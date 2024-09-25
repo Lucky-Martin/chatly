@@ -1,0 +1,33 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import "@fortawesome/fontawesome-free/css/all.css";
+
+body {
+  background: #ffffff;
+}
+.error-text {
+  color: #ff0033;
+}
+i {
+  font-size: 18px;
+  color: #ffffff;
+}
+button:active, .item-click:active {
+  transform: scale(0.9);
+}
+button.green-btn {
+  width: 100%;
+  padding: 10px;
+
+  border-radius: 10px;
+  background-color: #00b93e;
+  border: 0;
+  color: #fff;
+  cursor: pointer;
+}
+button[disabled].green-btn {
+  color: lightgray;
+  background-color: #00a035;
+}

@@ -1,0 +1,21 @@
+<div class="login-container">
+  <div class="flex items-center justify-evenly">
+    <i class="fa-solid fa-chevron-left cursor-pointer" (click)="onReturn()"></i>
+    <h2 class="text-2xl text-center">Enter your credentials</h2>
+  </div>
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+    <div class="input-wrap">
+      <label for="email">Email</label>
+      <input id="email" formControlName="email" type="email" />
+    </div>
+
+    <div class="input-wrap">
+      <label for="password">Password</label>
+      <input id="password" formControlName="password" type="password" />
+    </div>
+
+    <p class="error-text mt-2" *ngIf="credentialsError">Credentials don't match. Please try again</p>
+
+    <button type="submit" [disabled]="loginForm.invalid" class="mt-6">Login</button>
+  </form>
+</div>

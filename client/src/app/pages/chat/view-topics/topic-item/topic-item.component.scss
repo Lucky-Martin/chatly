@@ -1,0 +1,13 @@
+.topic-item-wrap {
+  width: 100%;
+  min-height: 64px;
+  background: #ffffff;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  cursor: pointer;
+
+  img {
+    max-width: 64px;
+    border-radius: 10px;
+  }
+}

@@ -1,0 +1,24 @@
+<i class="fa-solid fa-spinner text-white text-2xl flex items-center justify-center fa-spin" *ngIf="!topic"></i>
+
+<div class="p-3">
+  <div class="topic-wrap p-1.5" *ngIf="topic">
+    <i class="fa-solid fa-chevron-left cursor-pointer text-black" (click)="leaveTopic(topic.id)"></i>
+    <p class="text-2xl text-black mb-3 border-b-2 border-slate-400 pb-1.5">{{ topic.name }}</p>
+    <p class="text-black" *ngIf="!topic.messages.length">No messages...</p>
+    <div class="messages-wrap" *ngIf="topic.messages.length">
+      <div class="msg-wrap text-black" *ngFor="let message of topic.messages">
+        <p *ngIf="authService.username === message.user" class="text-right">
+          {{ message.text }} :{{ message.user }}
+        </p>
+        <p *ngIf="authService.username !== message.user">
+          {{ message.user }}: {{ message.text }}
+        </p>
+        <p class="text-slate-500" [ngClass]="{'text-right': authService.username === message.user}">{{message.timestamp | timeAgo}}</p>
+      </div>
+    </div>
+  </div>
+  <div class="action-wrap" *ngIf="topic">
+    <textarea placeholder="Enter message" class="p-1.5" [(ngModel)]="message"></textarea>
+    <button class="green-btn" (click)="onSendMessage()">Send message</button>
+  </div>
+</div>

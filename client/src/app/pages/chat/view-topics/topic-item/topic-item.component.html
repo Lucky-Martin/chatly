@@ -1,0 +1,11 @@
+<div class="topic-item-wrap item-click p-1.5 flex items-center justify-start" (click)="onOpenTopic()">
+  <img src="assets/demo.svg" alt="Thumbnail" class="mr-2 ml-0.5">
+  <div class="text-wrap">
+    <p class="text-xl text-black">{{ topic.name }}</p>
+    <p class="text-sm text-black" *ngIf="!topic.messages.length">No messages...</p>
+    <p class="text-sm text-black" *ngIf="topic.messages.length">
+      {{topic.messages[topic.messages.length-1].user}}: {{topic.messages[topic.messages.length-1].text}}
+    </p>
+    <p class="text-sm text-black text-slate-500" *ngIf="topic.messages.length">{{ topic.messages[topic.messages.length-1].timestamp | timeAgo }}</p>
+  </div>
+</div>

@@ -1,0 +1,12 @@
+.topics-wrap {
+  width: 100%;
+  height: 70vh;
+}
+.footer-wrap {
+  height: calc(100vh - 85vh);
+
+  button {
+    height: 100%;
+    max-height: 64px;
+  }
+}

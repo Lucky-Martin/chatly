@@ -1,0 +1,16 @@
+<div class="position-wrap">
+  <div class="modal-wrap">
+    <div class="modal-header p-4 flex items-center justify-between">
+      <h2 class="m-0 text-2xl">Create new topic</h2>
+      <i class="fa-solid fa-xmark text-black text-2xl cursor-pointer" (click)="onCloseModal()"></i>
+    </div>
+    <div class="modal-content">
+      <div class="input-wrap">
+        <label for="topic">Topic name</label>
+        <input id="topic" type="text" placeholder="Enter topic name" [(ngModel)]="topicName" />
+      </div>
+
+      <button class="green-btn mt-4" (click)="onCreateTopic()">Create topic</button>
+    </div>
+  </div>
+</div>
