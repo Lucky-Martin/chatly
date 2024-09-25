@@ -3,6 +3,7 @@ import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/
 import {Router} from "@angular/router";
 import {NgIf} from "@angular/common";
 import {AuthService} from "../../../services/auth.service";
+import { EToastTypes, ToastService } from '../../../services/toast.service';
 
 @Component({
   selector: 'app-login',
@@ -20,7 +21,8 @@ export class LoginComponent implements OnInit {
 
   constructor(private fb: FormBuilder,
               private authService: AuthService,
-              private router: Router) {}
+              private router: Router,
+              private toastService: ToastService) {}
 
   ngOnInit(): void {
     this.loginForm = this.fb.group({
@@ -43,8 +45,14 @@ export class LoginComponent implements OnInit {
         await this.authService.processSuccessAuth(res);
       }, err => {
         this.credentialsError = true;
+        this.toastService.showToast(EToastTypes.warning, "Invalid info. Credentials don't match!");
         console.log(err);
       })
     }
+  }
+
+  onNavigateSignup(event: Event) {
+    event.preventDefault();
+    this.router.navigate(['auth', 'signup']);
   }
 }

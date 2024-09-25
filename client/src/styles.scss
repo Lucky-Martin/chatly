@@ -31,3 +31,42 @@ button[disabled].green-btn {
   color: lightgray;
   background-color: #00a035;
 }
+.toast-hidden {
+  animation: hideToast 1s forwards;
+}
+.toast-visible {
+  animation: showToast 1s forwards;
+}
+.toast-wrapper {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+  transition: all 1s;
+}
+
+@keyframes showToast {
+  from {
+    display: none;
+    opacity: 0;
+    bottom: -100%;
+  } to {
+    display: flex!important;
+    bottom: 25px;
+    opacity: 1;
+  }
+}
+@keyframes hideToast {
+  from {
+    display: flex;
+    opacity: 1;
+  } to {
+    display: none!important;
+    bottom: -100%;
+    opacity: 0;
+  }
+}

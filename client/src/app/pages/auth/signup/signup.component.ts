@@ -3,6 +3,7 @@ import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/
 import {Router} from "@angular/router";
 import {AuthService} from "../../../services/auth.service";
 import {NgIf} from "@angular/common";
+import { EToastTypes, ToastService } from '../../../services/toast.service';
 
 @Component({
   selector: 'app-signup',
@@ -17,13 +18,15 @@ import {NgIf} from "@angular/common";
 export class SignupComponent implements OnInit {
   loginForm: FormGroup;
   canSubmit: boolean;
+  usernameErrorMessage: string;
   emailErrorMessage: string;
   passwordErrorMessage: string;
   credentialsError: boolean;
 
   constructor(private fb: FormBuilder,
               private router: Router,
-              private authService: AuthService) {}
+              private authService: AuthService,
+              private toastService: ToastService) {}
 
   ngOnInit(): void {
     this.loginForm = this.fb.group({
@@ -45,6 +48,7 @@ export class SignupComponent implements OnInit {
       }, err => {
         if (err.error.message.includes('unique')) {
           this.emailErrorMessage = 'Email already in use!';
+          this.toastService.showToast(EToastTypes.warning, this.emailErrorMessage);
         } else {
           this.credentialsError = true;
         }
@@ -53,11 +57,24 @@ export class SignupComponent implements OnInit {
     }
   }
 
+  onNavigateLogin(event: Event) {
+    event.preventDefault();
+    this.router.navigate(['auth', 'login']);
+  }
+
   validateCanSubmit() {
     const username = this.loginForm.get('username')?.value;
     const email = this.loginForm.get('email');
     const pass = this.loginForm.get('password');
     const confirmPass = this.loginForm.get('confirmPassword');
+
+    if (username && username.length < 4) {
+      this.usernameErrorMessage = "Username must be atleast 4 characters long"
+      this.canSubmit = false;
+      return;
+    } else {
+      this.usernameErrorMessage = '';
+    }
 
     if (!this.authService.isValidEmail(email?.value) && email?.value.length) {
       this.emailErrorMessage = 'Please enter a valid email';
@@ -78,7 +95,7 @@ export class SignupComponent implements OnInit {
       }
     }
 
-    if (!this.emailErrorMessage && !this.passwordErrorMessage
+    if (!this.emailErrorMessage && !this.passwordErrorMessage && !this.usernameErrorMessage
       && email?.value.length && pass?.value.length && username.length) {
       this.canSubmit = true;
     }
