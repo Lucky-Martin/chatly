@@ -4,6 +4,7 @@ import {ViewTopicsComponent} from "./view-topics/view-topics.component";
 import {Router, RouterOutlet} from "@angular/router";
 import {NgIf} from "@angular/common";
 import { IUser } from "../../models/IUser";
+import { TruncatePipe } from '../../pipes/truncate.pipe';
 
 @Component({
   selector: 'app-chat',
@@ -11,7 +12,8 @@ import { IUser } from "../../models/IUser";
   imports: [
     ViewTopicsComponent,
     RouterOutlet,
-    NgIf
+    NgIf,
+    TruncatePipe
   ],
   templateUrl: './chat.component.html',
   styleUrl: './chat.component.scss'
