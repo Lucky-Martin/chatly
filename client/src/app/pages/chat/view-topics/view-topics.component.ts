@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import { Component, EventEmitter, Input, OnInit } from '@angular/core';
 import {TopicItemComponent} from "./topic-item/topic-item.component";
 import {CreateTopicModalComponent} from "./create-topic-modal/create-topic-modal.component";
 import {NgForOf, NgIf} from "@angular/common";
@@ -17,6 +17,7 @@ import {ChatService} from "../../../services/chat.service";
   styleUrl: './view-topics.component.scss'
 })
 export class ViewTopicsComponent implements OnInit {
+  @Input() eventEmitter: EventEmitter<void> = new EventEmitter();
   topicModalOpen: boolean;
 
   constructor(public chatService: ChatService) {
@@ -28,9 +29,14 @@ export class ViewTopicsComponent implements OnInit {
     }, err => {
       console.log(err);
     })
+
+    this.eventEmitter.subscribe(() => {
+      this.toggleTopicModal(!this.topicModalOpen);
+    })
   }
 
   toggleTopicModal(state: boolean) {
+    console.log('here')
     this.topicModalOpen = state;
   }
 }

@@ -3,6 +3,7 @@ import {BehaviorSubject, Observable} from "rxjs";
 import {HttpClient} from "@angular/common/http";
 import {Router} from "@angular/router";
 import {ChatService} from "./chat.service";
+import { IUser } from "../models/IUser";
 
 export interface ISignupCredentials {
   username: string;
@@ -24,6 +25,7 @@ export class AuthService {
   private readonly apiUrl: string = 'http://localhost:8000/api';
   private readonly AUTH_TOKEN_KEY: string = 'auth_token';
   username: string;
+  user: IUser;
 
   constructor(private httpClient: HttpClient,
               private chatService: ChatService,
