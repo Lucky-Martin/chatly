@@ -32,10 +32,10 @@ button[disabled].green-btn {
   background-color: #00a035;
 }
 .toast-hidden {
-  animation: hideToast 1s forwards;
+  display: none!important;
 }
 .toast-visible {
-  animation: showToast 1s forwards;
+  display: flex!important;
 }
 .toast-wrapper {
   position: fixed;
@@ -47,26 +47,4 @@ button[disabled].green-btn {
   align-items: center;
   z-index: 999;
   transition: all 1s;
-}
-
-@keyframes showToast {
-  from {
-    display: none;
-    opacity: 0;
-    bottom: -100%;
-  } to {
-    display: flex!important;
-    bottom: 25px;
-    opacity: 1;
-  }
-}
-@keyframes hideToast {
-  from {
-    display: flex;
-    opacity: 1;
-  } to {
-    display: none!important;
-    bottom: -100%;
-    opacity: 0;
-  }
 }

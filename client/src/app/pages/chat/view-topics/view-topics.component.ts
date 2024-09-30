@@ -19,16 +19,21 @@ import {ChatService} from "../../../services/chat.service";
 export class ViewTopicsComponent implements OnInit {
   @Input() eventEmitter: EventEmitter<void> = new EventEmitter();
   topicModalOpen: boolean;
+  pollingUpdate = {
+    status: true,
+    timeout: 2000
+  }
 
   constructor(public chatService: ChatService) {
   }
 
   ngOnInit() {
-    this.chatService.getTopics().subscribe(res => {
-      this.chatService.topics = res;
-    }, err => {
-      console.log(err);
-    })
+    // if (this.pollingUpdate.status) {
+    //   this.fetchTopics();
+    //   setInterval(this.fetchTopics.bind(this), this.pollingUpdate.timeout);
+    // } else {
+    // }
+    this.fetchTopics();
 
     this.eventEmitter.subscribe(() => {
       this.toggleTopicModal(!this.topicModalOpen);
@@ -38,5 +43,13 @@ export class ViewTopicsComponent implements OnInit {
   toggleTopicModal(state: boolean) {
     console.log('here')
     this.topicModalOpen = state;
+  }
+
+  private fetchTopics() {
+    this.chatService.getTopics().subscribe(res => {
+      this.chatService.topics = res;
+    }, err => {
+      console.log(err);
+    })
   }
 }

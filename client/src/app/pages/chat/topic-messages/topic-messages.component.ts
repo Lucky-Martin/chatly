@@ -6,6 +6,7 @@ import {FormsModule} from "@angular/forms";
 import {AuthService} from "../../../services/auth.service";
 import {Subscription} from "rxjs";
 import {TimeAgoPipe} from "../../../services/time-ago.pipe";
+import { EToastTypes, ToastService } from '../../../services/toast.service';
 
 @Component({
   selector: 'app-topic-messages',
@@ -27,6 +28,7 @@ export class TopicMessagesComponent implements OnInit, OnDestroy {
 
   constructor(private route: ActivatedRoute,
               private router: Router,
+              private toastService: ToastService,
               private chatService: ChatService,
               public authService: AuthService) {
   }
@@ -71,7 +73,12 @@ export class TopicMessagesComponent implements OnInit, OnDestroy {
   }
 
   onSendMessage() {
-   this.chatService.sendMessage(this.topic.id, this.message!);
-   this.message = undefined;
+    if (!this.message) {
+      this.toastService.showToast(EToastTypes.warning, "Enter a valid message!");
+      return; 
+    };
+
+    this.chatService.sendMessage(this.topic.id, this.message);
+    this.message = undefined;
   }
 }

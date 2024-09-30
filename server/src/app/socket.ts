@@ -63,6 +63,9 @@ export const setupSocket = (io: any) => {
                 if (message) {
                     io.to(topicId).emit('message', message);
                 }
+
+                const allTopics = await ChatRepository.getAllTopics();
+                io.emit('topicsUpdated', allTopics);
             } catch (e) {
                 console.log('Error while fetching user');
             }
