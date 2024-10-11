@@ -4,6 +4,7 @@ import {ITopic} from "../../../../services/chat.service";
 import {NgClass, NgIf} from "@angular/common";
 import {AuthService} from "../../../../services/auth.service";
 import {TimeAgoPipe} from "../../../../services/time-ago.pipe";
+import {TruncatePipe} from "../../../../pipes/truncate.pipe";
 
 @Component({
   selector: 'app-topic-item',
@@ -11,7 +12,8 @@ import {TimeAgoPipe} from "../../../../services/time-ago.pipe";
   imports: [
     NgIf,
     NgClass,
-    TimeAgoPipe
+    TimeAgoPipe,
+    TruncatePipe
   ],
   templateUrl: './topic-item.component.html',
   styleUrl: './topic-item.component.scss'

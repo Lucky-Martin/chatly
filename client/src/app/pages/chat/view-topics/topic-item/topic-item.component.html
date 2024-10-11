@@ -20,7 +20,7 @@
       <div class="text-sm font-semibold text-left">{{topic.name}}</div>
       <p class="text-sm text-black text-left" *ngIf="!topic.messages.length">No messages...</p>
       <p class="text-sm text-black text-left" *ngIf="topic.messages.length">
-        {{topic.messages[topic.messages.length-1].user.trimEnd()}}: {{topic.messages[topic.messages.length-1].text}}
+        {{topic.messages[topic.messages.length-1].user.trimEnd() | truncate:10 }}: {{topic.messages[topic.messages.length-1].text | truncate:10}}
       </p>
     </div>
 </button>
