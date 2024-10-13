@@ -4,3 +4,12 @@
 .topic-wrap {
   height: 95%;
 }
+.return-btn {
+  max-width: 64px;
+
+  img {
+    max-width: 24px;
+    aspect-ratio: 1;
+    margin-bottom: 10px;
+  }
+}

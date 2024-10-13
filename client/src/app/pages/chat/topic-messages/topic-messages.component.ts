@@ -1,4 +1,11 @@
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {
+  AfterViewChecked,
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from '@angular/core';
 import {ChatService, IMessage, ITopic} from "../../../services/chat.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {NgClass, NgForOf, NgIf} from "@angular/common";
@@ -21,7 +28,8 @@ import { EToastTypes, ToastService } from '../../../services/toast.service';
   templateUrl: './topic-messages.component.html',
   styleUrl: './topic-messages.component.scss'
 })
-export class TopicMessagesComponent implements OnInit, OnDestroy {
+export class TopicMessagesComponent implements OnInit, OnDestroy, AfterViewChecked {
+  @ViewChild('messageContainer') private scrollableDiv!: ElementRef<HTMLDivElement>;
   topic: ITopic;
   message: string | undefined;
   messageSubscription: Subscription;
@@ -29,7 +37,7 @@ export class TopicMessagesComponent implements OnInit, OnDestroy {
   constructor(private route: ActivatedRoute,
               private router: Router,
               private toastService: ToastService,
-              private chatService: ChatService,
+              public chatService: ChatService,
               public authService: AuthService) {
   }
 
@@ -59,10 +67,18 @@ export class TopicMessagesComponent implements OnInit, OnDestroy {
     });
   }
 
+  ngAfterViewChecked() {
+    this.scrollToBottom();
+  }
+
   ngOnDestroy(): void {
     if (this.messageSubscription) {
       this.messageSubscription.unsubscribe();
     }
+  }
+
+  scrollToBottom(): void {
+    this.scrollableDiv.nativeElement.scrollTop = this.scrollableDiv.nativeElement.scrollHeight;
   }
 
   leaveTopic(topicId: string): void {
@@ -75,8 +91,8 @@ export class TopicMessagesComponent implements OnInit, OnDestroy {
   onSendMessage() {
     if (!this.message) {
       this.toastService.showToast(EToastTypes.warning, "Enter a valid message!");
-      return; 
-    };
+      return;
+    }
 
     this.chatService.sendMessage(this.topic.id, this.message);
     this.message = undefined;

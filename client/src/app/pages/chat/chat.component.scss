@@ -4,3 +4,16 @@
 .max-w-xs {
   max-width: 256px!important;
 }
+
+@media only screen and (max-width: 992px) {
+  .profile-wrap {
+    width: 100%;
+    padding: 10px!important;
+  }
+  .max-w-xs {
+    max-width: none !important;
+    left: 0;
+    padding: 0 5px!important;
+    margin-bottom: 5px;
+  }
+}

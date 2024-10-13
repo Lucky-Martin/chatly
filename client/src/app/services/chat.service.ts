@@ -21,11 +21,19 @@ export interface ITopic {
 export class ChatService {
   private readonly apiUrl: string = 'http://localhost:8000/api';
   private socket: Socket | null = null;
+  inTopic: boolean;
+  isMobile: boolean;
   topics: ITopic[] = [];
   topicMessages = new BehaviorSubject<IMessage[]>([]);
 
   constructor(private httpClient: HttpClient) {
     this.setupSocket();
+
+    this.isMobile = window.innerWidth <= 992;
+
+    window.onresize = () => {
+      this.isMobile = window.innerWidth <= 992;
+    }
   }
 
   private setupSocket() {
@@ -90,11 +98,14 @@ export class ChatService {
 
   joinTopic(topicId: string): void {
     this.socket!.emit('joinTopic', topicId);
+    this.inTopic = true;
+    console.log(this.inTopic, 't3ad');
   }
 
   leaveTopic(topicId: string): void {
     this.socket!.emit('leaveTopic', topicId);
     this.topicMessages.next([]);
+    this.inTopic = false;
   }
 
   sendMessage(topicId: string, text: string): void {
