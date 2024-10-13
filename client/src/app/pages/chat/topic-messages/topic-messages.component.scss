@@ -13,3 +13,9 @@
     margin-bottom: 10px;
   }
 }
+
+@media only screen and (max-width: 992px) {
+  .topic-wrap {
+    height: 90%;
+  }
+}

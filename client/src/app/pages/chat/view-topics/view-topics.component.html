@@ -3,14 +3,14 @@
 </app-create-topic-modal>
 
 <div class="flex flex-col mt-8 h-full">
-  <div class="flex flex-row items-center justify-between text-xs">
-    <div class="flex items-center">
+  <div class="flex-row items-center justify-between text-xs" [ngClass]="{'flex': !searchActive}">
+    <div class="items-center flex">
       <span class="font-bold mr-2">Active Conversations</span>
       <span class="flex items-center justify-center bg-gray-300 h-4 w-4 rounded-full">
         {{ chatService.topics.length }}
       </span>
     </div>
-    <div class="relative flex items-center space-x-2">
+    <div class="relative flex items-center space-x-2 mt-2">
       <div class="p-2 bg-gray-200 rounded-full cursor-pointer" (click)="toggleSearch()">
         <ng-container *ngIf="!searchActive; else closeIcon">
           <svg class="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"
@@ -38,5 +38,6 @@
     <app-topic-item
       *ngFor="let topic of getTopics()"
       [topic]="topic"></app-topic-item>
+    <p *ngIf="getTopics().length === 0" class="ml-2">No conversations found</p>
   </div>
 </div>

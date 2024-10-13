@@ -48,6 +48,7 @@
       <div class="flex-grow">
         <div class="relative w-full">
           <input [(ngModel)]="message" type="text"
+                 (keyup.enter)="onSendMessage()"
                  class="flex w-full border rounded-xl focus:outline-none focus:border-indigo-300 pl-4 h-10" />
         </div>
       </div>

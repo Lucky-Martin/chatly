@@ -34,12 +34,13 @@
       <div
         class="flex flex-col items-center bg-indigo-100 border border-gray-200 mt-4 w-full py-6 px-4 rounded-lg"
       >
-        <div class="h-20 w-20 rounded-full border overflow-hidden">
-          <img
-            src="https://avatars.githubusercontent.com/u/46198570?v=4&size=128"
-            alt="Avatar"
-            class="h-full w-full"
-          />
+        <div class="h-20 w-20 bg-indigo-500 rounded-full border overflow-hidden text-white text-3xl flex justify-center items-center">
+<!--          <img-->
+<!--            src="https://avatars.githubusercontent.com/u/46198570?v=4&size=128"-->
+<!--            alt="Avatar"-->
+<!--            class="h-full w-full"-->
+<!--          />-->
+          <p>{{authService.username[0].toUpperCase()}}</p>
         </div>
         <div class="user-wrap text-center" *ngIf="authService.user">
           <div class="text-sm font-semibold mt-2">{{ authService.user.username.trimStart().trimEnd() | truncate: 20 }}</div>
@@ -47,7 +48,7 @@
         </div>
       </div>
       <app-view-topics [eventEmitter]="topicModalOpened"></app-view-topics>
-      <div class="new-topic-wrapper fixed bottom-0 left-[5px] bg-white pt-2 pr-2 pb-2 max-w-xs w-full bg-white">
+      <div class="new-topic-wrapper fixed bottom-0 left-[5px] pt-2 pr-2 pb-2 max-w-xs w-full bg-white">
         <button (click)="onOpenTopicModal()" class="w-full bg-blue-500 text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 disabled:bg-blue-300">New topic</button>
       </div>
     </div>
