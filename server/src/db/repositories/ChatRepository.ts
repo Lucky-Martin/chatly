@@ -1,4 +1,4 @@
-import {randomUUID} from "node:crypto";
+import { randomUUID } from "node:crypto";
 
 export interface Message {
     user: string;
@@ -9,6 +9,8 @@ export interface Message {
 export interface Topic {
     id: string;
     name: string;
+    privacyState: boolean;
+    createdBy: string;
     messages: Message[];
 }
 
@@ -19,8 +21,8 @@ export class ChatRepository {
         return topics;
     }
 
-    public static async createTopic(topicName: string): Promise<Topic> {
-        const newTopic: Topic = { id: randomUUID(), name: topicName, messages: [] };
+    public static async createTopic(topicName: string, privacy: boolean, createdBy: string): Promise<Topic> {
+        const newTopic: Topic = {id: randomUUID(), name: topicName, privacyState: privacy, createdBy, messages: []};
         topics.push(newTopic);
 
         return newTopic;
@@ -34,7 +36,7 @@ export class ChatRepository {
         const topic = await this.getTopicById(topicId);
 
         if (topic) {
-            const message: Message = { user, text, timestamp: Date.now() };
+            const message: Message = {user, text, timestamp: Date.now()};
             topic.messages.push(message);
             return message;
         }

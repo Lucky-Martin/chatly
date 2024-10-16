@@ -21,9 +21,11 @@ export const setupSocket = (io: any) => {
     io.on('connection', (socket: any) => {
         // console.log('a user connected:', socket.user);
 
-        socket.on('createTopic', async (topicName: string) => {
-            await ChatRepository.createTopic(topicName);
+        socket.on('createTopic', async (topicName: string, privacy: boolean, createdBy: string) => {
+            const newTopic = await ChatRepository.createTopic(topicName, privacy, createdBy);
             const allTopics = await ChatRepository.getAllTopics();
+
+            socket.emit('topicCreated', newTopic);
 
             io.emit('topicsUpdated', allTopics);
         });
