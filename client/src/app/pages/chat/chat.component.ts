@@ -1,7 +1,7 @@
 import { Component, EventEmitter, OnInit } from '@angular/core';
 import {AuthService} from "../../services/auth.service";
 import {ViewTopicsComponent} from "./view-topics/view-topics.component";
-import {RouterOutlet} from "@angular/router";
+import { ActivatedRoute, RouterOutlet } from "@angular/router";
 import {NgIf} from "@angular/common";
 import { IUser } from "../../models/IUser";
 import { TruncatePipe } from '../../pipes/truncate.pipe';
@@ -27,14 +27,7 @@ export class ChatComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.authService.fetchUser().subscribe(res => {
-      if ((res as any).user as IUser) {
-        this.authService.username = (res as any).user.username;
-        this.authService.user = (res as any).user;
-      }
-    }, err => {
-      console.log(err);
-    });
+    this.authService.updateUser();
   }
 
   onOpenTopicModal() {

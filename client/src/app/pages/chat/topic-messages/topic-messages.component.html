@@ -1,5 +1,16 @@
 <i class="fa-solid fa-spinner text-black text-2xl flex items-center justify-center fa-spin" *ngIf="!topic"></i>
 
+<div class="emoji-wrap absolute right-3 bottom-20 z-40" *ngIf="isEmojiOpen">
+  <button
+    (click)="isEmojiOpen = false"
+    class="text-white bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500 rounded-full p-2 block mb-1">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+    </svg>
+  </button>
+  <emoji-mart title="Pick your emoji…" emoji="thumbsup" (emojiSelect)="onEmojiSelected($event)"></emoji-mart>
+</div>
+
 <div class="flex flex-col flex-auto h-full p-2 bg-wrap" *ngIf="topic">
   <button *ngIf="chatService.isMobile"
           (click)="leaveTopic(topic.id)"
@@ -51,6 +62,13 @@
                  (keyup.enter)="onSendMessage()"
                  class="flex w-full border rounded-xl focus:outline-none focus:border-indigo-300 pl-4 h-10" />
         </div>
+      </div>
+      <div class="ml-4">
+        <button
+          (click)="isEmojiOpen = !isEmojiOpen"
+          class="flex items-center justify-center space-x-2 ring-2 ring-gray-500 rounded-full p-2">
+          <i class="fa-regular fa-face-smile text-gray-500 hover:text-gray-700"></i>
+        </button>
       </div>
       <div class="ml-4">
         <button (click)="onSendMessage()"

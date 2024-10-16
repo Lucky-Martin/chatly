@@ -2,6 +2,7 @@ import {Component, EventEmitter, Output} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {ChatService} from "../../../../services/chat.service";
 import { EToastTypes, ToastService } from '../../../../services/toast.service';
+import { AuthService } from "../../../../services/auth.service";
 
 @Component({
   selector: 'app-create-topic-modal',
@@ -16,25 +17,28 @@ import { EToastTypes, ToastService } from '../../../../services/toast.service';
 export class CreateTopicModalComponent {
   @Output() modalClosed: EventEmitter<void> = new EventEmitter<void>();
   topicName: string;
+  publicChatRoom: boolean = true;
 
   constructor(private chatService: ChatService,
+              private authService: AuthService,
               private toastService: ToastService
-  ) {
-  }
+  ) { }
 
   onCloseModal() {
     this.modalClosed.emit();
   }
 
   onCreateTopic() {
-    console.log(this.topicName);
-    
     if (!this.topicName) {
       this.toastService.showToast(EToastTypes.warning, 'Enter topic name!')
       return;
-    };
+    }
 
-    this.chatService.createTopic(this.topicName);
+    this.chatService.createTopic(this.topicName, this.publicChatRoom, this.authService.user._id);
     this.modalClosed.emit();
+  }
+
+  onChangeState() {
+    this.publicChatRoom = !this.publicChatRoom;
   }
 }

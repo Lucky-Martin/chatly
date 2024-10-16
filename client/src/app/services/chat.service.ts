@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
 import { io, Socket } from "socket.io-client";
 import { BehaviorSubject } from "rxjs";
+import { Router } from "@angular/router";
 
 export interface IMessage {
   user: string;
@@ -12,6 +13,8 @@ export interface IMessage {
 export interface ITopic {
   id: string;
   name: string;
+  privacyState: boolean;
+  createdBy: string;
   messages: IMessage[];
 }
 
@@ -26,7 +29,8 @@ export class ChatService {
   topics: ITopic[] = [];
   topicMessages = new BehaviorSubject<IMessage[]>([]);
 
-  constructor(private httpClient: HttpClient) {
+  constructor(private httpClient: HttpClient,
+              private router: Router) {
     this.setupSocket();
 
     this.isMobile = window.innerWidth <= 992;
@@ -70,6 +74,11 @@ export class ChatService {
     this.socket!.on('message', (message: IMessage) => {
       this.topicMessages.next([...this.topicMessages.value, message]);
     });
+
+    this.socket!.on('topicCreated', (topic: ITopic) => {
+      console.log('join topic')
+      this.joinTopic(topic.id);
+    });
   }
 
   disconnectSocket() {
@@ -88,8 +97,8 @@ export class ChatService {
     return this.httpClient.get<ITopic[]>(`${this.apiUrl}/chat/topics`, { withCredentials: true });
   }
 
-  createTopic(topicName: string) {
-    this.socket!.emit('createTopic', topicName);
+  createTopic(topicName: string, privacyState: boolean, myId: string) {
+    this.socket!.emit('createTopic', topicName, privacyState, myId);
   }
 
   fetchTopicMessages(topicId: string) {
@@ -99,7 +108,8 @@ export class ChatService {
   joinTopic(topicId: string): void {
     this.socket!.emit('joinTopic', topicId);
     this.inTopic = true;
-    console.log(this.inTopic, 't3ad');
+
+    this.router.navigate(['chat', 'view'], {queryParams: {topicId}});
   }
 
   leaveTopic(topicId: string): void {

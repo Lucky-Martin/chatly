@@ -14,6 +14,7 @@ import {AuthService} from "../../../services/auth.service";
 import {Subscription} from "rxjs";
 import {TimeAgoPipe} from "../../../services/time-ago.pipe";
 import { EToastTypes, ToastService } from '../../../services/toast.service';
+import { PickerComponent } from "@ctrl/ngx-emoji-mart";
 
 @Component({
   selector: 'app-topic-messages',
@@ -23,7 +24,8 @@ import { EToastTypes, ToastService } from '../../../services/toast.service';
     NgIf,
     FormsModule,
     NgClass,
-    TimeAgoPipe
+    TimeAgoPipe,
+    PickerComponent
   ],
   templateUrl: './topic-messages.component.html',
   styleUrl: './topic-messages.component.scss'
@@ -33,6 +35,7 @@ export class TopicMessagesComponent implements OnInit, OnDestroy, AfterViewCheck
   topic: ITopic;
   message: string | undefined;
   messageSubscription: Subscription;
+  isEmojiOpen: boolean;
 
   constructor(private route: ActivatedRoute,
               private router: Router,
@@ -43,8 +46,13 @@ export class TopicMessagesComponent implements OnInit, OnDestroy, AfterViewCheck
 
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
+
       const topicId = params['topicId'];
       if (topicId) {
+        setTimeout(async () => {
+          await this.router.navigate(['chat', 'view'], {queryParams: {topicId}});
+        }, 100);
+
         //simulate delay to show loading animation
         setTimeout(() => {
           this.chatService.fetchTopicMessages(topicId).subscribe(res => {
@@ -53,8 +61,6 @@ export class TopicMessagesComponent implements OnInit, OnDestroy, AfterViewCheck
             console.log(err);
           });
         }, 1000);
-
-        console.log(this.authService.username)
 
         this.chatService.joinTopic(topicId);
 
@@ -78,6 +84,8 @@ export class TopicMessagesComponent implements OnInit, OnDestroy, AfterViewCheck
   }
 
   scrollToBottom(): void {
+    if (!this.scrollableDiv) return;
+
     this.scrollableDiv.nativeElement.scrollTop = this.scrollableDiv.nativeElement.scrollHeight;
   }
 
@@ -96,5 +104,21 @@ export class TopicMessagesComponent implements OnInit, OnDestroy, AfterViewCheck
 
     this.chatService.sendMessage(this.topic.id, this.message);
     this.message = undefined;
+  }
+
+  onEmojiSelected(emoji: {emoji: {native: string}}) {
+    if (!this.message) {
+      this.message = ''
+    }
+
+    if (this.message.length === 0) {
+      this.message += emoji.emoji.native;
+    } else {
+      this.message += ' ' + emoji.emoji.native;
+    }
+
+    if (window.innerWidth < 992) {
+      this.isEmojiOpen = false;
+    }
   }
 }

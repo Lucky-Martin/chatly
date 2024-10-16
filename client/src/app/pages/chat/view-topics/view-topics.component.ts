@@ -1,9 +1,10 @@
 import { Component, ElementRef, EventEmitter, Input, OnInit, ViewChild } from '@angular/core';
-import {TopicItemComponent} from "./topic-item/topic-item.component";
-import {CreateTopicModalComponent} from "./create-topic-modal/create-topic-modal.component";
+import { TopicItemComponent } from "./topic-item/topic-item.component";
+import { CreateTopicModalComponent } from "./create-topic-modal/create-topic-modal.component";
 import { NgClass, NgForOf, NgIf } from "@angular/common";
-import {ChatService} from "../../../services/chat.service";
+import { ChatService } from "../../../services/chat.service";
 import { FormsModule } from "@angular/forms";
+import { AuthService } from "../../../services/auth.service";
 
 @Component({
   selector: 'app-view-topics',
@@ -21,6 +22,7 @@ import { FormsModule } from "@angular/forms";
 })
 export class ViewTopicsComponent implements OnInit {
   @Input() eventEmitter: EventEmitter<void> = new EventEmitter();
+  @Input() title: string;
   @ViewChild('searchInput') searchInput!: ElementRef;
   topicModalOpen: boolean;
   searchActive: boolean = false;
@@ -30,7 +32,8 @@ export class ViewTopicsComponent implements OnInit {
   //   timeout: 2000
   // }
 
-  constructor(public chatService: ChatService) {
+  constructor(public chatService: ChatService,
+              private authService: AuthService) {
   }
 
   ngOnInit() {
@@ -78,5 +81,35 @@ export class ViewTopicsComponent implements OnInit {
     }, err => {
       console.log(err);
     })
+  }
+
+  getPublicTopics() {
+    const publicTopics = this.chatService.topics.filter(topic => {
+      return topic.privacyState;
+    });
+
+    if (this.searchActive && this.searchQuery.length > 0) {
+      return publicTopics.filter(topic => {
+        return topic.name.includes(this.searchQuery);
+      });
+    }
+
+    return publicTopics;
+  }
+
+  getMyTopics() {
+    if (!this.authService.user) return;
+
+    const myTopics = this.chatService.topics.filter(topic => {
+      return topic.createdBy === this.authService.user._id;
+    });
+
+    if (this.searchActive && this.searchQuery.length > 0) {
+      return myTopics.filter(topic => {
+        topic.name.includes(this.searchQuery);
+      });
+    }
+
+    return myTopics;
   }
 }

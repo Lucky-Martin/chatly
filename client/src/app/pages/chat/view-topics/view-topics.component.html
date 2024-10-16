@@ -1,13 +1,13 @@
-<app-create-topic-modal *ngIf="topicModalOpen"
+<app-create-topic-modal *ngIf="topicModalOpen && !title"
                         (modalClosed)="toggleTopicModal(false)">
 </app-create-topic-modal>
 
-<div class="flex flex-col mt-8 h-full">
+<div class="flex flex-col mt-8 h-full" *ngIf="!(title && getMyTopics()?.length === 0 && !searchQuery.length)">
   <div class="flex-row items-center justify-between text-xs" [ngClass]="{'flex': !searchActive}">
     <div class="items-center flex">
-      <span class="font-bold mr-2">Active Conversations</span>
+      <span class="font-bold mr-2">{{title ? title : "Active Conversations"}}</span>
       <span class="flex items-center justify-center bg-gray-300 h-4 w-4 rounded-full">
-        {{ chatService.topics.length }}
+        {{ title ? getMyTopics()?.length : getPublicTopics().length }}
       </span>
     </div>
     <div class="relative flex items-center space-x-2 mt-2">
@@ -34,9 +34,15 @@
     </div>
   </div>
 
-  <div class="flex flex-col space-y-1 mt-4 -mx-2 overflow-y-auto h-[75%]">
+  <div class="flex flex-col space-y-1 mt-4 -mx-2 overflow-y-auto h-[75%]" *ngIf="!title">
     <app-topic-item
-      *ngFor="let topic of getTopics()"
+      *ngFor="let topic of getPublicTopics()"
+      [topic]="topic"></app-topic-item>
+    <p *ngIf="getTopics().length === 0" class="ml-2">No conversations found</p>
+  </div>
+  <div class="flex flex-col space-y-1 mt-4 -mx-2 overflow-y-auto h-[75%]" *ngIf="title">
+    <app-topic-item
+      *ngFor="let topic of getMyTopics()"
       [topic]="topic"></app-topic-item>
     <p *ngIf="getTopics().length === 0" class="ml-2">No conversations found</p>
   </div>

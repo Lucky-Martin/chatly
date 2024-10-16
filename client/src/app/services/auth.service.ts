@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable} from "rxjs";
 import {HttpClient} from "@angular/common/http";
-import {Router} from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import {ChatService} from "./chat.service";
 import { IUser } from "../models/IUser";
 
@@ -74,6 +74,22 @@ export class AuthService {
     return this.httpClient.get(`${this.apiUrl}/auth/profile`, {withCredentials: true});
   }
 
+  updateUser() {
+    return new Promise<boolean>((resolve, reject) => {
+      this.fetchUser().subscribe(res => {
+        if ((res as any).user as IUser) {
+          this.username = (res as any).user.username;
+          this.user = (res as any).user;
+          this.authStatus.next(true)
+        }
+        resolve(true);
+      }, err => {
+        console.log(err);
+        reject(false)
+      });
+    })
+  }
+
   async processSuccessAuth(res: any) {
     await this.storeToken(res.token);
     this.authStatus.next(true);
@@ -83,7 +99,6 @@ export class AuthService {
 
     localStorage.setItem('user-json', JSON.stringify(res.user));
     this.chatService.reconnectSocket();
-
     await this.router.navigateByUrl('home', {replaceUrl: true});
   }
 
