@@ -3,6 +3,7 @@ import { HttpClient } from "@angular/common/http";
 import { io, Socket } from "socket.io-client";
 import { BehaviorSubject } from "rxjs";
 import { Router } from "@angular/router";
+import { environment } from "../environments/environment";
 
 export interface IMessage {
   user: string;
@@ -22,7 +23,7 @@ export interface ITopic {
   providedIn: 'root'
 })
 export class ChatService {
-  private readonly apiUrl: string = 'http://localhost:8000/api';
+  private readonly apiUrl: string = environment.apiUrl;
   private socket: Socket | null = null;
   inTopic: boolean;
   isMobile: boolean;

@@ -4,6 +4,7 @@ import {HttpClient} from "@angular/common/http";
 import { ActivatedRoute, Router } from "@angular/router";
 import {ChatService} from "./chat.service";
 import { IUser } from "../models/IUser";
+import { environment } from "../environments/environment";
 
 export interface ISignupCredentials {
   username: string;
@@ -22,8 +23,8 @@ export interface ILoginCredentials {
 export class AuthService {
   private authStatus = new BehaviorSubject<boolean>(false);
   private initialAuthCheck = false;
-  private readonly apiUrl: string = 'http://localhost:8000/api';
   private readonly AUTH_TOKEN_KEY: string = 'auth_token';
+  private readonly apiUrl: string = environment.apiUrl;
   username: string;
   user: IUser;
 

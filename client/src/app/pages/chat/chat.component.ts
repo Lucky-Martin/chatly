@@ -6,6 +6,7 @@ import {NgIf} from "@angular/common";
 import { IUser } from "../../models/IUser";
 import { TruncatePipe } from '../../pipes/truncate.pipe';
 import {ChatService} from "../../services/chat.service";
+import { LogoutModalComponent } from "../../components/logout-modal/logout-modal.component";
 
 @Component({
   selector: 'app-chat',
@@ -14,13 +15,16 @@ import {ChatService} from "../../services/chat.service";
     ViewTopicsComponent,
     RouterOutlet,
     NgIf,
-    TruncatePipe
+    TruncatePipe,
+    LogoutModalComponent
   ],
   templateUrl: './chat.component.html',
   styleUrl: './chat.component.scss'
 })
 export class ChatComponent implements OnInit {
   topicModalOpened: EventEmitter<void> = new EventEmitter();
+  logoutModalAction: EventEmitter<boolean> = new EventEmitter<boolean>();
+  logoutModalState: boolean = false;
 
   constructor(public authService: AuthService,
               public chatService: ChatService) {
@@ -28,6 +32,14 @@ export class ChatComponent implements OnInit {
 
   ngOnInit() {
     this.authService.updateUser();
+
+    this.logoutModalAction.subscribe(actionValue => {
+      if (actionValue) {
+        this.onLogout();
+      } else {
+        this.logoutModalState = false;
+      }
+    })
   }
 
   onOpenTopicModal() {
