@@ -4,13 +4,15 @@ import {Router} from "@angular/router";
 import {AuthService} from "../../../services/auth.service";
 import {NgIf} from "@angular/common";
 import { EToastTypes, ToastService } from '../../../services/toast.service';
+import { SpinnerComponent } from "../../../components/spinner/spinner.component";
 
 @Component({
   selector: 'app-signup',
   standalone: true,
   imports: [
     ReactiveFormsModule,
-    NgIf
+    NgIf,
+    SpinnerComponent
   ],
   templateUrl: './signup.component.html',
   styleUrl: './signup.component.scss'
@@ -22,6 +24,7 @@ export class SignupComponent implements OnInit {
   emailErrorMessage: string;
   passwordErrorMessage: string;
   credentialsError: boolean;
+  isLoading: boolean;
 
   constructor(private fb: FormBuilder,
               private router: Router,
@@ -42,10 +45,13 @@ export class SignupComponent implements OnInit {
 
     if (this.loginForm.valid) {
       const loginData = this.loginForm.value;
+      this.isLoading = true;
 
       this.authService.signup(loginData).subscribe(async res => {
         await this.authService.processSuccessAuth(res);
+        this.isLoading = false;
       }, err => {
+        this.isLoading = false;
         if (err.error.message.includes('unique')) {
           this.emailErrorMessage = 'Email already in use!';
           this.toastService.showToast(EToastTypes.warning, this.emailErrorMessage);

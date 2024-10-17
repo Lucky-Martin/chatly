@@ -31,7 +31,7 @@ mongoose.connect(process.env.MONGODB_URL!, {
 
 app.use(cors({
     credentials: true,
-    origin: process.env.CLIENT_HOST_URL!
+    origin: true
 }));
 
 app.use(urlencoded({ extended: true }));

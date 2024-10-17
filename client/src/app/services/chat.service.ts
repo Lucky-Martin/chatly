@@ -42,7 +42,7 @@ export class ChatService {
 
   private setupSocket() {
     const token = localStorage.getItem('auth_token');
-    console.log('connect token', token);
+    // console.log('connect token', token);
     if (token) {
       this.socket = io(this.apiUrl.split('/api')[0], {
         auth: {

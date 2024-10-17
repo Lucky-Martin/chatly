@@ -72,9 +72,5 @@ export const setupSocket = (io: any) => {
                 console.log('Error while fetching user');
             }
         });
-
-        socket.on('disconnect', () => {
-            console.log('user disconnected');
-        });
     });
 };
