@@ -14,12 +14,13 @@ dotenv.config();
 
 const app = express();
 const socketServer = http.createServer(app);
-const io = new Server(socketServer, {
+export const io = new Server(socketServer, {
     cors: {
         origin: "*",
         methods: ["GET", "POST"]
     }
 });
+
 const PORT = process.env.PORT || 8000;
 
 mongoose.connect(process.env.MONGODB_URL!, {
@@ -41,6 +42,12 @@ app.use('/api/auth', authRouter);
 app.use('/api/chat', chatRouter);
 
 setupSocket(io);
+
+export let profanityFilter: any;
+
+(async () => {
+    profanityFilter = await new (await import('bad-words')).Filter;;
+})();
 
 socketServer.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);

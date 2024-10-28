@@ -1,88 +1,98 @@
-<i class="fa-solid fa-spinner text-black text-2xl flex items-center justify-center fa-spin" *ngIf="!topic"></i>
-
-<div class="emoji-wrap absolute right-3 bottom-20 z-40" *ngIf="isEmojiOpen">
-  <button
-    (click)="isEmojiOpen = false"
-    class="text-white bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500 rounded-full p-2 block mb-1">
-    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-    </svg>
-  </button>
-  <emoji-mart title="Pick your emoji…" emoji="thumbsup" (emojiSelect)="onEmojiSelected($event)"></emoji-mart>
+<div class="flex justify-center items-center full-screen" *ngIf="!topic">
+  <app-spinner></app-spinner>
 </div>
 
-<div class="flex flex-col flex-auto h-full p-2 bg-wrap" *ngIf="topic">
-  <button *ngIf="chatService.isMobile"
-          (click)="leaveTopic(topic.id)"
-          class="text-black font-bold return-btn">
-    <img src="/assets/icons/chevron-left-solid.svg" alt="Return">
-  </button>
-  <h2 class="mb-4 text-2xl">Chat room - {{topic.name}}</h2>
+<div class="flex h-screen">
+  <!-- Main Chat Area -->
+  <div class="flex flex-col flex-auto h-full p-2 bg-wrap w-3/4" *ngIf="topic">
 
-  <div class="flex flex-col flex-auto flex-shrink-0 rounded-2xl bg-gray-100 topic-wrap p-2 mb-2">
-    <div class="flex flex-col h-full overflow-x-auto mb-4" #messageContainer>
-      <div class="flex flex-col h-full">
-        <div class="space-y-2">
-          <div class="msg-wrap" *ngFor="let message of topic.messages">
+    <!-- Chat Room Header -->
+    <button *ngIf="chatService.isMobile"
+            (click)="leaveTopic(topic.id)"
+            class="text-black font-bold return-btn">
+      <img src="/assets/icons/chevron-left-solid.svg" alt="Return">
+    </button>
+    <div class="flex w-[100%] justify-between mb-4">
+      <div class="flex items-center">
+        <i class="fa-solid fa-chevron-left cursor-pointer text-black text-2xl mr-2" (click)="onLeave()"></i>
+        <h2 class="text-2xl">Chat room - {{ topic.name }}</h2>
+      </div>
+      <div class="flex">
+        <i class="fa-solid fa-share-from-square text-2xl text-black cursor-pointer mr-4" (click)="onShareUrl()"></i>
+        <i class="fa-solid fa-user-group text-black text-2xl cursor-pointer" (click)="isParticipantVisible = !isParticipantVisible"></i>
+      </div>
+    </div>
 
-            <!-- Message from other users (Left Bubble) -->
-            <div *ngIf="message.user !== authService.username" class="flex items-start">
-              <div class="flex items-center justify-center text-white h-10 w-10 rounded-full bg-indigo-500 flex-shrink-0">
-                {{message.user.charAt(0).toUpperCase()}}
-              </div>
-              <div class="ml-3 max-w-[80%]">
-                <div class="relative text-sm bg-white py-2 px-4 shadow rounded-xl break-all whitespace-normal">
-                  {{ message.text }}
+    <!-- Chat Messages Area -->
+    <div class="flex flex-col flex-auto flex-shrink-0 rounded-2xl bg-gray-100 topic-wrap p-2 mb-2">
+      <div class="flex flex-col h-full overflow-x-auto mb-4" #messageContainer>
+        <div class="flex flex-col h-full">
+          <div class="space-y-2">
+            <div class="msg-wrap" *ngFor="let message of topic.messages">
+
+              <!-- Message from other users (Left Bubble) -->
+              <div *ngIf="message.user !== authService.username" class="flex items-start">
+                <div class="flex items-center justify-center text-white h-10 w-10 rounded-full bg-indigo-500 flex-shrink-0">
+                  {{ message.user.charAt(0).toUpperCase() }}
+                </div>
+                <div class="ml-3 max-w-[80%]">
+                  <div class="relative text-sm bg-white py-2 px-4 shadow rounded-xl break-all whitespace-normal">
+                    {{ message.text }}
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <!-- Message from current user (Right Bubble) -->
-            <div *ngIf="message.user == authService.username" class="flex items-start justify-end">
-              <div class="mr-3 max-w-[80%]">
-                <div class="relative text-sm bg-indigo-100 py-2 px-4 shadow rounded-xl break-all whitespace-normal">
-                  {{ message.text }}
+              <!-- Message from current user (Right Bubble) -->
+              <div *ngIf="message.user == authService.username" class="flex items-start justify-end">
+                <div class="mr-3 max-w-[80%]">
+                  <div class="relative text-sm bg-indigo-100 py-2 px-4 shadow rounded-xl break-all whitespace-normal">
+                    {{ message.text }}
+                  </div>
+                </div>
+                <div class="flex items-center justify-center h-10 w-10 rounded-full text-white bg-indigo-500 flex-shrink-0">
+                  {{ message.user.charAt(0).toUpperCase() }}
                 </div>
               </div>
-              <div class="flex items-center justify-center h-10 w-10 rounded-full text-white bg-indigo-500 flex-shrink-0">
-                {{message.user.charAt(0).toUpperCase()}}
-              </div>
-            </div>
 
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- Input area -->
-    <div class="flex items-center h-16 rounded-xl bg-white w-full px-2">
-      <div class="flex-grow">
-        <div class="relative w-full">
-          <input [(ngModel)]="message" type="text"
-                 (keyup.enter)="onSendMessage()"
-                 class="flex w-full border rounded-xl focus:outline-none focus:border-indigo-300 pl-4 h-10" />
+      <!-- Input Area -->
+      <div class="flex items-center h-16 rounded-xl bg-white w-full px-2">
+        <div class="flex-grow">
+          <div class="relative w-full">
+            <input [(ngModel)]="message" type="text"
+                   (keyup.enter)="onSendMessage()"
+                   class="flex w-full border rounded-xl focus:outline-none focus:border-indigo-300 pl-4 h-10" />
+          </div>
         </div>
-      </div>
-      <div class="ml-4">
-        <button
-          (click)="isEmojiOpen = !isEmojiOpen"
-          class="flex items-center justify-center space-x-2 ring-2 ring-gray-500 rounded-full p-2">
-          <i class="fa-regular fa-face-smile text-gray-500 hover:text-gray-700"></i>
-        </button>
-      </div>
-      <div class="ml-4">
-        <button (click)="onSendMessage()"
-                class="flex items-center justify-center bg-indigo-500 hover:bg-indigo-600 rounded-xl text-white px-4 py-1 flex-shrink-0">
-          <span>Send</span>
-          <span class="ml-2">
-            <svg class="w-4 h-4 transform rotate-45 -mt-px" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                 xmlns="http://www.w3.org/2000/svg">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8">
-              </path>
-            </svg>
-          </span>
-        </button>
+        <div class="ml-4">
+          <button
+            (click)="isEmojiOpen = !isEmojiOpen"
+            class="flex items-center justify-center space-x-2 ring-2 ring-gray-500 rounded-full p-2">
+            <i class="fa-regular fa-face-smile text-gray-500 hover:text-gray-700"></i>
+          </button>
+        </div>
+        <div class="ml-4">
+          <button (click)="onSendMessage()"
+                  class="flex items-center justify-center bg-indigo-500 hover:bg-indigo-600 rounded-xl text-white px-4 py-1 flex-shrink-0">
+            <span>Send</span>
+            <span class="ml-2">
+              <svg class="w-4 h-4 transform rotate-45 -mt-px" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                   xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8">
+                </path>
+              </svg>
+            </span>
+          </button>
+        </div>
       </div>
     </div>
   </div>
+
+  <app-participants-list [topic]="topic!" [isVisible]="isParticipantVisible"></app-participants-list>
 </div>
+
+<app-emoji-picker [isEmojiOpen]="isEmojiOpen" (emojiSelected)="onEmojiSelected($event)"></app-emoji-picker>

@@ -1,21 +1,11 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 import {BehaviorSubject, Observable} from "rxjs";
 import {HttpClient} from "@angular/common/http";
-import { ActivatedRoute, Router } from "@angular/router";
+import { Router } from "@angular/router";
 import {ChatService} from "./chat.service";
 import { IUser } from "../models/IUser";
 import { environment } from "../environments/environment";
-
-export interface ISignupCredentials {
-  username: string;
-  email: string;
-  password: string;
-}
-
-export interface ILoginCredentials {
-  email: string;
-  password: string;
-}
+import { ILoginCredentials, ISignupCredentials } from "../models/ICredentials";
 
 @Injectable({
   providedIn: 'root'

@@ -1,1 +1,1 @@
-export type IParticipant = string[];
+export type IParticipants = string[];

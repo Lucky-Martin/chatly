@@ -1,44 +1,34 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from "@angular/common/http";
-import { io, Socket } from "socket.io-client";
-import { BehaviorSubject } from "rxjs";
-import { Router } from "@angular/router";
-import { environment } from "../environments/environment";
-
-export interface IMessage {
-  user: string;
-  text: string;
-  timestamp: number;
-}
-
-export interface ITopic {
-  id: string;
-  name: string;
-  privacyState: boolean;
-  createdBy: string;
-  messages: IMessage[];
-}
+import { HttpClient } from '@angular/common/http';
+import { io, Socket } from 'socket.io-client';
+import { BehaviorSubject } from 'rxjs';
+import { Router } from '@angular/router';
+import { environment } from '../environments/environment';
+import { IMessage } from '../models/IMessage';
+import { ITopic } from '../models/ITopic';
+import { IParticipants } from '../models/IParticipants';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ChatService {
   private readonly apiUrl: string = environment.apiUrl;
   private socket: Socket | null = null;
+  topicId: string;
   inTopic: boolean;
   isMobile: boolean;
   topics: ITopic[] = [];
   topicMessages = new BehaviorSubject<IMessage[]>([]);
+  topicParticipants = new BehaviorSubject<string[]>([]);
 
-  constructor(private httpClient: HttpClient,
-              private router: Router) {
+  constructor(private httpClient: HttpClient, private router: Router) {
     this.setupSocket();
 
     this.isMobile = window.innerWidth <= 992;
 
     window.onresize = () => {
       this.isMobile = window.innerWidth <= 992;
-    }
+    };
   }
 
   private setupSocket() {
@@ -47,8 +37,8 @@ export class ChatService {
     if (token) {
       this.socket = io(this.apiUrl.split('/api')[0], {
         auth: {
-          token: token
-        }
+          token: token,
+        },
       });
 
       this.socket.on('connect', () => {
@@ -64,7 +54,6 @@ export class ChatService {
 
   private setupListeners() {
     this.socket!.on('topicsUpdated', (topics: ITopic[]) => {
-      console.log('new topics', topics);
       this.topics = topics;
     });
 
@@ -76,14 +65,22 @@ export class ChatService {
       this.topicMessages.next([...this.topicMessages.value, message]);
     });
 
+    this.socket!.on('participantsUpdated', (participants: IParticipants) => {
+      this.topicParticipants.next(participants);
+    });
+
     this.socket!.on('topicCreated', (topic: ITopic) => {
-      console.log('join topic')
+      console.log('join topic');
       this.joinTopic(topic.id);
     });
   }
 
   disconnectSocket() {
     if (this.socket) {
+      if (this.inTopic) {
+        this.leaveTopic(this.topicId);
+      }
+
       this.socket.disconnect();
       this.socket = null;
     }
@@ -95,7 +92,9 @@ export class ChatService {
   }
 
   getTopics() {
-    return this.httpClient.get<ITopic[]>(`${this.apiUrl}/chat/topics`, { withCredentials: true });
+    return this.httpClient.get<ITopic[]>(`${this.apiUrl}/chat/topics`, {
+      withCredentials: true,
+    });
   }
 
   createTopic(topicName: string, privacyState: boolean, myId: string) {
@@ -109,13 +108,15 @@ export class ChatService {
   joinTopic(topicId: string): void {
     this.socket!.emit('joinTopic', topicId);
     this.inTopic = true;
+    this.topicId = topicId;
 
-    this.router.navigate(['chat', 'view'], {queryParams: {topicId}});
+    this.router.navigate(['chat', 'view'], { queryParams: { topicId } });
   }
 
   leaveTopic(topicId: string): void {
     this.socket!.emit('leaveTopic', topicId);
     this.topicMessages.next([]);
+    this.topicId = '';
     this.inTopic = false;
   }
 

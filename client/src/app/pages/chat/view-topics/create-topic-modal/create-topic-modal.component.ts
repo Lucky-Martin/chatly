@@ -3,6 +3,7 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {ChatService} from "../../../../services/chat.service";
 import { EToastTypes, ToastService } from '../../../../services/toast.service';
 import { AuthService } from "../../../../services/auth.service";
+import { Filter } from 'bad-words';
 
 @Component({
   selector: 'app-create-topic-modal',
@@ -15,6 +16,7 @@ import { AuthService } from "../../../../services/auth.service";
   styleUrl: './create-topic-modal.component.scss'
 })
 export class CreateTopicModalComponent {
+  private profanityFilter: Filter = new Filter();
   @Output() modalClosed: EventEmitter<void> = new EventEmitter<void>();
   topicName: string;
   publicChatRoom: boolean = true;
@@ -32,6 +34,15 @@ export class CreateTopicModalComponent {
     if (!this.topicName) {
       this.toastService.showToast(EToastTypes.warning, 'Enter topic name!')
       return;
+    }
+
+    if (this.profanityFilter.isProfane(this.topicName)) {
+      this.toastService.showToast(EToastTypes.warning, "Profanity words are not allowed!");
+      return;
+    }
+
+    if (this.chatService.inTopic) {
+      this.chatService.leaveTopic(this.chatService.topicId);
     }
 
     this.chatService.createTopic(this.topicName, this.publicChatRoom, this.authService.user._id);

@@ -1,0 +1,13 @@
+<div class="w-[100%] bg-gray-100 p-4 h-full mr-4" *ngIf="topic && !isVisible">
+  <div class="text-xl font-semibold mb-4">Participants</div>
+  <ul>
+    <li class="mb-2" *ngFor="let participant of participants">
+      <div class="flex items-center space-x-3">
+        <div class="h-10 w-10 rounded-full bg-indigo-500 text-white flex items-center justify-center">
+          {{ participant.charAt(0).toUpperCase() }}
+        </div>
+        <span>{{ participant }}</span>
+      </div>
+    </li>
+  </ul>
+</div>

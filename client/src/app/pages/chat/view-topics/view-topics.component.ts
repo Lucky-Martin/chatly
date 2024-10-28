@@ -72,6 +72,8 @@ export class ViewTopicsComponent implements OnInit {
       setTimeout(() => {
         this.searchInput.nativeElement.focus();
       }, 0); // timeout ensures this runs after the view is updated
+    } else {
+      this.searchQuery = '';
     }
   }
 

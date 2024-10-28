@@ -4,17 +4,23 @@ import {
   ElementRef,
   OnDestroy,
   OnInit,
-  ViewChild
+  ViewChild,
 } from '@angular/core';
-import {ChatService, IMessage, ITopic} from "../../../services/chat.service";
-import {ActivatedRoute, Router} from "@angular/router";
-import {NgClass, NgForOf, NgIf} from "@angular/common";
-import {FormsModule} from "@angular/forms";
-import {AuthService} from "../../../services/auth.service";
-import {Subscription} from "rxjs";
-import {TimeAgoPipe} from "../../../services/time-ago.pipe";
+import { ChatService } from '../../../services/chat.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { NgClass, NgForOf, NgIf } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { AuthService } from '../../../services/auth.service';
+import { Subscription } from 'rxjs';
+import { TimeAgoPipe } from '../../../services/time-ago.pipe';
 import { EToastTypes, ToastService } from '../../../services/toast.service';
-import { PickerComponent } from "@ctrl/ngx-emoji-mart";
+import { PickerComponent } from '@ctrl/ngx-emoji-mart';
+import { EmojiPickerComponent } from './emoji-picker/emoji-picker.component';
+import { ParticipantsListComponent } from './participants-list/participants-list.component';
+import { ITopic } from '../../../models/ITopic';
+import { IMessage } from '../../../models/IMessage';
+import { SpinnerComponent } from '../../../components/spinner/spinner.component';
+import { Filter } from 'bad-words';
 
 @Component({
   selector: 'app-topic-messages',
@@ -25,50 +31,69 @@ import { PickerComponent } from "@ctrl/ngx-emoji-mart";
     FormsModule,
     NgClass,
     TimeAgoPipe,
-    PickerComponent
+    PickerComponent,
+    EmojiPickerComponent,
+    ParticipantsListComponent,
+    SpinnerComponent,
   ],
   templateUrl: './topic-messages.component.html',
-  styleUrl: './topic-messages.component.scss'
+  styleUrl: './topic-messages.component.scss',
 })
-export class TopicMessagesComponent implements OnInit, OnDestroy, AfterViewChecked {
-  @ViewChild('messageContainer') private scrollableDiv!: ElementRef<HTMLDivElement>;
-  topic: ITopic;
+export class TopicMessagesComponent
+  implements OnInit, OnDestroy, AfterViewChecked
+{
+  @ViewChild('messageContainer')
+  private scrollableDiv!: ElementRef<HTMLDivElement>;
+  private profanityFilter: Filter;
+  topic: ITopic | undefined;
   message: string | undefined;
   messageSubscription: Subscription;
   isEmojiOpen: boolean;
+  isParticipantVisible: boolean;
 
-  constructor(private route: ActivatedRoute,
-              private router: Router,
-              private toastService: ToastService,
-              public chatService: ChatService,
-              public authService: AuthService) {
-  }
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private toastService: ToastService,
+    public chatService: ChatService,
+    public authService: AuthService
+  ) {}
 
   ngOnInit() {
-    this.route.queryParams.subscribe(params => {
+    this.profanityFilter = new Filter();
 
+    this.route.queryParams.subscribe((params) => {
       const topicId = params['topicId'];
       if (topicId) {
         setTimeout(async () => {
-          await this.router.navigate(['chat', 'view'], {queryParams: {topicId}});
+          await this.router.navigate(['chat', 'view'], {
+            queryParams: { topicId },
+          });
         }, 100);
 
         //simulate delay to show loading animation
+        this.topic = undefined;
+        
         setTimeout(() => {
-          this.chatService.fetchTopicMessages(topicId).subscribe(res => {
-            this.topic = res;
-          }, err => {
-            console.log(err);
-          });
+          this.chatService.fetchTopicMessages(topicId).subscribe(
+            (res) => {
+              this.topic = res;
+            },
+            (err) => {
+              console.log(err);
+            }
+          );
         }, 1000);
 
         this.chatService.joinTopic(topicId);
 
-        this.messageSubscription = this.chatService.topicMessages.asObservable().subscribe((messages: IMessage[]) => {
-          if (this.topic) {
-            this.topic.messages = messages;
-          }
-        });
+        this.messageSubscription = this.chatService.topicMessages
+          .asObservable()
+          .subscribe((messages: IMessage[]) => {
+            if (this.topic) {
+              this.topic.messages = messages;
+            }
+          });
       }
     });
   }
@@ -86,39 +111,78 @@ export class TopicMessagesComponent implements OnInit, OnDestroy, AfterViewCheck
   scrollToBottom(): void {
     if (!this.scrollableDiv) return;
 
-    this.scrollableDiv.nativeElement.scrollTop = this.scrollableDiv.nativeElement.scrollHeight;
+    this.scrollableDiv.nativeElement.scrollTop =
+      this.scrollableDiv.nativeElement.scrollHeight;
   }
 
   leaveTopic(topicId: string): void {
     this.chatService.leaveTopic(topicId);
-    this.topic.messages = [];
+    this.topic!.messages = [];
 
     this.router.navigateByUrl('chat');
   }
 
   onSendMessage() {
     if (!this.message) {
-      this.toastService.showToast(EToastTypes.warning, "Enter a valid message!");
+      this.toastService.showToast(
+        EToastTypes.warning,
+        'Enter a valid message!'
+      );
       return;
     }
 
-    this.chatService.sendMessage(this.topic.id, this.message);
+    if (this.profanityFilter.isProfane(this.message)) {
+      this.toastService.showToast(EToastTypes.warning, "Profanity words are not allowed!");
+
+      this.message = undefined;
+      return;
+    }
+
+    this.chatService.sendMessage(this.topic!.id, this.message);
     this.message = undefined;
   }
 
-  onEmojiSelected(emoji: {emoji: {native: string}}) {
+  onEmojiSelected(emoji: string) {
     if (!this.message) {
-      this.message = ''
+      this.message = '';
     }
 
     if (this.message.length === 0) {
-      this.message += emoji.emoji.native;
+      this.message += emoji;
     } else {
-      this.message += ' ' + emoji.emoji.native;
+      this.message += ' ' + emoji;
     }
+  }
 
-    if (window.innerWidth < 992) {
-      this.isEmojiOpen = false;
+  onLeave() {
+    this.chatService.leaveTopic(this.chatService.topicId);
+    this.router.navigate(['chat']);
+  }
+
+  onShareUrl() {
+    const url = `${window.location.origin}${this.router.url}`;
+
+    if (navigator.share) {
+      navigator
+        .share({
+          title: 'Share chat room link!',
+          url,
+        })
+        .then(() => {
+          console.log('Successful share');
+        })
+        .catch((error) => {
+          console.log('Error sharing:', error);
+        });
+    } else {
+      navigator.clipboard
+        .writeText(url)
+        .then(() => {
+          alert('URL copied to clipboard!');
+        })
+        .catch((err) => {
+          console.error('Failed to copy: ', err);
+        });
     }
   }
 }
