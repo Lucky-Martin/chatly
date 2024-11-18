@@ -21,6 +21,8 @@ import { ITopic } from '../../../models/ITopic';
 import { IMessage } from '../../../models/IMessage';
 import { SpinnerComponent } from '../../../components/spinner/spinner.component';
 import { Filter } from 'bad-words';
+import { TruncatePipe } from "../../../pipes/truncate.pipe";
+import { EMessageViewType, MessageItemComponent } from "./message-item/message-item.component";
 
 @Component({
   selector: 'app-topic-messages',
@@ -35,6 +37,8 @@ import { Filter } from 'bad-words';
     EmojiPickerComponent,
     ParticipantsListComponent,
     SpinnerComponent,
+    TruncatePipe,
+    MessageItemComponent,
   ],
   templateUrl: './topic-messages.component.html',
   styleUrl: './topic-messages.component.scss',
@@ -73,7 +77,7 @@ export class TopicMessagesComponent
 
         //simulate delay to show loading animation
         this.topic = undefined;
-        
+
         setTimeout(() => {
           this.chatService.fetchTopicMessages(topicId).subscribe(
             (res) => {
@@ -185,4 +189,6 @@ export class TopicMessagesComponent
         });
     }
   }
+
+  protected readonly EMessageViewType = EMessageViewType;
 }

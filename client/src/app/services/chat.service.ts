@@ -113,6 +113,10 @@ export class ChatService {
     this.router.navigate(['chat', 'view'], { queryParams: { topicId } });
   }
 
+  getTopicByRoomCode(roomCode: string): Promise<{topic: ITopic}> {
+    return this.httpClient.get<{topic: ITopic}>(`${this.apiUrl}/chat/roomCode/${roomCode}`).toPromise() as Promise<{topic: ITopic}>;
+  }
+
   leaveTopic(topicId: string): void {
     this.socket!.emit('leaveTopic', topicId);
     this.topicMessages.next([]);

@@ -19,6 +19,8 @@ export class TopicItemComponent {
   constructor(private router: Router, private chatService: ChatService) {}
 
   async onOpenTopic() {
+    if (this.chatService.inTopic && this.chatService.topicId === this.topic.id) return;
+
     if (this.chatService.inTopic) {
       this.chatService.leaveTopic(this.chatService.topicId);
     }

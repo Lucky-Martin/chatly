@@ -1,6 +1,6 @@
 import { Component, ElementRef, EventEmitter, Input, OnInit, ViewChild } from '@angular/core';
 import { TopicItemComponent } from "./topic-item/topic-item.component";
-import { CreateTopicModalComponent } from "./create-topic-modal/create-topic-modal.component";
+import { CreateTopicModalComponent } from "../../../components/create-topic-modal/create-topic-modal.component";
 import { NgClass, NgForOf, NgIf } from "@angular/common";
 import { ChatService } from "../../../services/chat.service";
 import { FormsModule } from "@angular/forms";
@@ -85,6 +85,17 @@ export class ViewTopicsComponent implements OnInit {
     })
   }
 
+  getAllTopics() {
+    const myTopics = this.getMyTopics() || [];
+    const publicTopics = this.getPublicTopics() || [];
+
+    const combinedTopics = [...myTopics, ...publicTopics];
+
+    return combinedTopics.filter((topic, index, self) =>
+      index === self.findIndex(t => t.id === topic.id)
+    );
+  }
+
   getPublicTopics() {
     const publicTopics = this.chatService.topics.filter(topic => {
       return topic.privacyState;
@@ -100,7 +111,7 @@ export class ViewTopicsComponent implements OnInit {
   }
 
   getMyTopics() {
-    if (!this.authService.user) return;
+    if (!this.authService.user) return [];
 
     const myTopics = this.chatService.topics.filter(topic => {
       return topic.createdBy === this.authService.user._id;

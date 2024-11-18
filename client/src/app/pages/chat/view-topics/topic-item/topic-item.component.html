@@ -17,11 +17,11 @@
   <div
     class="flex items-center justify-center h-8 w-8 bg-indigo-200 rounded-full"
   >
-    {{ topic.name[0].toUpperCase() }}
+    {{ (topic.name[0].toUpperCase()) | truncate:15 }}
   </div>
   <div class="ml-2 flex justify-between w-[80%]">
     <div class="item">
-      <div class="text-sm font-semibold text-left">{{ topic.name }}</div>
+      <div class="text-sm font-semibold text-left">{{ topic.name | truncate:15 }}</div>
       <p class="text-sm text-black text-left" *ngIf="!topic.messages.length">
         No messages...
       </p>

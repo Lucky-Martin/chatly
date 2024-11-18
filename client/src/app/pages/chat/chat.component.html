@@ -31,6 +31,12 @@
           </button>
           <app-logout-modal [actionDispatched]="logoutModalAction" *ngIf="logoutModalState"></app-logout-modal>
         </div>
+        <div class="logout ml-1">
+          <button class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50" (click)="joinRoomModalState = true">
+            <i class="fa-solid fa-hashtag"></i>
+          </button>
+          <app-join-room-code-modal *ngIf="joinRoomModalState" [joinRoomClicked]="joinRoomModalAction"></app-join-room-code-modal>
+        </div>
       </div>
       <div
         class="flex flex-col items-center bg-indigo-100 border border-gray-200 mt-4 w-full py-6 px-4 rounded-lg"
@@ -48,7 +54,6 @@
           <div class="text-xs text-gray-500">{{ authService.user.email }}</div>
         </div>
       </div>
-<!--      <app-view-topics [eventEmitter]="topicModalOpened" [title]="'My topics'"></app-view-topics>-->
       <app-view-topics [eventEmitter]="topicModalOpened"></app-view-topics>
       <div class="new-topic-wrapper fixed bottom-0 left-[5px] pt-2 pr-2 pb-2 max-w-xs w-full bg-white">
         <button (click)="onOpenTopicModal()" class="w-full bg-blue-500 text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 disabled:bg-blue-300">New topic</button>
