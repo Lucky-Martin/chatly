@@ -8,6 +8,7 @@ import { ChatService } from "../../services/chat.service";
 import { LogoutModalComponent } from "../../components/logout-modal/logout-modal.component";
 import { EModalAction, JoinRoomCodeModalComponent } from "../../components/join-room-code-modal/join-room-code-modal.component";
 import { EToastTypes, ToastService } from '../../services/toast.service';
+import { SidebarComponent } from "../../components/sidebar/sidebar.component";
 
 @Component({
   selector: 'app-chat',
@@ -18,8 +19,9 @@ import { EToastTypes, ToastService } from '../../services/toast.service';
     NgIf,
     TruncatePipe,
     LogoutModalComponent,
-    JoinRoomCodeModalComponent
-  ],
+    JoinRoomCodeModalComponent,
+    SidebarComponent
+],
   templateUrl: './chat.component.html',
   styleUrl: './chat.component.scss'
 })

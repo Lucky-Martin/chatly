@@ -1,0 +1,37 @@
+<div class="sidebar-wrapper flex h-full bg-[#1B1C21]">
+    <div class="relative text-center border-r-2 border-white text-white w-20 h-full p-3">
+        <!-- Logo -->
+        <img src="/assets/logo-icon.png" alt="Logo">
+
+        <!-- New topic button -->
+        <button class="w-full mt-8 aspect-square text-xl rounded-lg bg-[#EEE]">
+            <i class="fa-solid fa-plus text-black"></i>
+        </button>
+
+        <!-- Settings/Profile button -->
+        <button class="block m-auto" (click)="activeMenu = ESidebarMenus.ProfileInfo">
+            <i class="fa-regular fa-user text-white text-xl mt-8 cursor-pointer"></i>
+        </button>
+
+        <!-- Search button -->
+        <button class="block m-auto" (click)="activeMenu = ESidebarMenus.Search">
+            <i class="fa-solid fa-magnifying-glass text-white text-xl mt-8 cursor-pointer"></i>
+        </button>
+
+        <!-- Conversations button -->
+        <button class="block m-auto" (click)="activeMenu = ESidebarMenus.Conversations">
+            <i class="fa-regular fa-comment text-white text-xl mt-8 cursor-pointer"></i>
+        </button>
+
+        <!-- Separator -->
+        <div class="border-t-2 border-dotted border-white w-full mt-8"></div>
+
+        <!-- Logout -->
+        <i class="fa-solid fa-right-from-bracket absolute bottom-8 text-xl left-0 right-0"></i>
+    </div>
+
+    <!-- Preview tab -->
+    <div class="preview w-64 p-3 text-white" *ngIf="activeMenu !== null">
+        <app-sidebar-profile-info *ngIf="activeMenu === ESidebarMenus.ProfileInfo"></app-sidebar-profile-info>
+    </div>
+</div>

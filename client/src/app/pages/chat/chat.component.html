@@ -1,64 +1,9 @@
 <div class="flex h-screen antialiased text-gray-800">
   <div class="flex flex-row h-full w-full overflow-hidden">
-    <div *ngIf="!(chatService.isMobile && chatService.inTopic)" class="profile-wrap relative flex flex-col py-8 pl-2 pr-2 w-64 bg-white flex-shrink-0">
-      <div class="flex justify-between items-center h-12 w-full">
-        <div class="brand flex items-center w-full">
-          <div
-            class="flex items-center justify-center rounded-2xl text-[#1bb6ea] bg-indigo-100 h-10 w-10"
-          >
-            <svg
-              class="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
-              ></path>
-            </svg>
-          </div>
-          <div class="ml-2 font-bold text-2xl">Chatly</div>
-        </div>
-        <div class="logout">
-          <button class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50" (click)="logoutModalState = true">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H5a3 3 0 01-3-3V7a3 3 0 013-3h5a3 3 0 013 3v1" />
-            </svg>
-          </button>
-          <app-logout-modal [actionDispatched]="logoutModalAction" *ngIf="logoutModalState"></app-logout-modal>
-        </div>
-        <div class="logout ml-1">
-          <button class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50" (click)="joinRoomModalState = true">
-            <i class="fa-solid fa-hashtag"></i>
-          </button>
-          <app-join-room-code-modal *ngIf="joinRoomModalState" [joinRoomClicked]="joinRoomModalAction"></app-join-room-code-modal>
-        </div>
-      </div>
-      <div
-        class="flex flex-col items-center bg-indigo-100 border border-gray-200 mt-4 w-full py-6 px-4 rounded-lg"
-        *ngIf="authService.user">
-        <div class="h-20 w-20 bg-indigo-500 rounded-full border overflow-hidden text-white text-3xl flex justify-center items-center">
-<!--          <img-->
-<!--            src="https://avatars.githubusercontent.com/u/46198570?v=4&size=128"-->
-<!--            alt="Avatar"-->
-<!--            class="h-full w-full"-->
-<!--          />-->
-          <p>{{authService.username[0].toUpperCase()}}</p>
-        </div>
-        <div class="user-wrap text-center" *ngIf="authService.user">
-          <div class="text-sm font-semibold mt-2">{{ authService.user.username.trimStart().trimEnd() | truncate: 20 }}</div>
-          <div class="text-xs text-gray-500">{{ authService.user.email }}</div>
-        </div>
-      </div>
-      <app-view-topics [eventEmitter]="topicModalOpened"></app-view-topics>
-      <div class="new-topic-wrapper fixed bottom-0 left-[5px] pt-2 pr-2 pb-2 max-w-xs w-full bg-white">
-        <button (click)="onOpenTopicModal()" class="w-full bg-blue-500 text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 disabled:bg-blue-300">New topic</button>
-      </div>
-    </div>
+    <!-- Sidebar -->
+    <app-sidebar></app-sidebar>
+
+    <!-- Router outlet - pages -->
     <div class="flex flex-col flex-auto h-full justify-center">
         <router-outlet></router-outlet>
     </div>
