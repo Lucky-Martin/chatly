@@ -1,14 +1,14 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ITopic } from '../../models/ITopic';
 import { SpinnerComponent } from "../spinner/spinner.component";
-import { NgIf } from '@angular/common';
+import { NgClass, NgIf } from '@angular/common';
 import { IMessage } from '../../models/IMessage';
 import { TruncatePipe } from "../../pipes/truncate.pipe";
 
 @Component({
   selector: 'app-featured-room-card',
   standalone: true,
-  imports: [SpinnerComponent, NgIf, TruncatePipe],
+  imports: [SpinnerComponent, NgIf, NgClass, TruncatePipe],
   templateUrl: './featured-room-card.component.html',
   styleUrl: './featured-room-card.component.scss'
 })

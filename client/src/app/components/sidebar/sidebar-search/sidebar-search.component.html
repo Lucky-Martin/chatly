@@ -1,0 +1,2 @@
+<app-searchbar-filter (changeQuery)="onChangeQuery($event)"></app-searchbar-filter>
+<p *ngFor="let conversation of filteredConversations;">{{ conversation.name }}</p>

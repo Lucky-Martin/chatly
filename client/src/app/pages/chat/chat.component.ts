@@ -1,6 +1,5 @@
 import { Component, EventEmitter, OnInit } from '@angular/core';
 import { AuthService } from "../../services/auth.service";
-import { ViewTopicsComponent } from "./view-topics/view-topics.component";
 import { RouterOutlet } from "@angular/router";
 import { NgIf } from "@angular/common";
 import { TruncatePipe } from '../../pipes/truncate.pipe';
@@ -14,12 +13,7 @@ import { SidebarComponent } from "../../components/sidebar/sidebar.component";
   selector: 'app-chat',
   standalone: true,
   imports: [
-    ViewTopicsComponent,
     RouterOutlet,
-    NgIf,
-    TruncatePipe,
-    LogoutModalComponent,
-    JoinRoomCodeModalComponent,
     SidebarComponent
 ],
   templateUrl: './chat.component.html',

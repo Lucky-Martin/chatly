@@ -63,7 +63,7 @@ export class WelcomeComponent implements OnInit {
   }
 
   protected getFeaturedTopics(): void {
-    this.chatService.getTopics().subscribe((topics: ITopic[]) => {
+    this.chatService.fetchTopics().subscribe((topics: ITopic[]) => {
       this.rooms = topics.sort((a, b) => b.participants.length - a.participants.length);
     });
   }

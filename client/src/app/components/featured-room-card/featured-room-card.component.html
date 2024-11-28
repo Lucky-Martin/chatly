@@ -1,11 +1,12 @@
-<div class="wrapper border-[1px] border-gray-400 hover:border-gray-500 rounded-lg p-4 cursor-pointer min-w-[220px] text-center">
+<div class="wrapper shadow-md border-[1px] rounded-lg p-4 cursor-pointer min-w-[220px] text-center"
+    [ngClass]="{'border-gray-500': isPlaceholder, 'border-indigo-400': !isPlaceholder}">
     <app-spinner *ngIf="!isRoomValid() && !isPlaceholder"></app-spinner>
 
     <!-- Room data -->
     <div class="room-data-wrapper text-left" *ngIf="isRoomValid() && !isPlaceholder" (click)="clickCard.emit(room)">
         <p class="text-xl font-semibold mb-2">{{ room.name | truncate:16 }}</p>
         <div class="last-message-wrapper flex items-center">
-            <i class="fa-regular fa-user text-black text-xl mr-2"></i>
+            <i class="fa-regular fa-comment text-black text-xl mr-2"></i>
             <p class="text-sm">{{ getLastMessage().text | truncate:18 }}</p>
         </div>
     </div>
@@ -14,7 +15,7 @@
     <div class="placeholder-wrapper text-left" *ngIf="isPlaceholder" (click)="clickCard.emit()">
         <p class="text-xl font-semibold mb-2">Empty slot</p>
         <div class="last-message-wrapper flex items-center">
-            <i class="fa-regular fa-user text-black text-xl mr-2"></i>
+            <i class="fa-regular fa-comment text-black text-xl mr-2"></i>
             <p class="text-sm">Click to create a new room!</p>
         </div>
     </div>

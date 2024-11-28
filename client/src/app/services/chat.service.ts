@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { io, Socket } from 'socket.io-client';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, tap } from 'rxjs';
 import { Router } from '@angular/router';
 import { environment } from '../environments/environment';
 import { IMessage } from '../models/IMessage';
@@ -14,14 +14,15 @@ import { IParticipants } from '../models/IParticipants';
 export class ChatService {
   private readonly apiUrl: string = environment.apiUrl;
   private socket: Socket | null = null;
-  topicId: string;
-  inTopic: boolean;
-  isMobile: boolean;
-  topics: ITopic[] = [];
-  topicMessages = new BehaviorSubject<IMessage[]>([]);
-  topicParticipants = new BehaviorSubject<string[]>([]);
+  public inTopic: boolean;
+  public isMobile: boolean;
+  public topicId: string;
+  public topics: BehaviorSubject<ITopic[]> = new BehaviorSubject<ITopic[]>([]);
+  public topicMessages: BehaviorSubject<IMessage[]> = new BehaviorSubject<IMessage[]>([]);
+  public topicParticipants: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
 
-  constructor(private httpClient: HttpClient, private router: Router) {
+  constructor(private httpClient: HttpClient,
+    private router: Router) {
     this.setupSocket();
 
     this.isMobile = window.innerWidth <= 992;
@@ -53,23 +54,25 @@ export class ChatService {
   }
 
   private setupListeners() {
-    this.socket!.on('topicsUpdated', (topics: ITopic[]) => {
-      this.topics = topics;
+    if (!this.socket) return;
+
+    this.socket.on('topicsUpdated', (topics: ITopic[]) => {
+      this.topics.next(topics);
     });
 
-    this.socket!.on('messages', (messages: IMessage[]) => {
+    this.socket.on('messages', (messages: IMessage[]) => {
       this.topicMessages.next(messages);
     });
 
-    this.socket!.on('message', (message: IMessage) => {
+    this.socket.on('message', (message: IMessage) => {
       this.topicMessages.next([...this.topicMessages.value, message]);
     });
 
-    this.socket!.on('participantsUpdated', (participants: IParticipants) => {
+    this.socket.on('participantsUpdated', (participants: IParticipants) => {
       this.topicParticipants.next(participants);
     });
 
-    this.socket!.on('topicCreated', (topic: ITopic) => {
+    this.socket.on('topicCreated', (topic: ITopic) => {
       console.log('join topic');
       this.joinTopic(topic.id);
     });
@@ -91,10 +94,10 @@ export class ChatService {
     this.setupSocket();
   }
 
-  getTopics() {
+  fetchTopics() {
     return this.httpClient.get<ITopic[]>(`${this.apiUrl}/chat/topics`, {
       withCredentials: true,
-    });
+    }).pipe(tap((topics) => this.topics.next(topics)));
   }
 
   createTopic(topicName: string, privacyState: boolean, myId: string) {

@@ -31,7 +31,9 @@
     </div>
 
     <!-- Preview tab -->
-    <div class="preview w-64 p-3 text-white" *ngIf="activeMenu !== null">
+    <div class="preview w-88 p-3 text-white" *ngIf="activeMenu !== null">
         <app-sidebar-profile-info *ngIf="activeMenu === ESidebarMenus.ProfileInfo"></app-sidebar-profile-info>
+        <app-sidebar-search *ngIf="activeMenu === ESidebarMenus.Search"></app-sidebar-search>
+        <app-sidebar-conversations *ngIf="activeMenu === ESidebarMenus.Conversations"></app-sidebar-conversations>
     </div>
 </div>
