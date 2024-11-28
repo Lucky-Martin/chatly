@@ -55,6 +55,8 @@ export class NoTopicSelectedComponent implements OnInit {
 
   onUpdateNewTopicModalState(state: boolean) {
     this.createTopicModalOpen = state;
+    console.log(state);
+    
   }
 
   onJoinTopic(topic: ITopic) {

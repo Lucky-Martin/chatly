@@ -16,6 +16,7 @@ import { NgIf } from "@angular/common";
 export class TopicPreviewItemComponent implements OnInit, OnChanges {
   @Input() topic: ITopic;
   @Output() topicJoined: EventEmitter<ITopic> = new EventEmitter<ITopic>();
+  @Output() createTopic: EventEmitter<void> = new EventEmitter<void>();
   presentDescriptionMessage: string;
 
   ngOnInit() {
@@ -39,5 +40,9 @@ export class TopicPreviewItemComponent implements OnInit, OnChanges {
 
   onJoinTopic() {
     this.topicJoined.emit(this.topic);
+  }
+
+  onCreateTopic() {
+    this.createTopic.emit();
   }
 }

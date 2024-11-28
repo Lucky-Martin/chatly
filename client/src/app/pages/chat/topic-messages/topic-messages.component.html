@@ -7,11 +7,6 @@
   <div class="flex flex-col flex-auto h-full p-2 bg-wrap w-3/4" *ngIf="topic">
 
     <!-- Chat Room Header -->
-    <button *ngIf="chatService.isMobile"
-            (click)="leaveTopic(topic.id)"
-            class="text-black font-bold return-btn">
-      <img src="/assets/icons/chevron-left-solid.svg" alt="Return">
-    </button>
     <div class="flex w-[100%] justify-between mb-4">
       <div class="flex items-center">
         <i class="fa-solid fa-chevron-left cursor-pointer text-black text-2xl mr-2" (click)="onLeave()"></i>

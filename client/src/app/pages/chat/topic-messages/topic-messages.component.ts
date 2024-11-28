@@ -176,6 +176,7 @@ export class TopicMessagesComponent
           console.log('Successful share');
         })
         .catch((error) => {
+          alert('Error sharing:' + error.message);
           console.log('Error sharing:', error);
         });
     } else {
