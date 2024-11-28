@@ -1,8 +1,28 @@
-<div class="profile-info-wrapper">
+<!-- loading spinner -->
+<div class="w-full flex justify-center items-center" *ngIf="!getUser()">
+    <app-spinner></app-spinner>
+</div>
+
+<div class="profile-info-wrapper" *ngIf="getUser()">
     <div class="img-preview flex justify-center mt-8">
         <div class="flex items-center justify-center w-28 h-28 bg-[#EEE] rounded-full">
-            <span class="text-black text-4xl font-bold">{{ getUsername().charAt(0).toUpperCase() }}</span>
+            <span class="text-black text-4xl font-bold">{{ getUser().username.charAt(0).toUpperCase() }}</span>
         </div>
     </div>
-    <h3 class="mt-4 text-center text-2xl">{{ getUsername() }}</h3>
+    <h3 class="mt-4 mb-8 text-center text-2xl">{{ getUser().username }}</h3>
+
+    <!-- Email -->
+    <div class="flex items-center">
+        <i class="fa-regular fa-envelope text-2xl mr-4"></i>
+        <p class="text-sm">
+            {{ getUser().email }}
+        </p>
+    </div>
+    <!-- UserId -->
+    <div class="flex items-center mt-4">
+        <i class="fa-regular fa-hashtag text-2xl mr-4"></i>
+        <p class="text-sm">
+            {{ getUser()._id }}
+        </p>
+    </div>
 </div>
