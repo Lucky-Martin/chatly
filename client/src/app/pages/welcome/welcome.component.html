@@ -1,0 +1,51 @@
+<!-- Modals -->
+<app-create-topic-modal
+        *ngIf="isCreateRoomModalOpen"
+        (modalClosed)="isCreateRoomModalOpen = false"></app-create-topic-modal>
+
+<div class="flex justify-center items-center min-h-screen page-wrapper">
+    <app-spinner *ngIf="!isUserLoaded()"></app-spinner>
+
+    <div class="content-wrapper" *ngIf="isUserLoaded()">
+        <h1 class="text-3xl text-black">
+            Hi there,
+            <span class="text-3xl text-black text-transparent bg-gradient-to-r from-pink-500 to-indigo-500 bg-clip-text">
+                {{ getUsername() | truncate:20 }}
+            </span>
+
+            <br> What would you like to chat about?
+        </h1>
+        <h4 class="text-sm font-bold mt-2 text-black">Join or create a featured topic about your favourite interests</h4>
+
+        <!-- Loaded -->
+        <div class="suggested-rooms-wrapper mt-4 mb-4 grid grid-cols-3 gap-2" *ngIf="rooms">
+            <app-featured-room-card
+                *ngFor="let iteration of [0, 1, 2]"
+                (clickCard)="$event ? onJoinRoom($event) : isCreateRoomModalOpen = true"
+                [isPlaceholder]="rooms.indexOf(rooms[iteration]) === -1"
+                [room]="rooms ? rooms[iteration] : getEmptyRoom()"></app-featured-room-card>
+        </div>
+
+        <!-- Placeholder -->
+        <div class="placeholder-rooms-wrapper mt-4 mb-4 grid grid-cols-3 gap-2" *ngIf="!rooms">
+            <app-featured-room-card
+                *ngFor="let iteration of [0, 1, 2]"
+                [isPlaceholder]="false"
+                [room]="getEmptyRoom()"></app-featured-room-card>
+        </div>
+
+        <!-- Topic prompt -->
+        <div class="topic-prompt-wrapper flex justify-between items-center">
+            <textarea [(ngModel)]="promptInput" placeholder="Enter a new topic name..." class="p-2 h-20 w-[90%] mr-2 rounded-lg border-[1px] border-gray-400 focus:outline-none focus:ring-0"></textarea>
+            <button (click)="onCreateRoom()" type="button" class="w-[10%] text-white text-xl h-20 rounded-lg bg-blue-500">
+                <i class="fa-solid fa-plus"></i>
+            </button>
+        </div>
+        <div class="flex items-center mt-2 text-right">
+            <input id="default-checkbox" type="checkbox" [checked]="isChatroomPublic" (change)="isChatroomPublic = !isChatroomPublic"
+              class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+            <label for="default-checkbox" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Public chat
+              room</label>
+          </div>
+    </div>
+</div>

@@ -8,6 +8,7 @@ import {AuthGuard} from "./services/auth.guard";
 import {ViewTopicsComponent} from "./pages/chat/view-topics/view-topics.component";
 import {TopicMessagesComponent} from "./pages/chat/topic-messages/topic-messages.component";
 import { NoTopicSelectedComponent } from './components/no-topic-selected/no-topic-selected.component';
+import { WelcomeComponent } from './pages/welcome/welcome.component';
 
 export const routes: Routes = [
   {path: '', pathMatch: 'full', redirectTo: 'auth'},
@@ -18,7 +19,8 @@ export const routes: Routes = [
     ]},
   {path: 'home', redirectTo: 'chat'},
   {path: 'chat', component: ChatComponent, canActivate: [AuthGuard], children: [
-      {path: '', pathMatch: 'full', redirectTo: 'topics'},
+      {path: '', pathMatch: 'full', redirectTo: 'welcome'},
+      {path: 'welcome', component: WelcomeComponent},
       {path: 'topics', component: NoTopicSelectedComponent},
       {path: 'view', component: TopicMessagesComponent},
     ]}
