@@ -1,36 +1,26 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { SearchbarFilterComponent } from "./searchbar-filter/searchbar-filter.component";
-import { ChatService } from '../../../services/chat.service';
+import { NgFor, NgIf } from '@angular/common';
+import { SearchbarFilterItemComponent } from "./searchbar-filter/searchbar-filter-item/searchbar-filter-item.component";
 import { ITopic } from '../../../models/ITopic';
-import { NgFor } from '@angular/common';
 
 @Component({
   selector: 'app-sidebar-search',
   standalone: true,
-  imports: [SearchbarFilterComponent, NgFor],
+  imports: [SearchbarFilterComponent, NgFor, NgIf, SearchbarFilterItemComponent],
   templateUrl: './sidebar-search.component.html',
   styleUrl: './sidebar-search.component.scss'
 })
-export class SidebarSearchComponent implements OnInit {
-  private conversations: ITopic[] = [];
-  protected filteredConversations: ITopic[] = [];
+export class SidebarSearchComponent {
+  @Input() conversations: ITopic[];
+  @Output() joinConversation: EventEmitter<string> = new EventEmitter<string>();
+  @Output() changeQuery: EventEmitter<string> = new EventEmitter<string>();
 
-  constructor(private chatService: ChatService) { }
-
-  public ngOnInit(): void {
-    this.chatService.fetchTopics().subscribe(conversations => {
-      this.conversations = conversations;
-      this.filteredConversations = conversations;
-    });
-
-    this.chatService.topics.subscribe((topics: ITopic[]) => {
-      this.conversations = topics;
-    });
+  protected onJoinConversation(topicId: string): void {
+    this.joinConversation.emit(topicId);
   }
 
-  protected onChangeQuery(query: string): void {
-    this.filteredConversations = this.conversations.filter((conversation: ITopic) => {
-      return conversation.name.toLowerCase().includes(query.toLowerCase());
-    });
+  protected onChangeQuery(newQuery: string): void {
+    this.changeQuery.emit(newQuery);
   }
 }

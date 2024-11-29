@@ -1,8 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { NgForOf, NgIf } from "@angular/common";
-import { ITopic } from "../../../../models/ITopic";
-import { ChatService } from "../../../../services/chat.service";
-import { IParticipants } from "../../../../models/IParticipants";
+import { IParticipants } from '../../../models/IParticipants';
+import { ITopic } from '../../../models/ITopic';
+import { ChatService } from '../../../services/chat.service';
 
 @Component({
   selector: 'app-participants-list',

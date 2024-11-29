@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { IMessage } from "../../../../models/IMessage";
 import { NgIf, NgSwitch } from "@angular/common";
+import { IMessage } from '../../../models/IMessage';
 
 export enum EMessageViewType {
   Sender,

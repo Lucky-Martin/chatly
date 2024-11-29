@@ -6,26 +6,26 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-import { ChatService } from '../../../services/chat.service';
-import { ActivatedRoute, Router } from '@angular/router';
-import { NgClass, NgForOf, NgIf } from '@angular/common';
+import { NgForOf, NgIf, NgClass } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { AuthService } from '../../../services/auth.service';
-import { Subscription } from 'rxjs';
-import { TimeAgoPipe } from '../../../services/time-ago.pipe';
-import { EToastTypes, ToastService } from '../../../services/toast.service';
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
-import { EmojiPickerComponent } from './emoji-picker/emoji-picker.component';
-import { ParticipantsListComponent } from './participants-list/participants-list.component';
-import { ITopic } from '../../../models/ITopic';
-import { IMessage } from '../../../models/IMessage';
-import { SpinnerComponent } from '../../../components/spinner/spinner.component';
+import { SpinnerComponent } from '../../components/spinner/spinner.component';
+import { TruncatePipe } from '../../pipes/truncate.pipe';
+import { TimeAgoPipe } from '../../services/time-ago.pipe';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Filter } from 'bad-words';
-import { TruncatePipe } from "../../../pipes/truncate.pipe";
-import { EMessageViewType, MessageItemComponent } from "./message-item/message-item.component";
+import { Subscription } from 'rxjs';
+import { IMessage } from '../../models/IMessage';
+import { ITopic } from '../../models/ITopic';
+import { AuthService } from '../../services/auth.service';
+import { ChatService } from '../../services/chat.service';
+import { ToastService, EToastTypes } from '../../services/toast.service';
+import { EmojiPickerComponent } from './emoji-picker/emoji-picker.component';
+import { MessageItemComponent, EMessageViewType } from './message-item/message-item.component';
+import { ParticipantsListComponent } from './participants-list/participants-list.component';
 
 @Component({
-  selector: 'app-topic-messages',
+  selector: 'app-conversation',
   standalone: true,
   imports: [
     NgForOf,
@@ -40,12 +40,10 @@ import { EMessageViewType, MessageItemComponent } from "./message-item/message-i
     TruncatePipe,
     MessageItemComponent,
   ],
-  templateUrl: './topic-messages.component.html',
-  styleUrl: './topic-messages.component.scss',
+  templateUrl: './conversation.component.html',
+  styleUrl: './conversation.component.scss',
 })
-export class TopicMessagesComponent
-  implements OnInit, OnDestroy, AfterViewChecked
-{
+export class ConversationComponent implements OnInit, OnDestroy, AfterViewChecked {
   @ViewChild('messageContainer')
   private scrollableDiv!: ElementRef<HTMLDivElement>;
   private profanityFilter: Filter;
@@ -69,6 +67,9 @@ export class TopicMessagesComponent
     this.route.queryParams.subscribe((params) => {
       const topicId = params['topicId'];
       if (topicId) {
+        if (this.chatService.topicId) {
+          this.chatService.leaveTopic(this.chatService.topicId);
+        }
         setTimeout(async () => {
           await this.router.navigate(['chat', 'view'], {
             queryParams: { topicId },
@@ -85,6 +86,7 @@ export class TopicMessagesComponent
             },
             (err) => {
               console.log(err);
+              this.router.navigate(['chat']);
             }
           );
         }, 1000);
@@ -136,7 +138,10 @@ export class TopicMessagesComponent
     }
 
     if (this.profanityFilter.isProfane(this.message)) {
-      this.toastService.showToast(EToastTypes.warning, "Profanity words are not allowed!");
+      this.toastService.showToast(
+        EToastTypes.warning,
+        'Profanity words are not allowed!'
+      );
 
       this.message = undefined;
       return;

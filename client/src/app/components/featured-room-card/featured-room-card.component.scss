@@ -1,0 +1,12 @@
+.wrapper {
+    animation: 0.4s pop-in forwards;
+}
+
+@keyframes pop-in {
+    from {
+        transform: scale(0);
+    }
+    to {
+        transform: scale(1);
+    }
+}

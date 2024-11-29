@@ -6,24 +6,25 @@ import { NgFor, NgIf } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
 import { TruncatePipe } from "../../pipes/truncate.pipe";
 import { SpinnerComponent } from "../../components/spinner/spinner.component";
-import { CreateTopicModalComponent } from "../../components/create-topic-modal/create-topic-modal.component";
 import { Router } from '@angular/router';
 import { Filter } from 'bad-words';
 import { EToastTypes, ToastService } from '../../services/toast.service';
 import { FormsModule } from '@angular/forms';
+import { openCreateModalSubject } from '../../services/subjects';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-welcome',
   standalone: true,
-  imports: [FeaturedRoomCardComponent, NgFor, NgIf, FormsModule, TruncatePipe, SpinnerComponent, CreateTopicModalComponent],
+  imports: [FeaturedRoomCardComponent, NgFor, NgIf, FormsModule, TruncatePipe, SpinnerComponent],
   templateUrl: './welcome.component.html',
   styleUrl: './welcome.component.scss'
 })
 export class WelcomeComponent implements OnInit {
   private profanityFilter: Filter = new Filter();
   protected rooms: ITopic[];
-  protected isCreateRoomModalOpen: boolean;
   protected promptInput: string;
+  protected openCreateModalSubject: Subject<void> = openCreateModalSubject;
   protected isChatroomPublic: boolean = true;
 
   constructor(private chatService: ChatService,

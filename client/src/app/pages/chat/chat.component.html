@@ -4,8 +4,13 @@
     <app-sidebar></app-sidebar>
 
     <!-- Router outlet - pages -->
-    <div class="flex flex-col flex-auto h-full justify-center">
+    <div class="flex flex-col flex-auto h-full justify-center relative">
         <router-outlet></router-outlet>
+
+        <!-- Modals -->
+        @if (isCreateRoomModalOpen) {
+          <app-create-topic-modal (modalClosed)="isCreateRoomModalOpen = false"></app-create-topic-modal>
+        }
     </div>
   </div>
 </div>

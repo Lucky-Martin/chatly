@@ -5,8 +5,8 @@ import {SignupComponent} from "./pages/auth/signup/signup.component";
 import {InitialScreenComponent} from "./pages/auth/initial-screen/initial-screen.component";
 import {ChatComponent} from "./pages/chat/chat.component";
 import {AuthGuard} from "./services/auth.guard";
-import {TopicMessagesComponent} from "./pages/chat/topic-messages/topic-messages.component";
 import { WelcomeComponent } from './pages/welcome/welcome.component';
+import { ConversationComponent } from './pages/conversation/conversation.component';
 
 export const routes: Routes = [
   {path: '', pathMatch: 'full', redirectTo: 'auth'},
@@ -19,6 +19,6 @@ export const routes: Routes = [
   {path: 'chat', component: ChatComponent, canActivate: [AuthGuard], children: [
       {path: '', pathMatch: 'full', redirectTo: 'welcome'},
       {path: 'welcome', component: WelcomeComponent},
-      {path: 'view', component: TopicMessagesComponent},
+      {path: 'view', component: ConversationComponent},
     ]}
 ];

@@ -1,16 +1,11 @@
-<div class="sidebar-wrapper flex h-full bg-[#1B1C21]">
+<div class="sidebar-wrapper flex h-full bg-[#1B1C21] bg-[#03002E]">
     <div class="relative text-center border-r-2 border-white text-white w-20 h-full p-3">
         <!-- Logo -->
-        <img src="/assets/logo-icon.png" alt="Logo">
+        <img src="/assets/icon.png" alt="Logo">
 
         <!-- New topic button -->
-        <button class="w-full mt-8 aspect-square text-xl rounded-lg bg-[#EEE]">
+        <button class="w-full mt-4 aspect-square text-xl rounded-lg bg-[#EEE]" (click)="openCreateModalSubject.next()">
             <i class="fa-solid fa-plus text-black"></i>
-        </button>
-
-        <!-- Settings/Profile button -->
-        <button class="block m-auto" (click)="activeMenu = ESidebarMenus.ProfileInfo">
-            <i class="fa-regular fa-user text-white text-xl mt-8 cursor-pointer"></i>
         </button>
 
         <!-- Search button -->
@@ -23,6 +18,11 @@
             <i class="fa-regular fa-comment text-white text-xl mt-8 cursor-pointer"></i>
         </button>
 
+        <!-- Settings/Profile button -->
+        <button class="block m-auto mt-6" (click)="activeMenu = ESidebarMenus.ProfileInfo">
+            <i class="fa-regular fa-user text-white text-xl cursor-pointer"></i>
+        </button>
+
         <!-- Separator -->
         <div class="border-t-2 border-dotted border-white w-full mt-8"></div>
 
@@ -31,9 +31,14 @@
     </div>
 
     <!-- Preview tab -->
-    <div class="preview w-88 p-3 text-white" *ngIf="activeMenu !== null">
+    <div class="preview w-[20rem] p-3 text-white" *ngIf="activeMenu !== null">
         <app-sidebar-profile-info *ngIf="activeMenu === ESidebarMenus.ProfileInfo"></app-sidebar-profile-info>
-        <app-sidebar-search *ngIf="activeMenu === ESidebarMenus.Search"></app-sidebar-search>
+        @if (activeMenu === ESidebarMenus.Search) {
+            <app-sidebar-search
+                [conversations]="filteredConversations"
+                (changeQuery)="onChangeQuery($event)"
+                (joinConversation)="onJoinConversation($event)"></app-sidebar-search>
+        }
         <app-sidebar-conversations *ngIf="activeMenu === ESidebarMenus.Conversations"></app-sidebar-conversations>
     </div>
 </div>
