@@ -109,6 +109,10 @@ export class ChatService {
   }
 
   joinTopic(topicId: string): void {
+    if (this.topicId) {
+      this.leaveTopic(this.topicId);
+    }
+
     this.socket!.emit('joinTopic', topicId);
     this.inTopic = true;
     this.topicId = topicId;

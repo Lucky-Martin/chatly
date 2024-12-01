@@ -1,70 +1,71 @@
-<div class="flex justify-center items-center full-screen" *ngIf="!topic">
-    <app-spinner></app-spinner>
-</div>
-
-<div class="flex h-screen">
-<!-- Main Chat Area -->
-<div class="flex flex-col flex-auto h-full p-2 bg-wrap w-3/4" *ngIf="topic">
-
-    <!-- Chat Room Header -->
-    <div class="flex w-[100%] justify-between mb-4">
-    <div class="flex items-center">
-        <i class="fa-solid fa-chevron-left cursor-pointer text-black text-2xl mr-2" (click)="onLeave()"></i>
-        <h2 class="text-2xl">Chat room - {{ topic.name | truncate:20 }} | Room code - {{ topic.roomCode }} </h2>
-    </div>
-    <div class="flex">
-        <i class="fa-solid fa-share-from-square text-2xl text-black cursor-pointer mr-4" (click)="onShareUrl()"></i>
-        <i class="fa-solid fa-user-group text-black text-2xl cursor-pointer" (click)="isParticipantVisible = !isParticipantVisible"></i>
-    </div>
+<div class="flex h-screen relative">
+    <div class="flex absolute bottom-0 left-0 right-0 top-0 justify-center items-center full-screen" *ngIf="!topic">
+        <app-spinner></app-spinner>
     </div>
 
-    <!-- Chat Messages Area -->
-    <div class="flex flex-col flex-auto flex-shrink-0 rounded-2xl bg-gray-100 topic-wrap p-2 mb-2">
-    <div class="flex flex-col h-full overflow-x-auto mb-4" #messageContainer>
-        <div class="flex flex-col h-full">
-        <div class="space-y-2">
-            <div class="msg-wrap" *ngFor="let message of topic.messages">
-            <div *ngIf="message.user !== authService.username" class="flex items-start">
-                <app-message-item [message]="message" [messageViewType]="EMessageViewType.Receiver"></app-message-item>
+    <!-- Main Chat Area -->
+    <div class="flex flex-col flex-auto h-full p-2 pl-4 pr-4 bg-wrap w-3/4" *ngIf="topic">
+
+        <!-- Chat Room Header -->
+        <div class="flex w-[100%] justify-between mb-4">
+        <div class="flex items-center">
+            <i class="fa-solid fa-chevron-left cursor-pointer text-black text-2xl mr-4" (click)="onLeave()"></i>
+            <h2 class="text-2xl">Chat room - {{ topic.name | truncate:20 }}  -  Room code - {{ topic.roomCode }} </h2>
+        </div>
+        <div class="flex">
+            <i class="fa-solid fa-share-from-square text-2xl text-black cursor-pointer mr-4" (click)="onShareUrl()"></i>
+            <i class="fa-solid fa-user-group text-black text-2xl cursor-pointer" (click)="isParticipantVisible = !isParticipantVisible"></i>
+        </div>
+        </div>
+
+        <!-- Chat Messages Area -->
+        <div class="flex flex-col flex-auto flex-shrink-0 rounded-2xl bg-gray-100 topic-wrap p-2 mb-2">
+        <div class="flex flex-col h-full overflow-x-auto mb-4" #messageContainer>
+            <div class="flex flex-col h-full">
+            <div class="space-y-2">
+                <div class="msg-wrap" *ngFor="let message of topic.messages">
+                <div *ngIf="message.user !== authService.username" class="flex items-start">
+                    <app-message-item [message]="message" [messageViewType]="EMessageViewType.Receiver"></app-message-item>
+                </div>
+                <div *ngIf="message.user == authService.username" class="flex items-start justify-end">
+                    <app-message-item [message]="message" [messageViewType]="EMessageViewType.Sender"></app-message-item>
+                </div>
+                </div>
             </div>
-            <div *ngIf="message.user == authService.username" class="flex items-start justify-end">
-                <app-message-item [message]="message" [messageViewType]="EMessageViewType.Sender"></app-message-item>
-            </div>
             </div>
         </div>
-        </div>
-    </div>
 
-    <!-- Input Area -->
-    <div class="flex items-center h-16 rounded-xl bg-white w-full px-2">
-        <div class="flex-grow">
-        <div class="relative w-full">
-            <input [(ngModel)]="message" type="text"
-                    (keyup.enter)="onSendMessage()"
-                    class="flex w-full border rounded-xl focus:outline-none focus:border-indigo-300 pl-4 h-10" />
+        <!-- Input Area -->
+        <div class="flex items-center h-16 rounded-xl bg-white w-full px-2 shadow-sm shadow-gray-500">
+            <div class="flex-grow">
+            <div class="relative w-full">
+                <input [(ngModel)]="message" type="text"
+                        (keyup.enter)="onSendMessage()"
+                        placeholder="Enter your message"
+                        class="flex w-full border rounded-xl focus:outline-none focus:border-indigo-300 pl-4 h-10" />
+            </div>
+            </div>
+            <div class="ml-4">
+            <button
+                (click)="isEmojiOpen = !isEmojiOpen"
+                class="flex items-center justify-center space-x-2 ring-2 ring-gray-500 rounded-full p-2">
+                <i class="fa-regular fa-face-smile text-gray-500 hover:text-gray-700"></i>
+            </button>
+            </div>
+            <div class="ml-4">
+            <button (click)="onSendMessage()"
+                    class="flex items-center h-10 justify-center bg-indigo-500 hover:bg-indigo-600 rounded-xl text-white px-4 py-1 flex-shrink-0">
+                <span>Send</span>
+                <span class="ml-2">
+                <svg class="w-4 h-4 transform rotate-45 -mt-px" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8">
+                    </path>
+                </svg>
+                </span>
+            </button>
+            </div>
         </div>
-        </div>
-        <div class="ml-4">
-        <button
-            (click)="isEmojiOpen = !isEmojiOpen"
-            class="flex items-center justify-center space-x-2 ring-2 ring-gray-500 rounded-full p-2">
-            <i class="fa-regular fa-face-smile text-gray-500 hover:text-gray-700"></i>
-        </button>
-        </div>
-        <div class="ml-4">
-        <button (click)="onSendMessage()"
-                class="flex items-center justify-center bg-indigo-500 hover:bg-indigo-600 rounded-xl text-white px-4 py-1 flex-shrink-0">
-            <span>Send</span>
-            <span class="ml-2">
-            <svg class="w-4 h-4 transform rotate-45 -mt-px" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8">
-                </path>
-            </svg>
-            </span>
-        </button>
-        </div>
-    </div>
     </div>
 </div>
 

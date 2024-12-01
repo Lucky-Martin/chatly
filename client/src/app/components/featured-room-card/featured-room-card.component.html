@@ -1,10 +1,16 @@
-<div class="wrapper shadow-md border-[1px] rounded-lg p-4 cursor-pointer min-w-[220px] text-center transition-all"
+<div class="wrapper shadow-md border-[1px] rounded-lg p-4 pt-2 cursor-pointer min-w-[220px] text-center transition-all"
     [ngClass]="{'border-gray-500': isPlaceholder, 'border-indigo-400': !isPlaceholder}">
     <app-spinner *ngIf="!isRoomValid() && !isPlaceholder"></app-spinner>
 
     <!-- Room data -->
     <div class="room-data-wrapper text-left" *ngIf="isRoomValid() && !isPlaceholder" (click)="clickCard.emit(room)">
-        <p class="text-xl font-semibold mb-2">{{ room.name | truncate:16 }}</p>
+        <div class="flex w-full justify-between">
+            <p class="text-xl font-semibold mb-2">{{ room.name | truncate:16 }}</p>
+            <div class="flex items-center">
+                <p class="text-xl font-bold mr-2">{{ room.participants.length }}</p>
+                <i class="fa-solid fa-user text-black"></i>
+            </div>
+        </div>
         <div class="last-message-wrapper flex items-center">
             <i class="fa-regular fa-comment text-black text-xl mr-2"></i>
             <p class="text-sm">{{ getLastMessage().text | truncate:18 }}</p>

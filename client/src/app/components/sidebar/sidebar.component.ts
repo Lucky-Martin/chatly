@@ -5,8 +5,9 @@ import { SidebarSearchComponent } from "./sidebar-search/sidebar-search.componen
 import { SidebarConversationsComponent } from "./sidebar-conversations/sidebar-conversations.component";
 import { ITopic } from '../../models/ITopic';
 import { ChatService } from '../../services/chat.service';
-import { openCreateModalSubject } from '../../services/subjects';
+import { openCreateModalSubject, openLogoutModalSubject } from '../../services/subjects';
 import { Subject } from 'rxjs';
+import { Router } from '@angular/router';
 
 export enum ESidebarMenus {
   ProfileInfo,
@@ -23,13 +24,15 @@ export enum ESidebarMenus {
 })
 export class SidebarComponent implements OnInit {
   protected ESidebarMenus = ESidebarMenus;
-  protected activeMenu: ESidebarMenus = ESidebarMenus.Search;
+  protected isSidebarExpanded: boolean = false;
+  protected activeMenu: ESidebarMenus = ESidebarMenus.Conversations;
   protected openCreateModalSubject: Subject<void> = openCreateModalSubject;
   protected filteredConversations: ITopic[] = [];
-  private conversations: ITopic[] = [];
+  protected conversations: ITopic[] = [];
   private query: string;
 
-  constructor(private chatService: ChatService) { }
+  constructor(private chatService: ChatService,
+              private router: Router) { }
 
   public ngOnInit(): void {
     this.query = "";
@@ -43,6 +46,23 @@ export class SidebarComponent implements OnInit {
       this.conversations = topics;
       this.filterConversations();
     });
+  }
+
+  protected onChangeMenu(newMenu: ESidebarMenus): void {
+    this.activeMenu = newMenu;
+    this.isSidebarExpanded = true;
+  }
+
+  protected onNavigateHome(): void {
+    if (this.chatService.topicId) {
+      this.chatService.leaveTopic(this.chatService.topicId);
+    }
+
+    this.router.navigate(['chat']);
+  }
+
+  protected onLogout(): void {
+    openLogoutModalSubject.next();
   }
 
   protected onChangeQuery(query: string): void {

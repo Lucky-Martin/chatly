@@ -1,4 +1,8 @@
-<div *ngIf="messageViewType === EMessageViewType.Receiver" class="flex justify-start">
+<div *ngIf="messageViewType === EMessageViewType.Receiver" class="flex justify-start cursor-pointer relative">
+  <div class="absolute bottom-[120%] flex justify-between bg-white shadow-md shadow-gray-400 p-2 w-full rounded-lg">
+    <p>{{ message.user | truncate:16 }}</p>
+    <i class="fa-solid fa-xmark text-black"></i>
+  </div>
   <div class="flex items-center justify-center text-white h-10 w-10 rounded-full bg-indigo-500 flex-shrink-0">
     {{ message.user.charAt(0).toUpperCase() }}
   </div>
@@ -9,9 +13,9 @@
   </div>
 </div>
 
-<div *ngIf="messageViewType === EMessageViewType.Sender" class="flex justify-end">
+<div *ngIf="messageViewType === EMessageViewType.Sender" class="flex justify-end cursor-pointer">
   <div class="mr-3 max-w-[80%]">
-    <div class="relative text-sm bg-indigo-100 py-2 px-4 shadow rounded-xl break-all whitespace-normal">
+    <div class="relative text-sm bg-indigo-500 text-white py-2 px-4 shadow rounded-xl break-all whitespace-normal">
       {{ message.text }}
     </div>
   </div>
@@ -19,3 +23,5 @@
     {{ message.user.charAt(0).toUpperCase() }}
   </div>
 </div>
+
+<p class="text-sm text-slate-600">Sent {{ message.timestamp | timeAgo }}</p>

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { FormsModule } from "@angular/forms";
 
 @Component({
@@ -11,5 +11,6 @@ import { FormsModule } from "@angular/forms";
   styleUrl: './logout-modal.component.scss'
 })
 export class LogoutModalComponent {
-  @Input() actionDispatched: EventEmitter<boolean> = new EventEmitter<boolean>();
+  @Output() closeModal: EventEmitter<void> = new EventEmitter<void>();
+  @Output() logoutUser: EventEmitter<void> = new EventEmitter<void>();
 }

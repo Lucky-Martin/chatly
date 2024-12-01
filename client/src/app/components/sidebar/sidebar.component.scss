@@ -6,4 +6,13 @@
     .text-black {
         color: #000!important;
     }
+
+    .preview {
+        width: 20rem;
+        padding: .75rem;
+
+        &.closed {
+            display: none;
+        }
+    }
 }

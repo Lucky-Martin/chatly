@@ -26,6 +26,7 @@ export class WelcomeComponent implements OnInit {
   protected promptInput: string;
   protected openCreateModalSubject: Subject<void> = openCreateModalSubject;
   protected isChatroomPublic: boolean = true;
+  protected windowWidth: number = window.innerWidth;
 
   constructor(private chatService: ChatService,
               private authService: AuthService,
@@ -34,6 +35,8 @@ export class WelcomeComponent implements OnInit {
 
   public ngOnInit(): void {
     this.getFeaturedTopics();
+
+    window.onresize = () => this.windowWidth = window.innerWidth;
   }
 
   protected onCreateRoom(): void {
@@ -64,8 +67,12 @@ export class WelcomeComponent implements OnInit {
   }
 
   protected getFeaturedTopics(): void {
-    this.chatService.fetchTopics().subscribe((topics: ITopic[]) => {
-      this.rooms = topics.sort((a, b) => b.participants.length - a.participants.length);
+    this.chatService.fetchTopics();
+    this.chatService.topics.subscribe((topics: ITopic[]) => {
+      this.rooms = topics;
+      this.rooms = [...topics];
+      this.rooms = this.rooms.sort((a, b) => b.participants.length - a.participants.length);
+      // this.rooms = topics.sort((a, b) => b.participants.length - a.participants.length);
     });
   }
 

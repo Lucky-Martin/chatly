@@ -94,6 +94,10 @@ export class AuthService {
   }
 
   async logout() {
+    if (this.chatService.topicId) {
+      this.chatService.leaveTopic(this.chatService.topicId);
+    }
+
     localStorage.clear();
     this.chatService.disconnectSocket();
 

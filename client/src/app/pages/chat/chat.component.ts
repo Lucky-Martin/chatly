@@ -6,8 +6,9 @@ import { EModalAction } from "../../components/join-room-code-modal/join-room-co
 import { EToastTypes, ToastService } from '../../services/toast.service';
 import { SidebarComponent } from "../../components/sidebar/sidebar.component";
 import { CreateTopicModalComponent } from "../../components/create-topic-modal/create-topic-modal.component";
-import { openCreateModalSubject } from '../../services/subjects';
+import { openLogoutModalSubject as openLogoutModalSubject, openCreateModalSubject } from '../../services/subjects';
 import { Subscription } from 'rxjs';
+import { LogoutModalComponent } from "../../components/logout-modal/logout-modal.component";
 
 @Component({
   selector: 'app-chat',
@@ -15,17 +16,17 @@ import { Subscription } from 'rxjs';
   imports: [
     RouterOutlet,
     SidebarComponent,
-    CreateTopicModalComponent
+    CreateTopicModalComponent,
+    LogoutModalComponent
 ],
   templateUrl: './chat.component.html',
   styleUrl: './chat.component.scss'
 })
 export class ChatComponent implements OnInit, OnDestroy {
   protected topicModalOpened: EventEmitter<void> = new EventEmitter();
-  protected logoutModalAction: EventEmitter<boolean> = new EventEmitter<boolean>();
   protected joinRoomModalAction: EventEmitter<{ code: string; action: EModalAction }> = new EventEmitter<{ code: string; action: EModalAction }>();
-  protected logoutModalState: boolean;
   protected joinRoomModalState: boolean;
+  protected isLogoutModalOpen: boolean;
   protected isCreateRoomModalOpen: boolean;
   private subscriptions: Subscription[] = [];
 
@@ -36,16 +37,9 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   public ngOnInit(): void {
     this.authService.updateUser();
-    this.subscriptions.push(openCreateModalSubject.subscribe(() => this.isCreateRoomModalOpen = true));
 
-    const logoutSub: Subscription = this.logoutModalAction.subscribe(actionValue => {
-      if (actionValue) {
-        this.onLogout();
-      } else {
-        this.logoutModalState = false;
-      }
-    });
-    this.subscriptions.push(logoutSub);
+    this.subscriptions.push(openCreateModalSubject.subscribe(() => this.isCreateRoomModalOpen = true));
+    this.subscriptions.push(openLogoutModalSubject.subscribe(() => this.isLogoutModalOpen = true));
 
     const joinSub: Subscription = this.joinRoomModalAction.subscribe(actionValue => {
       if (actionValue && actionValue.action === EModalAction.Submit) {
@@ -67,9 +61,5 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   public onOpenTopicModal(): void {
     this.topicModalOpened.next();
-  }
-
-  public async onLogout(): Promise<void> {
-    await this.authService.logout();
   }
 }
