@@ -1,27 +1,27 @@
-<div *ngIf="messageViewType === EMessageViewType.Receiver" class="flex justify-start cursor-pointer relative">
-  <div class="absolute bottom-[120%] flex justify-between bg-white shadow-md shadow-gray-400 p-2 w-full rounded-lg">
-    <p>{{ message.user | truncate:16 }}</p>
-    <i class="fa-solid fa-xmark text-black"></i>
-  </div>
-  <div class="flex items-center justify-center text-white h-10 w-10 rounded-full bg-indigo-500 flex-shrink-0">
-    {{ message.user.charAt(0).toUpperCase() }}
-  </div>
-  <div class="ml-3 max-w-[80%]">
-    <div class="relative text-sm bg-white py-2 px-4 shadow rounded-xl break-all whitespace-normal">
-      {{ message.text }}
+@if (messageViewType === EMessageViewType.Receiver) {
+  <div class="flex justify-start cursor-pointer relative" (click)="onToggleProfilePreview()">
+    <div class="flex items-center justify-center text-white h-10 w-10 rounded-full bg-indigo-500 flex-shrink-0">
+      {{ message.user.charAt(0).toUpperCase() }}
+    </div>
+    <div class="ml-3 max-w-[80%]">
+      <div class="relative text-sm bg-white py-2 px-4 shadow rounded-xl break-all whitespace-normal">
+        {{ message.text }}
+      </div>
     </div>
   </div>
-</div>
+  <p class="text-sm text-slate-600 text-left">Sent {{ message.timestamp | timeAgo }}</p>
+}
 
-<div *ngIf="messageViewType === EMessageViewType.Sender" class="flex justify-end cursor-pointer">
-  <div class="mr-3 max-w-[80%]">
-    <div class="relative text-sm bg-indigo-500 text-white py-2 px-4 shadow rounded-xl break-all whitespace-normal">
-      {{ message.text }}
+@if (messageViewType === EMessageViewType.Sender) {
+  <div class="flex justify-end cursor-pointer relative" (click)="onToggleProfilePreview()">
+    <div class="mr-3 max-w-[80%]">
+      <div class="relative text-sm bg-indigo-500 text-white py-2 px-4 shadow rounded-xl break-all whitespace-normal">
+        {{ message.text }}
+      </div>
+    </div>
+    <div class="flex items-center justify-center h-10 w-10 rounded-full text-white bg-indigo-500 flex-shrink-0">
+      {{ message.user.charAt(0).toUpperCase() }}
     </div>
   </div>
-  <div class="flex items-center justify-center h-10 w-10 rounded-full text-white bg-indigo-500 flex-shrink-0">
-    {{ message.user.charAt(0).toUpperCase() }}
-  </div>
-</div>
-
-<p class="text-sm text-slate-600">Sent {{ message.timestamp | timeAgo }}</p>
+  <p class="text-sm text-slate-600 text-right">Sent {{ message.timestamp | timeAgo }}</p>
+}

@@ -1,21 +1,29 @@
 <div class="flex h-screen antialiased text-gray-800">
   <div class="flex flex-row h-full w-full overflow-hidden">
-    <!-- Sidebar -->
-    <app-sidebar></app-sidebar>
+    @if (isSidebarVisible) {
+      <!-- Sidebar -->
+      <app-sidebar></app-sidebar>
+    }
 
     <!-- Router outlet - pages -->
     <div class="flex flex-col flex-auto h-full justify-center relative">
         <router-outlet></router-outlet>
 
         <!-- Modals -->
-        @if (isCreateRoomModalOpen) {
-          <app-create-topic-modal (modalClosed)="isCreateRoomModalOpen = false"></app-create-topic-modal>
+        @if (modalsState.isCreateRoomModalOpen) {
+          <app-create-topic-modal (modalClosed)="modalsState.isCreateRoomModalOpen = false"></app-create-topic-modal>
         }
 
-        @if (isLogoutModalOpen) {
+        @if (modalsState.isLogoutModalOpen) {
           <app-logout-modal
             (logoutUser)="authService.logout()"
-            (closeModal)="isLogoutModalOpen = false"></app-logout-modal>
+            (closeModal)="modalsState.isLogoutModalOpen = false"></app-logout-modal>
+        }
+
+        @if (modalsState.isViewMessageModalOpen) {
+          <app-message-view-modal
+            (closeModal)="modalsState.isViewMessageModalOpen = false"
+            [message]="viewMessageModalData"></app-message-view-modal>
         }
     </div>
   </div>

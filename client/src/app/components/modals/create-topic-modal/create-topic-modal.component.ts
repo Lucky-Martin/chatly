@@ -1,9 +1,9 @@
 import {Component, EventEmitter, Output} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {ChatService} from "../../services/chat.service";
-import { EToastTypes, ToastService } from '../../services/toast.service';
-import { AuthService } from "../../services/auth.service";
 import { Filter } from 'bad-words';
+import { ChatService } from '../../../services/chat.service';
+import { AuthService } from '../../../services/auth.service';
+import { EToastTypes, ToastService } from '../../../services/toast.service';
 
 @Component({
   selector: 'app-create-topic-modal',

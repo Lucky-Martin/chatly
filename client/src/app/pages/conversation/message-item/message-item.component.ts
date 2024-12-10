@@ -1,8 +1,8 @@
 import { Component, Input } from '@angular/core';
-import { NgIf, NgSwitch } from "@angular/common";
 import { IMessage } from '../../../models/IMessage';
 import { TimeAgoPipe } from "../../../services/time-ago.pipe";
 import { TruncatePipe } from "../../../pipes/truncate.pipe";
+import { openMessagePreviewModal } from '../../../services/subjects';
 
 export enum EMessageViewType {
   Sender,
@@ -13,7 +13,6 @@ export enum EMessageViewType {
   selector: 'app-message-item',
   standalone: true,
   imports: [
-    NgIf,
     TimeAgoPipe,
     TruncatePipe
 ],
@@ -25,7 +24,7 @@ export class MessageItemComponent {
   @Input() messageViewType: EMessageViewType;
   protected readonly EMessageViewType = EMessageViewType;
 
-  protected onOpenProfilePreview(): void {
-
+  protected onToggleProfilePreview(): void {
+    openMessagePreviewModal.next(this.message);
   }
 }

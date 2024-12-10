@@ -1,5 +1,8 @@
 <div class="w-[100%] bg-gray-100 p-4 h-full mr-4" *ngIf="topic && !isVisible">
-  <div class="text-xl font-semibold mb-4">Participants</div>
+  <div class="flex justify-between items-center">
+    <h3 class="text-xl font-semibold mb-4">Participants</h3>
+    <h3 class="text-sl font-semibold mb-4">{{ topic.participants.length }}</h3>
+  </div>
   <ul>
     <li class="mb-2" *ngFor="let participant of participants">
       <div class="flex items-center space-x-3">

@@ -1,18 +1,23 @@
-import { AuthService } from "./auth.service";
 import { CanActivateFn, Router } from "@angular/router";
 import { inject } from "@angular/core";
+import { IUser } from "../models/IUser";
 
 export const AuthGuard: CanActivateFn = async () => {
   const router = inject(Router);
-  const service = inject(AuthService);
 
-  // const statePromise = new Promise((resolve) => {
-  //   service.getAuthState.subscribe(async state => {
-  //     resolve(state)
-  //   });
-  // })
+  const token: string | null = localStorage.getItem("auth_token");
+  const userJSON: string | null = localStorage.getItem("user-json");
+  if (userJSON) {
+    const user: IUser | null = JSON.parse(userJSON).user as IUser;
 
-  const token = localStorage.getItem("auth_token");
+    if (user && user.interests.length < 3) {
+      await router.navigateByUrl('auth/interests', {replaceUrl: true});
+      return false;
+    }
+  } else {
+    return false;
+  }
+
   if (token && token.length) {
     return true;
   } else {

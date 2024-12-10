@@ -29,4 +29,18 @@ export class UserRepository {
             throw new Error(e.message);
         }
     }
+
+    public static async updateUser(id: string, userData: Partial<IUser>): Promise<IUser | null> {
+        try {
+            const updatedUser = await User.findByIdAndUpdate(
+                id,
+                { $set: userData },
+                { new: true }
+            );
+
+            return updatedUser;
+        } catch (e: any) {
+            throw new Error(e.message);
+        }
+    }
 }

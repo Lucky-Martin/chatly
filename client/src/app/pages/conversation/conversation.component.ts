@@ -6,12 +6,10 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-import { NgForOf, NgIf, NgClass } from '@angular/common';
+import { NgForOf, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 import { SpinnerComponent } from '../../components/spinner/spinner.component';
 import { TruncatePipe } from '../../pipes/truncate.pipe';
-import { TimeAgoPipe } from '../../services/time-ago.pipe';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Filter } from 'bad-words';
 import { Subscription } from 'rxjs';
@@ -31,9 +29,6 @@ import { ParticipantsListComponent } from './participants-list/participants-list
     NgForOf,
     NgIf,
     FormsModule,
-    NgClass,
-    TimeAgoPipe,
-    PickerComponent,
     EmojiPickerComponent,
     ParticipantsListComponent,
     SpinnerComponent,
@@ -47,6 +42,7 @@ export class ConversationComponent implements OnInit, OnDestroy, AfterViewChecke
   @ViewChild('messageContainer')
   private scrollableDiv!: ElementRef<HTMLDivElement>;
   private profanityFilter: Filter;
+  window = window;
   topic: ITopic | undefined;
   message: string | undefined;
   messageSubscription: Subscription;

@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import {BehaviorSubject, Observable} from "rxjs";
-import {HttpClient} from "@angular/common/http";
+import { BehaviorSubject, tap } from "rxjs";
+import { HttpClient } from "@angular/common/http";
 import { Router } from "@angular/router";
-import {ChatService} from "./chat.service";
+import { ChatService } from "./chat.service";
 import { IUser } from "../models/IUser";
 import { environment } from "../environments/environment";
 import { ILoginCredentials, ISignupCredentials } from "../models/ICredentials";
@@ -11,27 +11,19 @@ import { ILoginCredentials, ISignupCredentials } from "../models/ICredentials";
   providedIn: 'root'
 })
 export class AuthService {
+  public username: string;
+  public user: IUser;
   private authStatus = new BehaviorSubject<boolean>(false);
   private initialAuthCheck = false;
   private readonly AUTH_TOKEN_KEY: string = 'auth_token';
   private readonly apiUrl: string = environment.apiUrl;
-  username: string;
-  user: IUser;
 
   constructor(private httpClient: HttpClient,
               private chatService: ChatService,
-              private router: Router) { }
-
-  get getAuthState(): Observable<boolean> {
-    return this.authStatus.asObservable();
+              private router: Router) {
   }
 
-  private async storeToken(token: string) {
-    if (!token) return;
-    localStorage.setItem(this.AUTH_TOKEN_KEY, token);
-  }
-
-  async checkInitialLoginStatus() {
+  public async checkInitialLoginStatus() {
     if (this.initialAuthCheck) return;
     this.initialAuthCheck = true;
 
@@ -49,7 +41,7 @@ export class AuthService {
     );
   }
 
-  signup(credentials: ISignupCredentials) {
+  public signup(credentials: ISignupCredentials) {
     return this.httpClient.post<{ token: string, user: any }>(`${this.apiUrl}/auth/signup`, {
       username: credentials.username,
       email: credentials.email,
@@ -57,15 +49,30 @@ export class AuthService {
     });
   }
 
-  login(credentials: ILoginCredentials) {
-    return this.httpClient.post<{ token: string, user: any }>(`${this.apiUrl}/auth/login`, credentials, {withCredentials: true});
+  public updateUserInterests(interests: string[]) {
+    return this.httpClient.patch(`${this.apiUrl}/auth/profile`, {interests}, {withCredentials: true}).pipe(
+      tap((response: any) => {
+        if (response.user) {
+          this.user = response.user;
+          this.username = response.user.username;
+          localStorage.setItem('user-json', JSON.stringify(response.user));
+        }
+      })
+    );
   }
 
-  fetchUser() {
+  public login(credentials: ILoginCredentials) {
+    return this.httpClient.post<{
+      token: string,
+      user: any
+    }>(`${this.apiUrl}/auth/login`, credentials, {withCredentials: true});
+  }
+
+  public fetchUser() {
     return this.httpClient.get(`${this.apiUrl}/auth/profile`, {withCredentials: true});
   }
 
-  updateUser() {
+  public fetchAndUpdateUser() {
     return new Promise<boolean>((resolve, reject) => {
       this.fetchUser().subscribe(res => {
         if ((res as any).user as IUser) {
@@ -81,7 +88,7 @@ export class AuthService {
     })
   }
 
-  async processSuccessAuth(res: any) {
+  public async processSuccessAuth(res: any) {
     await this.storeToken(res.token);
     this.authStatus.next(true);
     if (typeof res.user === 'string') {
@@ -93,7 +100,7 @@ export class AuthService {
     await this.router.navigateByUrl('home', {replaceUrl: true});
   }
 
-  async logout() {
+  public async logout() {
     if (this.chatService.topicId) {
       this.chatService.leaveTopic(this.chatService.topicId);
     }
@@ -102,11 +109,16 @@ export class AuthService {
     this.chatService.disconnectSocket();
 
     this.authStatus.next(false);
-    await this.router.navigateByUrl('/auth', { replaceUrl: true });
+    await this.router.navigateByUrl('/auth', {replaceUrl: true});
   }
 
-  isValidEmail(email: string) {
+  public isValidEmail(email: string) {
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
     return emailRegex.test(email);
+  }
+
+  private async storeToken(token: string) {
+    if (!token) return;
+    localStorage.setItem(this.AUTH_TOKEN_KEY, token);
   }
 }

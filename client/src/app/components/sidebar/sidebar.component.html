@@ -1,4 +1,4 @@
-<div class="sidebar-wrapper flex h-full bg-indigo-900">
+<div class="sidebar-wrapper flex h-full bg-indigo-900" [ngClass]="{'max-sm:w-[100vw]': isSidebarExpanded}">
     <div class="relative text-center text-white w-20 h-full p-3">
         <!-- Logo -->
         <img src="/assets/images/icon.png" alt="Logo" class="cursor-pointer" (click)="onNavigateHome()">
@@ -32,9 +32,10 @@
 
     <!-- Preview tab -->
     @if (activeMenu !== null) {
-        <div class="preview text-white"
+        <div class="preview text-white w-[20rem]"
             [ngClass]="{'closed': !isSidebarExpanded,
                         'border-l-2': isSidebarExpanded,
+                        'max-sm:w-[100%]': isSidebarExpanded,
                         'border-white': isSidebarExpanded}">
             <i class="fa-solid fa-chevron-left cursor-pointer text-white text-2xl" (click)="isSidebarExpanded = false"></i>
 

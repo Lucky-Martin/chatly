@@ -12,6 +12,7 @@ import { EToastTypes, ToastService } from '../../services/toast.service';
 import { FormsModule } from '@angular/forms';
 import { openCreateModalSubject } from '../../services/subjects';
 import { Subject } from 'rxjs';
+import { IUser } from "../../models/IUser";
 
 @Component({
   selector: 'app-welcome',
@@ -34,6 +35,15 @@ export class WelcomeComponent implements OnInit {
               private router: Router) { }
 
   public ngOnInit(): void {
+    const user = localStorage.getItem('user-json');
+    if (user) {
+      const parsedUser: IUser = JSON.parse(user);
+      if (parsedUser.interests.length < 3) {
+        this.router.navigateByUrl('auth/interests', {replaceUrl: true});
+        return;
+      }
+    }
+
     this.getFeaturedTopics();
 
     window.onresize = () => this.windowWidth = window.innerWidth;
