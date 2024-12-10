@@ -1,23 +1,26 @@
-import { Pipe, PipeTransform } from "@angular/core";
+import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-    name: 'time-ago',
-    standalone: true
+  name: 'timeAgo',
+  standalone: true
 })
 export class TimeAgoPipe implements PipeTransform {
-    transform(timestamp: number) {
-        const diffInSeconds = Math.floor((new Date().getTime() - timestamp) / 1000);
 
-        if (diffInSeconds < 60) {
-            return `${diffInSeconds} seconds ago`;
-        }
+  transform(value: number): string {
+    const now = Date.now();
+    const seconds = Math.floor((now - value) / 1000);
 
-        const diffInMinutes = Math.floor(diffInSeconds / 60);
-        if (diffInMinutes < 60) {
-            return `${diffInMinutes} minutes ago`;
-        }
-
-        const diffInHours = Math.floor(diffInMinutes / 60);
-        return `${diffInHours} hours ago`;
+    if (seconds < 60) {
+      return 'less than a minute ago';
     }
+
+    const minutes = Math.floor(seconds / 60);
+    if (minutes < 60) {
+      return `${minutes} minute${minutes === 1 ? '' : 's'} ago`;
+    }
+
+    const hours = Math.floor(minutes / 60);
+    return `${hours} hour${hours === 1 ? '' : 's'} ago`;
+  }
+
 }

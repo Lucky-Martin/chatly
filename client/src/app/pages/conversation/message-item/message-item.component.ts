@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { IMessage } from '../../../models/IMessage';
-import { TimeAgoPipe } from "../../../services/time-ago.pipe";
+import { TimeAgoPipe } from "../../../pipes/time-ago.pipe";
 import { TruncatePipe } from "../../../pipes/truncate.pipe";
 import { openMessagePreviewModal } from '../../../services/subjects';
 

@@ -1,30 +1,34 @@
-import {Component, EventEmitter, Output} from '@angular/core';
-import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import { Component, EventEmitter, Output } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { Filter } from 'bad-words';
 import { ChatService } from '../../../services/chat.service';
-import { AuthService } from '../../../services/auth.service';
+import { AuthService } from '../../../services/auth/auth.service';
 import { EToastTypes, ToastService } from '../../../services/toast.service';
+import { SearchbarDropdownComponent } from "./searchbar-dropdown/searchbar-dropdown.component";
 
 @Component({
   selector: 'app-create-topic-modal',
   standalone: true,
   imports: [
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+    SearchbarDropdownComponent
   ],
   templateUrl: './create-topic-modal.component.html',
   styleUrl: './create-topic-modal.component.scss'
 })
 export class CreateTopicModalComponent {
-  private profanityFilter: Filter = new Filter();
   @Output() modalClosed: EventEmitter<void> = new EventEmitter<void>();
   topicName: string;
   publicChatRoom: boolean = true;
+  interests: string[];
+  private profanityFilter: Filter = new Filter();
 
   constructor(private chatService: ChatService,
               private authService: AuthService,
               private toastService: ToastService
-  ) { }
+  ) {
+  }
 
   onCloseModal() {
     this.modalClosed.emit();
@@ -32,7 +36,7 @@ export class CreateTopicModalComponent {
 
   onCreateTopic() {
     if (!this.topicName) {
-      this.toastService.showToast(EToastTypes.warning, 'Enter topic name!')
+      this.toastService.showToast(EToastTypes.warning, 'Enter room name!')
       return;
     }
 
@@ -41,11 +45,11 @@ export class CreateTopicModalComponent {
       return;
     }
 
-    if (this.chatService.inTopic) {
-      this.chatService.leaveTopic(this.chatService.topicId);
+    if (this.chatService.currentTopicId) {
+      this.chatService.leaveTopic(this.chatService.currentTopicId);
     }
 
-    this.chatService.createTopic(this.topicName, this.publicChatRoom, this.authService.user._id);
+    this.chatService.createTopic(this.topicName, this.interests, this.publicChatRoom, this.authService.user._id);
     this.modalClosed.emit();
   }
 

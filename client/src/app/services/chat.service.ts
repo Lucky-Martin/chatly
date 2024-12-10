@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { io, Socket } from 'socket.io-client';
-import { BehaviorSubject, tap } from 'rxjs';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { Router } from '@angular/router';
 import { environment } from '../environments/environment';
 import { IMessage } from '../models/IMessage';
@@ -9,130 +9,128 @@ import { ITopic } from '../models/ITopic';
 import { IParticipants } from '../models/IParticipants';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class ChatService {
+  private readonly MOBILE_BREAKPOINT: number = 992;
   private readonly apiUrl: string = environment.apiUrl;
   private socket: Socket | null = null;
-  public inTopic: boolean;
-  public isMobile: boolean;
-  public topicId: string;
-  public topics: BehaviorSubject<ITopic[]> = new BehaviorSubject<ITopic[]>([]);
-  public topicMessages: BehaviorSubject<IMessage[]> = new BehaviorSubject<IMessage[]>([]);
-  public topicParticipants: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
 
-  constructor(private httpClient: HttpClient,
-    private router: Router) {
-    this.setupSocket();
+  private readonly topicsSubject = new BehaviorSubject<ITopic[]>([]);
+  private readonly messagesSubject = new BehaviorSubject<IMessage[]>([]);
+  private readonly participantsSubject = new BehaviorSubject<string[]>([]);
 
-    this.isMobile = window.innerWidth <= 992;
+  public readonly topics$ = this.topicsSubject.asObservable();
+  public readonly messages$ = this.messagesSubject.asObservable();
+  public readonly participants$ = this.participantsSubject.asObservable();
 
-    window.onresize = () => {
-      this.isMobile = window.innerWidth <= 992;
-    };
+  public readonly isMobile$ = new BehaviorSubject<boolean>(window.innerWidth <= this.MOBILE_BREAKPOINT);
+  public currentTopicId: string = '';
+
+  constructor(
+    private readonly http: HttpClient,
+    private readonly router: Router
+  ) {
+    this.initializeService();
   }
 
-  private setupSocket() {
-    const token = localStorage.getItem('auth_token');
-    // console.log('connect token', token);
-    if (token) {
-      this.socket = io(this.apiUrl.split('/api')[0], {
-        auth: {
-          token: token,
-        },
-      });
-
-      this.socket.on('connect', () => {
-        console.log('Socket connected');
-        this.setupListeners();
-      });
-
-      this.socket.on('disconnect', () => {
-        console.log('Socket disconnected');
-      });
-    }
-  }
-
-  private setupListeners() {
-    if (!this.socket) return;
-
-    this.socket.on('topicsUpdated', (topics: ITopic[]) => {
-      this.topics.next(topics);
-    });
-
-    this.socket.on('messages', (messages: IMessage[]) => {
-      this.topicMessages.next(messages);
-    });
-
-    this.socket.on('message', (message: IMessage) => {
-      this.topicMessages.next([...this.topicMessages.value, message]);
-    });
-
-    this.socket.on('participantsUpdated', (participants: IParticipants) => {
-      this.topicParticipants.next(participants);
-    });
-
-    this.socket.on('topicCreated', (topic: ITopic) => {
-      console.log('join topic');
-      this.joinTopic(topic.id);
-    });
-  }
-
-  disconnectSocket() {
+  public disconnect(): void {
     if (this.socket) {
-      if (this.inTopic) {
-        this.leaveTopic(this.topicId);
+      if (this.currentTopicId) {
+        this.leaveTopic(this.currentTopicId);
       }
-
       this.socket.disconnect();
       this.socket = null;
     }
   }
 
-  reconnectSocket() {
-    this.disconnectSocket();
-    this.setupSocket();
+  public reconnect(): void {
+    this.disconnect();
+    this.initializeSocket();
   }
 
-  fetchTopics() {
-    return this.httpClient.get<ITopic[]>(`${this.apiUrl}/chat/topics`, {
-      withCredentials: true,
-    }).pipe(tap((topics) => this.topics.next(topics)));
+  public getTopics(): Observable<ITopic[]> {
+    return this.http.get<ITopic[]>(`${this.apiUrl}/chat/topics`, { withCredentials: true }).pipe(tap((res) => {
+      this.topicsSubject.next(res);
+    }));
   }
 
-  createTopic(topicName: string, privacyState: boolean, myId: string) {
-    this.socket!.emit('createTopic', topicName, privacyState, myId);
+  public createTopic(topicName: string, interests: string[], isPrivate: boolean, userId: string): void {
+    this.socket?.emit('createTopic', topicName, interests, isPrivate, userId);
   }
 
-  fetchTopicMessages(topicId: string) {
-    return this.httpClient.get<ITopic>(`${this.apiUrl}/chat/topics/${topicId}`);
+  public async getTopicByRoomCode(roomCode: string): Promise<ITopic | undefined> {
+    const response = await this.http.get<{ topic: ITopic }>(`${this.apiUrl}/chat/roomCode/${roomCode}`).toPromise();
+    return response?.topic;
   }
 
-  joinTopic(topicId: string): void {
-    if (this.topicId) {
-      this.leaveTopic(this.topicId);
+  public getTopicMessages(topicId: string): Observable<ITopic> {
+    return this.http.get<ITopic>(`${this.apiUrl}/chat/topics/${topicId}`);
+  }
+
+  public joinTopic(topicId: string): void {
+    if (this.currentTopicId) {
+      this.leaveTopic(this.currentTopicId);
     }
 
-    this.socket!.emit('joinTopic', topicId);
-    this.inTopic = true;
-    this.topicId = topicId;
-
+    this.socket?.emit('joinTopic', topicId);
+    this.currentTopicId = topicId;
     this.router.navigate(['chat', 'view'], { queryParams: { topicId } });
   }
 
-  getTopicByRoomCode(roomCode: string): Promise<{topic: ITopic}> {
-    return this.httpClient.get<{topic: ITopic}>(`${this.apiUrl}/chat/roomCode/${roomCode}`).toPromise() as Promise<{topic: ITopic}>;
+  public leaveTopic(topicId: string): void {
+    this.socket?.emit('leaveTopic', topicId);
+    this.messagesSubject.next([]);
+    this.currentTopicId = '';
   }
 
-  leaveTopic(topicId: string): void {
-    this.socket!.emit('leaveTopic', topicId);
-    this.topicMessages.next([]);
-    this.topicId = '';
-    this.inTopic = false;
-  }
-
-  sendMessage(topicId: string, text: string): void {
+  public sendMessage(topicId: string, text: string): void {
     const message = { topicId, text, timestamp: Date.now() };
-    this.socket!.emit('message', message);
+    this.socket?.emit('message', message);
+  }
+
+  private initializeService(): void {
+    this.initializeSocket();
+    this.setupResizeListener();
+  }
+
+  private initializeSocket(): void {
+    const token = localStorage.getItem('auth_token');
+    if (!token) return;
+
+    const socketUrl = this.apiUrl.split('/api')[0];
+    this.socket = io(socketUrl, { auth: { token } });
+
+    this.socket.on('connect', () => {
+      console.log('Socket connected');
+      this.setupSocketListeners();
+    });
+
+    this.socket.on('disconnect', () => console.log('Socket disconnected'));
+  }
+
+  private setupSocketListeners(): void {
+    if (!this.socket) return;
+
+    this.socket.on('topicsUpdated', (topics: ITopic[]) =>
+      this.topicsSubject.next(topics));
+
+    this.socket.on('messages', (messages: IMessage[]) =>
+      this.messagesSubject.next(messages));
+
+    this.socket.on('message', (message: IMessage) =>
+      this.messagesSubject.next([...this.messagesSubject.value, message]));
+
+    this.socket.on('participantsUpdated', (participants: IParticipants) =>
+      this.participantsSubject.next(participants));
+
+    this.socket.on('topicCreated', (topic: ITopic) =>
+      this.joinTopic(topic.id));
+  }
+
+  private setupResizeListener(): void {
+    window.addEventListener('resize', () => {
+      this.isMobile$.next(window.innerWidth <= this.MOBILE_BREAKPOINT);
+    });
   }
 }

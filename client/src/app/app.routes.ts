@@ -4,7 +4,7 @@ import { LoginComponent } from './pages/auth/login/login.component';
 import { SignupComponent } from './pages/auth/signup/signup.component';
 import { InitialScreenComponent } from './pages/auth/initial-screen/initial-screen.component';
 import { ChatComponent } from './pages/chat/chat.component';
-import { AuthGuard } from './services/auth.guard';
+import { AuthGuard } from './services/auth/auth.guard';
 import { WelcomeComponent } from './pages/welcome/welcome.component';
 import { ConversationComponent } from './pages/conversation/conversation.component';
 import { SelectInterestsComponent } from './pages/auth/select-interests/select-interests.component';

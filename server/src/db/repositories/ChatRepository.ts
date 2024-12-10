@@ -15,6 +15,7 @@ export interface Topic {
 	createdBy: string;
 	messages: Message[];
 	participants: string[];
+	interests: string[];
 }
 
 export class ChatRepository {
@@ -24,7 +25,7 @@ export class ChatRepository {
 		return this.topics;
 	}
 
-	public static async createTopic(topicName: string, privacy: boolean, createdBy: string): Promise<Topic> {
+	public static async createTopic(topicName: string, interests: string[], privacy: boolean, createdBy: string): Promise<Topic> {
 		const newTopic: Topic = {
 			id: randomUUID(),
 			name: topicName,
@@ -32,7 +33,8 @@ export class ChatRepository {
 			createdBy,
 			messages: [],
 			participants: [],
-            roomCode: codeGenerator.generateCode()
+            roomCode: codeGenerator.generateCode(),
+			interests
 		};
 		this.topics.push(newTopic);
 

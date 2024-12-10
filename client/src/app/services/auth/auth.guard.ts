@@ -1,6 +1,6 @@
 import { CanActivateFn, Router } from "@angular/router";
 import { inject } from "@angular/core";
-import { IUser } from "../models/IUser";
+import { IUser } from "../../models/IUser";
 
 export const AuthGuard: CanActivateFn = async () => {
   const router = inject(Router);

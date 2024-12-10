@@ -37,12 +37,12 @@ export class SidebarComponent implements OnInit {
   public ngOnInit(): void {
     this.query = "";
 
-    this.chatService.fetchTopics().subscribe(conversations => {
+    this.chatService.getTopics().subscribe(conversations => {
       this.conversations = conversations;
       this.filteredConversations = conversations;
     });
 
-    this.chatService.topics.subscribe((topics: ITopic[]) => {
+    this.chatService.topics$.subscribe((topics: ITopic[]) => {
       this.conversations = topics;
       this.filterConversations();
     });
@@ -54,8 +54,8 @@ export class SidebarComponent implements OnInit {
   }
 
   protected onNavigateHome(): void {
-    if (this.chatService.topicId) {
-      this.chatService.leaveTopic(this.chatService.topicId);
+    if (this.chatService.currentTopicId) {
+      this.chatService.leaveTopic(this.chatService.currentTopicId);
     }
 
     this.router.navigate(['chat']);
@@ -71,8 +71,8 @@ export class SidebarComponent implements OnInit {
   }
 
   protected onJoinConversation(conversationId: string) {
-    if (this.chatService.topicId) {
-      this.chatService.leaveTopic(this.chatService.topicId);
+    if (this.chatService.currentTopicId) {
+      this.chatService.leaveTopic(this.chatService.currentTopicId);
     }
 
     this.chatService.joinTopic(conversationId);

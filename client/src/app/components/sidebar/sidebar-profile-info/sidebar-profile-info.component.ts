@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AuthService } from '../../../services/auth.service';
+import { AuthService } from '../../../services/auth/auth.service';
 import { IUser } from '../../../models/IUser';
 import { NgIf } from '@angular/common';
 import { SpinnerComponent } from "../../spinner/spinner.component";

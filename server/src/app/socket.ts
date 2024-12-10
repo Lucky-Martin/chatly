@@ -4,7 +4,7 @@ export const setupSocket = (io: any) => {
     io.use(authSocket);
 
     io.on('connection', (socket: any) => {
-        socket.on('createTopic', (topicName: string, privacy: boolean, createdBy: string) => createTopic(socket, topicName, privacy, createdBy));
+        socket.on('createTopic', (topicName: string, interests: string[], privacy: boolean, createdBy: string) => createTopic(socket, topicName, interests, privacy, createdBy));
         socket.on('joinTopic', (topicId: string) => joinTopic(socket, topicId));
         socket.on('message', ({ topicId, text }: { topicId: string, text: string }) => onMessage(socket, {topicId, text}));
 

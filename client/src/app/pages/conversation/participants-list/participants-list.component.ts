@@ -26,7 +26,7 @@ export class ParticipantsListComponent implements OnInit {
     this.detectMobile();
     window.onresize = (this.detectMobile.bind(this));
 
-    this.chatService.topicParticipants.subscribe(participants => {
+    this.chatService.participants$.subscribe(participants => {
       this.participants = participants;
     });
   }

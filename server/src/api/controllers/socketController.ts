@@ -18,12 +18,12 @@ export const authSocket = (socket: any, next: any) => {
   });
 };
 
-export const createTopic = async (socket: any, topicName: string, privacy: boolean, createdBy: string) => {
+export const createTopic = async (socket: any, topicName: string, interests: string[], privacy: boolean, createdBy: string) => {
   if (profanityFilter.isProfane(topicName)) {
     throw new Error("profanity");
   }
 
-  const newTopic = await ChatRepository.createTopic(topicName, privacy, createdBy);
+  const newTopic = await ChatRepository.createTopic(topicName, interests, privacy, createdBy);
   const allTopics = await ChatRepository.getAllTopics();
 
   socket.emit("topicCreated", newTopic);

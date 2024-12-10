@@ -3,7 +3,7 @@ import { FeaturedRoomCardComponent } from "../../components/featured-room-card/f
 import { ChatService } from '../../services/chat.service';
 import { ITopic } from '../../models/ITopic';
 import { NgFor, NgIf } from '@angular/common';
-import { AuthService } from '../../services/auth.service';
+import { AuthService } from '../../services/auth/auth.service';
 import { TruncatePipe } from "../../pipes/truncate.pipe";
 import { SpinnerComponent } from "../../components/spinner/spinner.component";
 import { Router } from '@angular/router';
@@ -38,11 +38,18 @@ export class WelcomeComponent implements OnInit {
     const user = localStorage.getItem('user-json');
     if (user) {
       const parsedUser: IUser = JSON.parse(user);
-      if (parsedUser.interests.length < 3) {
+      if (parsedUser.interests?.length < 3) {
         this.router.navigateByUrl('auth/interests', {replaceUrl: true});
         return;
       }
     }
+
+    this.chatService.topics$.subscribe((topics: ITopic[]) => {
+      this.rooms = topics;
+      this.rooms = [...topics];
+      this.rooms = this.rooms.sort((a, b) => b.participants.length - a.participants.length);
+      // this.rooms = topics.sort((a, b) => b.participants.length - a.participants.length);
+    });
 
     this.getFeaturedTopics();
 
@@ -59,7 +66,7 @@ export class WelcomeComponent implements OnInit {
       return;
     }
 
-    this.chatService.createTopic(this.promptInput, this.isChatroomPublic, this.authService.user._id);
+    this.chatService.createTopic(this.promptInput, [], this.isChatroomPublic, this.authService.user._id);
   }
 
   protected onJoinRoom(room: ITopic): void {
@@ -76,14 +83,8 @@ export class WelcomeComponent implements OnInit {
     return this.authService.username;
   }
 
-  protected getFeaturedTopics(): void {
-    this.chatService.fetchTopics();
-    this.chatService.topics.subscribe((topics: ITopic[]) => {
-      this.rooms = topics;
-      this.rooms = [...topics];
-      this.rooms = this.rooms.sort((a, b) => b.participants.length - a.participants.length);
-      // this.rooms = topics.sort((a, b) => b.participants.length - a.participants.length);
-    });
+  protected async getFeaturedTopics(): Promise<void> {
+    await this.chatService.getTopics().toPromise();
   }
 
   protected getEmptyRoom(): ITopic {

@@ -1,7 +1,7 @@
 import { NgFor } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AuthService } from "../../../services/auth.service";
+import { AuthService } from "../../../services/auth/auth.service";
 import { Router } from "@angular/router";
 import { EToastTypes, ToastService } from "../../../services/toast.service";
 

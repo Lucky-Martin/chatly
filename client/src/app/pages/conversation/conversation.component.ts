@@ -15,7 +15,7 @@ import { Filter } from 'bad-words';
 import { Subscription } from 'rxjs';
 import { IMessage } from '../../models/IMessage';
 import { ITopic } from '../../models/ITopic';
-import { AuthService } from '../../services/auth.service';
+import { AuthService } from '../../services/auth/auth.service';
 import { ChatService } from '../../services/chat.service';
 import { ToastService, EToastTypes } from '../../services/toast.service';
 import { EmojiPickerComponent } from './emoji-picker/emoji-picker.component';
@@ -63,8 +63,8 @@ export class ConversationComponent implements OnInit, OnDestroy, AfterViewChecke
     this.route.queryParams.subscribe((params) => {
       const topicId = params['topicId'];
       if (topicId) {
-        if (this.chatService.topicId) {
-          this.chatService.leaveTopic(this.chatService.topicId);
+        if (this.chatService.currentTopicId) {
+          this.chatService.leaveTopic(this.chatService.currentTopicId);
         }
         setTimeout(async () => {
           await this.router.navigate(['chat', 'view'], {
@@ -76,7 +76,7 @@ export class ConversationComponent implements OnInit, OnDestroy, AfterViewChecke
         this.topic = undefined;
 
         setTimeout(() => {
-          this.chatService.fetchTopicMessages(topicId).subscribe(
+          this.chatService.getTopicMessages(topicId).subscribe(
             (res) => {
               this.topic = res;
             },
@@ -89,9 +89,7 @@ export class ConversationComponent implements OnInit, OnDestroy, AfterViewChecke
 
         this.chatService.joinTopic(topicId);
 
-        this.messageSubscription = this.chatService.topicMessages
-          .asObservable()
-          .subscribe((messages: IMessage[]) => {
+        this.messageSubscription = this.chatService.messages$.subscribe((messages: IMessage[]) => {
             if (this.topic) {
               this.topic.messages = messages;
             }
@@ -160,7 +158,7 @@ export class ConversationComponent implements OnInit, OnDestroy, AfterViewChecke
   }
 
   onLeave() {
-    this.chatService.leaveTopic(this.chatService.topicId);
+    this.chatService.leaveTopic(this.chatService.currentTopicId);
     this.router.navigate(['chat']);
   }
 

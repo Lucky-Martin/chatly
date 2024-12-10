@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { ITopic } from '../../../models/ITopic';
-import { AuthService } from '../../../services/auth.service';
+import { AuthService } from '../../../services/auth/auth.service';
 import { NgFor } from '@angular/common';
 import { SearchbarFilterItemComponent } from "../sidebar-search/searchbar-filter/searchbar-filter-item/searchbar-filter-item.component";
 import { ChatService } from '../../../services/chat.service';

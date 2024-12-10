@@ -8,12 +8,8 @@ export const getTopics = async (req: Request, res: Response) => {
 };
 
 export const createNewTopic = async (req: Request, res: Response) => {
-  const { name, privacyState, createdBy } = req.body;
-  const newTopic = await ChatRepository.createTopic(
-    name,
-    privacyState,
-    createdBy
-  );
+  const { name, privacyState, createdBy, interests } = req.body;
+  const newTopic = await ChatRepository.createTopic(name, privacyState, createdBy, interests);
   const topics = await ChatRepository.getAllTopics();
 
   res.status(201).json({ topic: newTopic, allTopics: topics });

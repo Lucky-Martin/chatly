@@ -9,4 +9,5 @@ export interface ITopic {
   createdBy: string;
   messages: IMessage[];
   participants: IParticipants[];
+  interests: string[];
 }

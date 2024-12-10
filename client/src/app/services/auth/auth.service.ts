@@ -2,10 +2,10 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, tap } from "rxjs";
 import { HttpClient } from "@angular/common/http";
 import { Router } from "@angular/router";
-import { ChatService } from "./chat.service";
-import { IUser } from "../models/IUser";
-import { environment } from "../environments/environment";
-import { ILoginCredentials, ISignupCredentials } from "../models/ICredentials";
+import { ChatService } from "../chat.service";
+import { IUser } from "../../models/IUser";
+import { environment } from "../../environments/environment";
+import { ILoginCredentials, ISignupCredentials } from "../../models/ICredentials";
 
 @Injectable({
   providedIn: 'root'
@@ -96,17 +96,17 @@ export class AuthService {
     }
 
     localStorage.setItem('user-json', JSON.stringify(res.user));
-    this.chatService.reconnectSocket();
+    this.chatService.reconnect();
     await this.router.navigateByUrl('home', {replaceUrl: true});
   }
 
   public async logout() {
-    if (this.chatService.topicId) {
-      this.chatService.leaveTopic(this.chatService.topicId);
+    if (this.chatService.currentTopicId) {
+      this.chatService.leaveTopic(this.chatService.currentTopicId);
     }
 
     localStorage.clear();
-    this.chatService.disconnectSocket();
+    this.chatService.disconnect();
 
     this.authStatus.next(false);
     await this.router.navigateByUrl('/auth', {replaceUrl: true});

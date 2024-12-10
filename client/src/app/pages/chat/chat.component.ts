@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnDestroy, OnInit } from '@angular/core';
-import { AuthService } from "../../services/auth.service";
+import { AuthService } from "../../services/auth/auth.service";
 import { NavigationEnd, Router, RouterOutlet } from "@angular/router";
 import { ChatService } from "../../services/chat.service";
 import { EModalAction } from "../../components/modals/join-room-code-modal/join-room-code-modal.component";
@@ -66,7 +66,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     const joinSub: Subscription = this.joinRoomModalAction.subscribe(actionValue => {
       if (actionValue && actionValue.action === EModalAction.Submit) {
         this.chatService.getTopicByRoomCode(actionValue.code).then(res => {
-          this.chatService.joinTopic(res.topic.id);
+          this.chatService.joinTopic(res!.id);
         }).catch(error => {
           this.toastService.showToast(EToastTypes.warning, "Invalid room code!");
           console.warn(error);
