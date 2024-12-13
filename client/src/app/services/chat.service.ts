@@ -12,20 +12,17 @@ import { IParticipants } from '../models/IParticipants';
   providedIn: 'root'
 })
 export class ChatService {
+  public currentTopicId: string = '';
   private readonly MOBILE_BREAKPOINT: number = 992;
+  public readonly isMobile$ = new BehaviorSubject<boolean>(window.innerWidth <= this.MOBILE_BREAKPOINT);
   private readonly apiUrl: string = environment.apiUrl;
   private socket: Socket | null = null;
-
   private readonly topicsSubject = new BehaviorSubject<ITopic[]>([]);
-  private readonly messagesSubject = new BehaviorSubject<IMessage[]>([]);
-  private readonly participantsSubject = new BehaviorSubject<string[]>([]);
-
   public readonly topics$ = this.topicsSubject.asObservable();
+  private readonly messagesSubject = new BehaviorSubject<IMessage[]>([]);
   public readonly messages$ = this.messagesSubject.asObservable();
+  private readonly participantsSubject = new BehaviorSubject<string[]>([]);
   public readonly participants$ = this.participantsSubject.asObservable();
-
-  public readonly isMobile$ = new BehaviorSubject<boolean>(window.innerWidth <= this.MOBILE_BREAKPOINT);
-  public currentTopicId: string = '';
 
   constructor(
     private readonly http: HttpClient,
@@ -50,13 +47,17 @@ export class ChatService {
   }
 
   public getTopics(): Observable<ITopic[]> {
-    return this.http.get<ITopic[]>(`${this.apiUrl}/chat/topics`, { withCredentials: true }).pipe(tap((res) => {
+    return this.http.get<ITopic[]>(`${this.apiUrl}/chat/topics`, {withCredentials: true}).pipe(tap((res) => {
       this.topicsSubject.next(res);
     }));
   }
 
   public createTopic(topicName: string, interests: string[], isPrivate: boolean, userId: string): void {
     this.socket?.emit('createTopic', topicName, interests, isPrivate, userId);
+  }
+
+  public editTopicInterests(topicId: string, interests: string) {
+    return this.http.patch(`${this.apiUrl}/chat/topics/${topicId}`, {interests}, {withCredentials: true})
   }
 
   public async getTopicByRoomCode(roomCode: string): Promise<ITopic | undefined> {
@@ -75,7 +76,7 @@ export class ChatService {
 
     this.socket?.emit('joinTopic', topicId);
     this.currentTopicId = topicId;
-    this.router.navigate(['chat', 'view'], { queryParams: { topicId } });
+    this.router.navigate(['chat', 'view'], {queryParams: {topicId}});
   }
 
   public leaveTopic(topicId: string): void {
@@ -85,7 +86,7 @@ export class ChatService {
   }
 
   public sendMessage(topicId: string, text: string): void {
-    const message = { topicId, text, timestamp: Date.now() };
+    const message = {topicId, text, timestamp: Date.now()};
     this.socket?.emit('message', message);
   }
 
@@ -99,7 +100,7 @@ export class ChatService {
     if (!token) return;
 
     const socketUrl = this.apiUrl.split('/api')[0];
-    this.socket = io(socketUrl, { auth: { token } });
+    this.socket = io(socketUrl, {auth: {token}});
 
     this.socket.on('connect', () => {
       console.log('Socket connected');

@@ -46,6 +46,16 @@ export const joinTopic = async (socket: any, topicId: string) => {
   }
 };
 
+// export const editTopicInterests = async (topicId: string, newInterests: string[]) => {
+//   try {
+//     await ChatRepository.editTopicName(topicId, newInterests);
+//     const allTopics = await ChatRepository.getAllTopics();
+//     io.emit("topicsUpdated", allTopics);
+//   } catch (e) {
+//     console.log(e)
+//   }
+// }
+
 export const onLeave = async (socket: any, topicId: string) => {
   socket.leave(topicId);
 

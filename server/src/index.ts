@@ -46,7 +46,7 @@ setupSocket(io);
 export let profanityFilter: any;
 
 (async () => {
-    profanityFilter = await new (await import('bad-words')).Filter;;
+    profanityFilter = await new (await import('bad-words')).Filter;
 })();
 
 socketServer.listen(PORT, () => {

@@ -41,6 +41,14 @@ export class ChatRepository {
 		return newTopic;
 	}
 
+	public static async editTopicInterests(topicId: string, interests: string[]): Promise<void> {
+		const topic = this.topics.find(topic => topic.id === topicId);
+
+        if (topic) {
+            topic.interests = interests;
+        }
+	}
+
 	public static async getTopicById(topicId: string): Promise<Topic | undefined> {
 		return this.topics.find(topic => topic.id === topicId);
 	}

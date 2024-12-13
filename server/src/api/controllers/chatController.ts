@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { ChatRepository } from "../../db/repositories/ChatRepository";
 import { codeGenerator } from "../../app/codeGenerator";
+import { io } from "../../index";
 
 export const getTopics = async (req: Request, res: Response) => {
   const topics = await ChatRepository.getAllTopics();
@@ -14,6 +15,19 @@ export const createNewTopic = async (req: Request, res: Response) => {
 
   res.status(201).json({ topic: newTopic, allTopics: topics });
 };
+
+export const editTopicInterests = async (req: Request, res: Response) => {
+  const { interests } = req.body;
+  const { roomId } = req.params;
+  try {
+    await ChatRepository.editTopicInterests(roomId, interests);
+    const allTopics = await ChatRepository.getAllTopics();
+    io.emit("topicsUpdated", allTopics);
+    res.status(200).json({ topics: allTopics });
+  } catch (e) {
+    res.status(500).json({ message: (e as Error).message });
+  }
+}
 
 export const getRoomIdByCode = async (req: Request, res: Response) => {
   const { roomCode } = req.params;
