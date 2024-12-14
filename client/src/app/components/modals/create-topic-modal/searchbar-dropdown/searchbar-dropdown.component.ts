@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { debounceTime, distinctUntilChanged, map } from "rxjs";
 import { FormControl, ReactiveFormsModule } from "@angular/forms";
 import { NgClass, NgForOf, NgIf } from "@angular/common";
@@ -16,16 +16,15 @@ import { NgClass, NgForOf, NgIf } from "@angular/common";
   styleUrl: './searchbar-dropdown.component.scss'
 })
 export class SearchbarDropdownComponent implements OnInit {
+  @Input("selectedInterests") selectedItems: string[] = [];
   @Output() itemsChanged: EventEmitter<string[]> = new EventEmitter();
   private readonly predefinedItems: string[] = [
     'technology', 'sports', 'music', 'travel', 'food', 'art',
     'books', 'movies', 'gaming', 'fashion', 'photography', 'science'
   ];
-
   public searchControl = new FormControl('');
   public filteredItems: string[] = [];
   public showDropdown = false;
-  public selectedItems: string[] = [];
 
   ngOnInit(): void {
     this.setupSearch();
@@ -57,6 +56,7 @@ export class SearchbarDropdownComponent implements OnInit {
 
   public removeItem(item: string): void {
     this.selectedItems = this.selectedItems.filter(i => i !== item);
+    this.itemsChanged.emit(this.selectedItems);
   }
 
   public isItemSelected(item: string): boolean {

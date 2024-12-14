@@ -30,7 +30,7 @@ export class AuthService {
     this.httpClient.get<{
       token: string,
       user: any
-    }>(`${this.apiUrl}/auth/status`, {withCredentials: true}).subscribe(
+    }>(`${this.apiUrl}/auth/profile`, {withCredentials: true}).subscribe(
       async res => {
         await this.processSuccessAuth(res);
       },

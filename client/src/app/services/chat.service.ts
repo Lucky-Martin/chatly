@@ -56,7 +56,7 @@ export class ChatService {
     this.socket?.emit('createTopic', topicName, interests, isPrivate, userId);
   }
 
-  public editTopicInterests(topicId: string, interests: string) {
+  public editTopicInterests(topicId: string, interests: string[]) {
     return this.http.patch(`${this.apiUrl}/chat/topics/${topicId}`, {interests}, {withCredentials: true})
   }
 
