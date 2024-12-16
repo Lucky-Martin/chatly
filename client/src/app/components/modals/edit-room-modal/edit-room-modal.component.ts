@@ -25,12 +25,15 @@ export class EditRoomModalComponent {
 
   protected onUpdateInterests(interests: string[]): void {
     this.interests = interests;
-    console.log("updated", this.interests);
   }
 
   protected onSaveChanges(event: Event): void {
     event.preventDefault();
-    console.log("save", this.interests);
+
+    if (!this.interests.length) {
+      this.toastService.showToast(EToastTypes.warning, "Please select at least one interest");
+      return;
+    }
 
     this.chatService
       .editTopicInterests(this.chatService.currentTopicId, this.interests)

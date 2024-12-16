@@ -14,7 +14,7 @@ import { ChatService } from '../../../services/chat.service';
 })
 export class SidebarConversationsComponent {
   @Input() conversations: ITopic[];
-  protected isConversationsSorted: boolean = true;
+  protected conversationSortType: string = "popular";
 
   constructor(private authService: AuthService,
               private chatService: ChatService) { }
@@ -24,12 +24,27 @@ export class SidebarConversationsComponent {
   }
 
   protected getPublicConversations(): ITopic[] {
-    if (this.isConversationsSorted) {
-      const sortedConversations: ITopic[] = [...this.conversations];
-      return sortedConversations.sort((a, b) => b.participants.length - a.participants.length);
-    } else {
-      return [...this.conversations];
+    let publicConversations: ITopic[] = [...this.conversations];
+
+    // Sort by popularity if enabled
+    switch (this.conversationSortType) {
+      case "popular":
+        publicConversations.sort((a, b) => b.participants.length - a.participants.length);
+        break;
+      case "interests":
+        publicConversations.sort((a, b) => {
+          const aMatchCount = a.interests.filter(interest =>
+            this.authService.user.interests.includes(interest)
+          ).length;
+          const bMatchCount = b.interests.filter(interest =>
+            this.authService.user.interests.includes(interest)
+          ).length;
+          return bMatchCount - aMatchCount;
+        });
+        break;
     }
+
+    return publicConversations;
   }
 
   protected getPrivateConversations(): ITopic[] {
@@ -42,7 +57,8 @@ export class SidebarConversationsComponent {
     });
   }
 
-  protected onToggleFilter(): void {
-    this.isConversationsSorted = !this.isConversationsSorted;
+  protected onUpdateSortType(event: any): void {
+    const sortType: string = event.target.value;
+    this.conversationSortType = sortType;
   }
 }
