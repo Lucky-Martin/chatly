@@ -2,7 +2,8 @@ import { Component, Input } from '@angular/core';
 import { IMessage } from '../../../models/IMessage';
 import { TimeAgoPipe } from "../../../pipes/time-ago.pipe";
 import { TruncatePipe } from "../../../pipes/truncate.pipe";
-import { openMessagePreviewModal } from '../../../services/subjects';
+import { openMessageEditModal, openMessagePreviewModal } from '../../../services/subjects';
+import { NgClass } from '@angular/common';
 
 export enum EMessageViewType {
   Sender,
@@ -14,7 +15,8 @@ export enum EMessageViewType {
   standalone: true,
   imports: [
     TimeAgoPipe,
-    TruncatePipe
+    TruncatePipe,
+    NgClass
 ],
   templateUrl: './message-item.component.html',
   styleUrl: './message-item.component.scss'
@@ -23,8 +25,17 @@ export class MessageItemComponent {
   @Input() message: IMessage;
   @Input() messageViewType: EMessageViewType;
   protected readonly EMessageViewType = EMessageViewType;
+  protected isOptionsOpen: boolean = false;
 
   protected onToggleProfilePreview(): void {
     openMessagePreviewModal.next(this.message);
+  }
+
+  protected onToggleOptions(): void {
+    this.isOptionsOpen = !this.isOptionsOpen;
+  }
+
+  protected onEditMessage(): void {
+    openMessageEditModal.next(this.message);
   }
 }

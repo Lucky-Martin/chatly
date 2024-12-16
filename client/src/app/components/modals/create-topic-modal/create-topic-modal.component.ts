@@ -49,6 +49,11 @@ export class CreateTopicModalComponent {
       this.chatService.leaveTopic(this.chatService.currentTopicId);
     }
 
+    if (!this.interests || !this.interests.length) {
+      this.toastService.showToast(EToastTypes.warning, 'Select at least one interest!')
+      return;
+    }
+
     this.chatService.createTopic(this.topicName, this.interests, this.publicChatRoom, this.authService.user._id);
     this.modalClosed.emit();
   }

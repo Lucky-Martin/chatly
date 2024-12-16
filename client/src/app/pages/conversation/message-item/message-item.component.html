@@ -13,15 +13,32 @@
 }
 
 @if (messageViewType === EMessageViewType.Sender) {
-  <div class="flex justify-end cursor-pointer relative" (click)="onToggleProfilePreview()">
+  <div class="flex justify-end cursor-pointer relative text-right">
     <div class="mr-3 max-w-[80%]">
-      <div class="relative text-sm bg-indigo-500 text-white py-2 px-4 shadow rounded-xl break-all whitespace-normal">
+      <div
+        (click)="onToggleProfilePreview()"
+        class="relative text-sm bg-indigo-500 text-white py-2 px-4 shadow rounded-xl break-all whitespace-normal">
         {{ message.text }}
       </div>
     </div>
-    <div class="flex items-center justify-center h-10 w-10 rounded-full text-white bg-indigo-500 flex-shrink-0">
+    <div
+      (click)="onToggleProfilePreview()"
+      class="flex items-center justify-center h-10 w-10 rounded-full text-white bg-indigo-500 flex-shrink-0">
       {{ message.user.charAt(0).toUpperCase() }}
     </div>
   </div>
-  <p class="text-sm text-slate-600 text-right">Sent {{ message.timestamp | timeAgo }}</p>
+
+  <div class="flex items-center justify-end mt-1">
+    @if (isOptionsOpen) {
+      <div class="flex justify-between items-center">
+        <p class="text-sm text-slate-600 text-right mr-2">Sent {{ message.timestamp | timeAgo }}</p>
+        <i class="fa-solid fa-trash text-xl text-black cursor-pointer mr-2"></i>
+        <i class="fa-solid fa-pen-to-square text-xl text-black cursor-pointer mr-2" (click)="onEditMessage()"></i>
+      </div>
+    }
+    <i
+      [ngClass]="{'text-indigo-500': isOptionsOpen}"
+      (click)="onToggleOptions()"
+      class="fa-solid fa-ellipsis text-black cursor-pointer mr-2 text-xl"></i>
+  </div>
 }

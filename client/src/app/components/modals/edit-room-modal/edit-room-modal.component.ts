@@ -11,7 +11,7 @@ import { EToastTypes, ToastService } from '../../../services/toast.service';
   styleUrl: './edit-room-modal.component.scss',
 })
 export class EditRoomModalComponent {
-  @Input() interests: string[];
+  @Input() interests: string[] = [];
   @Output() closeModal: EventEmitter<void> = new EventEmitter<void>();
 
   constructor(

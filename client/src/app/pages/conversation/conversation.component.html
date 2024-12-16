@@ -137,3 +137,10 @@
     (closeModal)="onUpdateEditModalState(false)"
   ></app-edit-room-modal>
 }
+
+@if (editMessageModalData.isOpen && editMessageModalData.message) {
+  <app-edit-message-modal
+    (closeModal)="onEditMessageModalState(false)"
+    [message]="editMessageModalData.message"
+  ></app-edit-message-modal>
+}

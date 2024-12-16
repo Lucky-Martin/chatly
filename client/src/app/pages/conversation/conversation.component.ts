@@ -24,6 +24,13 @@ import { EmojiPickerComponent } from './emoji-picker/emoji-picker.component';
 import { MessageItemComponent, EMessageViewType } from './message-item/message-item.component';
 import { ParticipantsListComponent } from './participants-list/participants-list.component';
 import { EditRoomModalComponent } from "../../components/modals/edit-room-modal/edit-room-modal.component";
+import { EditMessageModalComponent } from "../../components/modals/edit-message-modal/edit-message-modal.component";
+import { openMessageEditModal } from '../../services/subjects';
+
+export interface IMessageModalData {
+  isOpen: boolean;
+  message?: IMessage;
+}
 
 @Component({
   selector: 'app-conversation',
@@ -37,13 +44,14 @@ import { EditRoomModalComponent } from "../../components/modals/edit-room-modal/
     SpinnerComponent,
     TruncatePipe,
     MessageItemComponent,
-    EditRoomModalComponent
+    EditRoomModalComponent,
+    EditMessageModalComponent
 ],
   templateUrl: './conversation.component.html',
   styleUrl: './conversation.component.scss',
 })
 export class ConversationComponent implements OnInit, OnDestroy, AfterViewChecked {
-  @ViewChild('messageContainer')
+  @ViewChild('messageContainer') messageContainer: ElementRef<HTMLDivElement>;
   private scrollableDiv!: ElementRef<HTMLDivElement>;
   private profanityFilter: Filter;
   private messageSubscription: Subscription | undefined;
@@ -54,6 +62,12 @@ export class ConversationComponent implements OnInit, OnDestroy, AfterViewChecke
   protected isEmojiOpen: boolean = false;
   protected isParticipantVisible: boolean = false;
   protected isEditTopicModalVisible: boolean = false;
+  protected editMessageModalData: IMessageModalData = {
+    isOpen: false
+  };
+  protected deleteMessageModalData: IMessageModalData = {
+    isOpen: false
+  };
 
   constructor(
     private route: ActivatedRoute,
@@ -78,8 +92,12 @@ export class ConversationComponent implements OnInit, OnDestroy, AfterViewChecke
       const currentTopicIndex: number = topics.findIndex((topic: ITopic) => topic.id === this.chatService.currentTopicId);
       if (currentTopicIndex > -1) {
         this.topic = topics[currentTopicIndex];
-        console.log("topic updated", this.topic);
       }
+    });
+
+    openMessageEditModal.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((message: IMessage) => {
+      this.editMessageModalData.isOpen = true;
+      this.editMessageModalData.message = message;
     });
   }
 
@@ -91,6 +109,10 @@ export class ConversationComponent implements OnInit, OnDestroy, AfterViewChecke
     if (this.messageSubscription) {
       this.messageSubscription.unsubscribe();
     }
+  }
+
+  protected onEditMessageModalState(state: boolean) {
+    this.editMessageModalData.isOpen = state;
   }
 
   private handleTopicChange(topicId: string): void {
