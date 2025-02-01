@@ -1,4 +1,4 @@
-import { authSocket, createTopic, joinTopic, onLeave, onMessage } from "../api/controllers/socketController";
+import { authSocket, createTopic, joinTopic, onLeave, onMessage } from "../../api/controllers/socketController";
 
 export const setupSocket = (io: any) => {
     io.use(authSocket);

@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import { ChatRepository } from "../../db/repositories/ChatRepository";
-import { FetchUserQuery } from "../../app/queries/User/fetchUserQuery/FetchUserQuery";
-import { FetchUserQueryHandler } from "../../app/queries/User/fetchUserQuery/FetchUserQueryHandler";
+import { FetchUserQuery } from "../../app/queries/User/FetchUser/FetchUserQuery";
+import { FetchUserQueryHandler } from "../../app/queries/User/FetchUser/FetchUserQueryHandler";
 import { io, profanityFilter } from "../../index";
 import { CreateNewTopicCommand } from "../../app/commands/Topic/CreateNewTopic/CreateNewTopicCommand";
 import { CreateNewTopicCommandHandler } from "../../app/commands/Topic/CreateNewTopic/CreateNewTopicCommandHandler";
@@ -9,8 +9,8 @@ import { JoinTopicCommand } from "../../app/commands/Topic/JoinTopic/JoinTopicCo
 import { JoinTopicCommandHandler } from "../../app/commands/Topic/JoinTopic/JoinTopicCommandHandler";
 import { LeaveTopicCommand } from "../../app/commands/Topic/LeaveTopic/LeaveTopicCommand";
 import { LeaveTopicCommandHandler } from "../../app/commands/Topic/LeaveTopic/LeaveTopicCommandHandler";
-import { AddMessageCommand } from "../../app/commands/Message/AddMessageCommand/AddMessageCommand";
-import { AddMessageCommandHandler } from "../../app/commands/Message/AddMessageCommand/AddMessageCommandHandler";
+import { AddMessageCommand } from "../../app/commands/Message/AddMessage/AddMessageCommand";
+import { AddMessageCommandHandler } from "../../app/commands/Message/AddMessage/AddMessageCommandHandler";
 
 export const authSocket = (socket: any, next: any) => {
 	const token = socket.handshake.auth.token;

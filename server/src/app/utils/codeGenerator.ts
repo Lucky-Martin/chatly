@@ -34,16 +34,8 @@ export class RoomCodeGenerator {
 		throw new Error('Failed to generate unique code after maximum attempts');
 	}
 
-	releaseCode(code: string): void {
-		this.activeCodes.delete(code);
-	}
-
 	isCodeValid(code: string): boolean {
 		return this.activeCodes.has(code);
-	}
-
-	getActiveCodeCount(): number {
-		return this.activeCodes.size;
 	}
 
 	private _generateRandomCode(): string {

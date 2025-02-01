@@ -4,16 +4,16 @@ import { CreateNewTopicCommand } from "../../app/commands/Topic/CreateNewTopic/C
 import { CreateNewTopicCommandHandler } from "../../app/commands/Topic/CreateNewTopic/CreateNewTopicCommandHandler";
 import { EditTopicInterestsCommand } from "../../app/commands/Topic/EditTopicInterests/EditTopicInterestsCommand";
 import { EditTopicInterestsCommandHandler } from "../../app/commands/Topic/EditTopicInterests/EditTopicInterestsCommandHandler";
-import { GetTopicsQuery } from "../../app/queries/Topic/GetTopicsQuery/GetTopicsQuery";
-import { GetTopicsQueryHandler } from "../../app/queries/Topic/GetTopicsQuery/GetTopicsQueryHandler";
-import { GetTopicByCodeQuery } from "../../app/queries/Topic/GetTopicByCodeQuery/GetTopicByCodeQuery";
-import { GetTopicByCodeQueryHandler } from "../../app/queries/Topic/GetTopicByCodeQuery/GetTopicByCodeQueryHandler";
-import { GetTopicMessagesQuery } from "../../app/queries/Topic/GetTopicMessagesQuery/GetTopicMessagesQuery";
-import { GetTopicMessagesQueryHandler } from "../../app/queries/Topic/GetTopicMessagesQuery/GetTopicMessagesQueryHandler";
-import { AddMessageCommand } from "../../app/commands/Message/AddMessageCommand/AddMessageCommand";
-import { AddMessageCommandHandler } from "../../app/commands/Message/AddMessageCommand/AddMessageCommandHandler";
-import { EditMessageCommand } from "../../app/commands/Message/EditMessageCommand/EditMessageCommand";
-import { EditMessageCommandHandler } from "../../app/commands/Message/EditMessageCommand/EditMessageCommandHandler";
+import { GetTopicsQuery } from "../../app/queries/Topic/GetTopics/GetTopicsQuery";
+import { GetTopicsQueryHandler } from "../../app/queries/Topic/GetTopics/GetTopicsQueryHandler";
+import { GetTopicByCodeQuery } from "../../app/queries/Topic/GetTopicByCode/GetTopicByCodeQuery";
+import { GetTopicByCodeQueryHandler } from "../../app/queries/Topic/GetTopicByCode/GetTopicByCodeQueryHandler";
+import { GetTopicMessagesQuery } from "../../app/queries/Topic/GetTopicMessages/GetTopicMessagesQuery";
+import { GetTopicMessagesQueryHandler } from "../../app/queries/Topic/GetTopicMessages/GetTopicMessagesQueryHandler";
+import { AddMessageCommand } from "../../app/commands/Message/AddMessage/AddMessageCommand";
+import { AddMessageCommandHandler } from "../../app/commands/Message/AddMessage/AddMessageCommandHandler";
+import { EditMessageCommand } from "../../app/commands/Message/EditMessage/EditMessageCommand";
+import { EditMessageCommandHandler } from "../../app/commands/Message/EditMessage/EditMessageCommandHandler";
 
 export const getTopics = async (req: Request, res: Response) => {
   const query = new GetTopicsQuery();

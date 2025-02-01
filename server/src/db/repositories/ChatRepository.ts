@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto";
-import { codeGenerator } from "../../app/codeGenerator";
+import { codeGenerator } from "../../app/utils/codeGenerator";
 
 export interface IMessage {
 	user: string;

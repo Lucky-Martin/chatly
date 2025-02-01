@@ -7,7 +7,7 @@ import { json, urlencoded } from 'body-parser';
 import dotenv from 'dotenv';
 import {Server} from 'socket.io';
 import * as http from "http";
-import {setupSocket} from "./app/socket";
+import {setupSocket} from "./app/utils/socket";
 import {chatRouter} from "./api/routes/chat";
 
 dotenv.config();
