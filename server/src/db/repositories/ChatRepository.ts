@@ -1,32 +1,33 @@
 import { randomUUID } from "node:crypto";
 import { codeGenerator } from "../../app/codeGenerator";
 
-export interface Message {
+export interface IMessage {
 	user: string;
 	text: string;
 	timestamp: number;
+	messageId: string;
 }
 
-export interface Topic {
+export interface ITopic {
 	id: string;
 	roomCode: string;
 	name: string;
 	privacyState: boolean;
 	createdBy: string;
-	messages: Message[];
+	messages: IMessage[];
 	participants: string[];
 	interests: string[];
 }
 
 export class ChatRepository {
-	private static topics: Topic[] = [];
+	private static topics: ITopic[] = [];
 
-	public static async getAllTopics(): Promise<Topic[]> {
+	public static async getAllTopics(): Promise<ITopic[]> {
 		return this.topics;
 	}
 
-	public static async createTopic(topicName: string, interests: string[], privacy: boolean, createdBy: string): Promise<Topic> {
-		const newTopic: Topic = {
+	public static async createTopic(topicName: string, interests: string[], privacy: boolean, createdBy: string): Promise<ITopic> {
+		const newTopic: ITopic = {
 			id: randomUUID(),
 			name: topicName,
 			privacyState: privacy,
@@ -49,12 +50,12 @@ export class ChatRepository {
         }
 	}
 
-	public static async getTopicById(topicId: string): Promise<Topic | undefined> {
+	public static async getTopicById(topicId: string): Promise<ITopic | undefined> {
 		return this.topics.find(topic => topic.id === topicId);
 	}
 
-	public static async getTopicByRoomCode(roomCode: string): Promise<Topic | undefined> {
-		return this.topics.find(topic => topic.roomCode === roomCode);
+	public static async getTopicByCode(topicCode: string): Promise<ITopic | undefined> {
+		return this.topics.find(topic => topic.roomCode === topicCode);
 	}
 
 	public static async getParticipants(topicId: string) {
@@ -83,15 +84,25 @@ export class ChatRepository {
 		}
 	}
 
-	public static async addMessageToTopic(topicId: string, user: string, text: string): Promise<Message | null> {
+	public static async addMessageToTopic(topicId: string, user: string, text: string): Promise<IMessage | null> {
 		const topic = await this.getTopicById(topicId);
 
 		if (topic) {
-			const message: Message = {user, text, timestamp: Date.now()};
+			const message: IMessage = {user, text, timestamp: Date.now(), messageId: randomUUID()  };
 			topic.messages.push(message);
 			return message;
 		}
 
 		return null;
+	}
+
+	public static async editMessage(topicId: string, messageId: string, newMessage: string): Promise<void> {
+		const topic = await this.getTopicById(topicId);
+		if (topic) {
+			const messageIndex = topic.messages.findIndex(message => message.messageId === messageId);
+            if (messageIndex > -1) {
+                topic.messages[messageIndex].text = newMessage;
+            }
+		}
 	}
 }
