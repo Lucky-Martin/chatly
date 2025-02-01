@@ -105,4 +105,16 @@ export class ChatRepository {
             }
 		}
 	}
+
+	public static async deleteMessage(topicId: string, messageId: string): Promise<boolean> {
+		const topic = await this.getTopicById(topicId);
+		if (topic) {
+			const messageIndex = topic.messages.findIndex(message => message.messageId === messageId);
+			if (messageIndex > -1) {
+				await this.editMessage(topicId, messageId, "This message was deleted...");
+				return true;
+			}
+		}
+		return false;
+	}
 }

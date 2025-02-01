@@ -64,6 +64,10 @@ export class ChatService {
     return this.http.patch(`${this.apiUrl}/chat/message`, {roomId, messageId, newMessage}, {withCredentials: true});
   }
 
+  public deleteMessage(topicId: string, messageId: string) {
+    return this.http.delete(`${this.apiUrl}/chat/message/${topicId}/${messageId}`, {withCredentials: true});
+  }
+
   public async getTopicByRoomCode(roomCode: string): Promise<ITopic | undefined> {
     const response = await this.http.get<{ topic: ITopic }>(`${this.apiUrl}/chat/roomCode/${roomCode}`).toPromise();
     return response?.topic;

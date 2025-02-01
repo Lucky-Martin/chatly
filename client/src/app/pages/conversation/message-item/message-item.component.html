@@ -14,7 +14,7 @@
 
 @if (messageViewType === EMessageViewType.Sender) {
   <div class="flex justify-end cursor-pointer relative text-right">
-    <div class="mr-3 max-w-[80%]">
+    <div class="mr-3 max-w-[85%]">
       <div
         (click)="onToggleProfilePreview()"
         class="relative text-sm bg-indigo-500 text-white py-2 px-4 shadow rounded-xl break-all whitespace-normal">
@@ -32,7 +32,7 @@
     @if (isOptionsOpen) {
       <div class="flex justify-between items-center">
         <p class="text-sm text-slate-600 text-right mr-2">Sent {{ message.timestamp | timeAgo }}</p>
-        <i class="fa-solid fa-trash text-xl text-black cursor-pointer mr-2"></i>
+        <i class="fa-solid fa-trash text-xl text-black cursor-pointer mr-2" (click)="onDeleteMessage()"></i>
         <i class="fa-solid fa-pen-to-square text-xl text-black cursor-pointer mr-2" (click)="onEditMessage()"></i>
       </div>
     }

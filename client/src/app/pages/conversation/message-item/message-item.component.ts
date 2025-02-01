@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { IMessage } from '../../../models/IMessage';
 import { TimeAgoPipe } from "../../../pipes/time-ago.pipe";
 import { TruncatePipe } from "../../../pipes/truncate.pipe";
-import { openMessageEditModal, openMessagePreviewModal } from '../../../services/subjects';
+import { openDeleteMessageModal, openMessageEditModal, openMessagePreviewModal } from '../../../services/subjects';
 import { NgClass } from '@angular/common';
 
 export enum EMessageViewType {
@@ -37,5 +37,9 @@ export class MessageItemComponent {
 
   protected onEditMessage(): void {
     openMessageEditModal.next(this.message);
+  }
+
+  protected onDeleteMessage(): void {
+    openDeleteMessageModal.next(this.message);
   }
 }

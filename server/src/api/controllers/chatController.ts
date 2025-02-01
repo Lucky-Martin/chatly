@@ -14,6 +14,8 @@ import { AddMessageCommand } from "../../app/commands/Message/AddMessage/AddMess
 import { AddMessageCommandHandler } from "../../app/commands/Message/AddMessage/AddMessageCommandHandler";
 import { EditMessageCommand } from "../../app/commands/Message/EditMessage/EditMessageCommand";
 import { EditMessageCommandHandler } from "../../app/commands/Message/EditMessage/EditMessageCommandHandler";
+import { DeleteMessageCommand } from "../../app/commands/Message/DeleteMessage/DeleteMessageCommand";
+import { DeleteMessageCommandHandler } from "../../app/commands/Message/DeleteMessage/DeleteMessageCommandHandler";
 
 export const getTopics = async (req: Request, res: Response) => {
   const query = new GetTopicsQuery();
@@ -124,5 +126,35 @@ export const editMessage = async (req: Request, res: Response) => {
     }
   } catch (error) {
     res.status(500).json({ message: (error as Error).message });
+  }
+};
+
+export const deleteMessage = async (req: Request, res: Response) => {
+  const { topicId, messageId } = req.params;
+  const userId = (req as any).user?.user._id;
+
+  if (!userId) {
+    return res.status(401).json({ message: 'Unauthorized' });
+  }
+
+  try {
+    const command = new DeleteMessageCommand(topicId, messageId, userId);
+    const handler = new DeleteMessageCommandHandler();
+    const reply = await handler.handle(command);
+
+    if (reply.success) {
+      io.to(topicId).emit('messageDeleted', messageId);
+      io.emit('topicsUpdated', reply.allTopics);
+      res.status(200).json({ message: 'Message deleted successfully' });
+    } else {
+      res.status(404).json({ message: 'Message not found or could not be deleted' });
+    }
+  } catch (error) {
+    console.error('Error deleting message:', error);
+    if (error instanceof Error) {
+      res.status(400).json({ message: error.message });
+    } else {
+      res.status(500).json({ message: 'An error occurred while deleting the message' });
+    }
   }
 };

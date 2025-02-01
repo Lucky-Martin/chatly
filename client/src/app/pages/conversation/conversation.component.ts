@@ -25,7 +25,8 @@ import { MessageItemComponent, EMessageViewType } from './message-item/message-i
 import { ParticipantsListComponent } from './participants-list/participants-list.component';
 import { EditRoomModalComponent } from "../../components/modals/edit-room-modal/edit-room-modal.component";
 import { EditMessageModalComponent } from "../../components/modals/edit-message-modal/edit-message-modal.component";
-import { openMessageEditModal } from '../../services/subjects';
+import { openDeleteMessageModal, openMessageEditModal } from '../../services/subjects';
+import { DeleteMessageModalComponent } from "../../components/modals/delete-message-modal/delete-message-modal.component";
 
 export interface IMessageModalData {
   isOpen: boolean;
@@ -36,8 +37,6 @@ export interface IMessageModalData {
   selector: 'app-conversation',
   standalone: true,
   imports: [
-    NgForOf,
-    NgIf,
     FormsModule,
     EmojiPickerComponent,
     ParticipantsListComponent,
@@ -45,8 +44,9 @@ export interface IMessageModalData {
     TruncatePipe,
     MessageItemComponent,
     EditRoomModalComponent,
-    EditMessageModalComponent
-],
+    EditMessageModalComponent,
+    DeleteMessageModalComponent
+  ],
   templateUrl: './conversation.component.html',
   styleUrl: './conversation.component.scss',
 })
@@ -99,6 +99,11 @@ export class ConversationComponent implements OnInit, OnDestroy, AfterViewChecke
       this.editMessageModalData.isOpen = true;
       this.editMessageModalData.message = message;
     });
+
+    openDeleteMessageModal.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((message: IMessage) => {
+      this.deleteMessageModalData.isOpen = true;
+      this.deleteMessageModalData.message = message;
+    });
   }
 
   public ngAfterViewChecked(): void {
@@ -113,6 +118,10 @@ export class ConversationComponent implements OnInit, OnDestroy, AfterViewChecke
 
   protected onEditMessageModalState(state: boolean) {
     this.editMessageModalData.isOpen = state;
+  }
+
+  protected onDeleteMessageModalState(state: boolean) {
+    this.deleteMessageModalData.isOpen = state;
   }
 
   private handleTopicChange(topicId: string): void {

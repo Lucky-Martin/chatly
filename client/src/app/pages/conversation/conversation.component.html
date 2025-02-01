@@ -144,3 +144,10 @@
     [message]="editMessageModalData.message"
   ></app-edit-message-modal>
 }
+
+@if (deleteMessageModalData.isOpen && deleteMessageModalData.message) {
+  <app-delete-message-modal
+    (closeModal)="onDeleteMessageModalState(false)"
+    [message]="deleteMessageModalData.message"
+  ></app-delete-message-modal>
+}

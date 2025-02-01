@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { IMessage } from '../../../models/IMessage';
+import { ChatService } from "../../../services/chat.service";
 
 @Component({
   selector: 'app-delete-message-modal',
@@ -12,7 +13,15 @@ export class DeleteMessageModalComponent {
   @Input() message: IMessage;
   @Output() closeModal: EventEmitter<void> = new EventEmitter<void>();
 
-  protected onDeleteMessage(): void {
-    this.closeModal.emit();
+  constructor(private chatService: ChatService) { }
+
+  protected onDeleteMessage(event: Event): void {
+    event.preventDefault();
+
+    this.chatService.deleteMessage(this.chatService.currentTopicId, this.message.messageId).subscribe(() => {
+      this.closeModal.emit();
+    }, err => {
+      console.warn(err);
+    });
   }
 }
