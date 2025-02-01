@@ -25,7 +25,7 @@ import { MessageItemComponent, EMessageViewType } from './message-item/message-i
 import { ParticipantsListComponent } from './participants-list/participants-list.component';
 import { EditRoomModalComponent } from "../../components/modals/edit-room-modal/edit-room-modal.component";
 import { EditMessageModalComponent } from "../../components/modals/edit-message-modal/edit-message-modal.component";
-import { openDeleteMessageModal, openMessageEditModal } from '../../services/subjects';
+import { openDeleteMessageModal, openMessageEditModal } from '../../subjects/subjects';
 import { DeleteMessageModalComponent } from "../../components/modals/delete-message-modal/delete-message-modal.component";
 
 export interface IMessageModalData {

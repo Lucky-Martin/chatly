@@ -6,7 +6,7 @@ import { EModalAction } from "../../components/modals/join-room-code-modal/join-
 import { EToastTypes, ToastService } from '../../services/toast.service';
 import { SidebarComponent } from "../../components/sidebar/sidebar.component";
 import { CreateTopicModalComponent } from "../../components/modals/create-topic-modal/create-topic-modal.component";
-import { openLogoutModalSubject as openLogoutModalSubject, openCreateModalSubject, openMessagePreviewModal } from '../../services/subjects';
+import { openLogoutModalSubject as openLogoutModalSubject, openCreateModalSubject, openMessagePreviewModal } from '../../subjects/subjects';
 import { filter, Subscription } from 'rxjs';
 import { LogoutModalComponent } from "../../components/modals/logout-modal/logout-modal.component";
 import { IMessage } from '../../models/IMessage';

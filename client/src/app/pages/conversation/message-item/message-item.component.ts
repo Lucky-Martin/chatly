@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { IMessage } from '../../../models/IMessage';
 import { TimeAgoPipe } from "../../../pipes/time-ago.pipe";
 import { TruncatePipe } from "../../../pipes/truncate.pipe";
-import { openDeleteMessageModal, openMessageEditModal, openMessagePreviewModal } from '../../../services/subjects';
+import { openDeleteMessageModal, openMessageEditModal, openMessagePreviewModal } from '../../../subjects/subjects';
 import { NgClass } from '@angular/common';
 
 export enum EMessageViewType {

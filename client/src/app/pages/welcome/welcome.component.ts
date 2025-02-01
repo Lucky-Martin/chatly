@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
 import { Filter } from 'bad-words';
 import { EToastTypes, ToastService } from '../../services/toast.service';
 import { FormsModule } from '@angular/forms';
-import { openCreateModalSubject } from '../../services/subjects';
+import { openCreateModalSubject } from '../../subjects/subjects';
 import { Subject } from 'rxjs';
 import { IUser } from "../../models/IUser";
 

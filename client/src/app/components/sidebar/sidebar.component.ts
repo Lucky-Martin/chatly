@@ -5,7 +5,7 @@ import { SidebarSearchComponent } from "./sidebar-search/sidebar-search.componen
 import { SidebarConversationsComponent } from "./sidebar-conversations/sidebar-conversations.component";
 import { ITopic } from '../../models/ITopic';
 import { ChatService } from '../../services/chat.service';
-import { openCreateModalSubject, openLogoutModalSubject } from '../../services/subjects';
+import { openCreateModalSubject, openLogoutModalSubject } from '../../subjects/subjects';
 import { Subject } from 'rxjs';
 import { Router } from '@angular/router';
 
