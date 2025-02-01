@@ -3,109 +3,134 @@ import { ChatRepository } from "../../db/repositories/ChatRepository";
 import { FetchUserQuery } from "../../app/queries/User/fetchUserQuery/FetchUserQuery";
 import { FetchUserQueryHandler } from "../../app/queries/User/fetchUserQuery/FetchUserQueryHandler";
 import { io, profanityFilter } from "../../index";
+import { CreateNewTopicCommand } from "../../app/commands/Topic/CreateNewTopic/CreateNewTopicCommand";
+import { CreateNewTopicCommandHandler } from "../../app/commands/Topic/CreateNewTopic/CreateNewTopicCommandHandler";
+import { JoinTopicCommand } from "../../app/commands/Topic/JoinTopic/JoinTopicCommand";
+import { JoinTopicCommandHandler } from "../../app/commands/Topic/JoinTopic/JoinTopicCommandHandler";
+import { LeaveTopicCommand } from "../../app/commands/Topic/LeaveTopic/LeaveTopicCommand";
+import { LeaveTopicCommandHandler } from "../../app/commands/Topic/LeaveTopic/LeaveTopicCommandHandler";
+import { AddMessageCommand } from "../../app/commands/Message/AddMessageCommand/AddMessageCommand";
+import { AddMessageCommandHandler } from "../../app/commands/Message/AddMessageCommand/AddMessageCommandHandler";
 
 export const authSocket = (socket: any, next: any) => {
-  const token = socket.handshake.auth.token;
-  if (!token) {
-    return next(new Error("Authentication error"));
-  }
-  jwt.verify(token, process.env.JWT_SECRET!, (err: any, decoded: any) => {
-    if (err) {
-      return next(new Error("Authentication error"));
-    }
-    socket.user = decoded;
-    next();
-  });
+	const token = socket.handshake.auth.token;
+	if (!token) {
+		return next(new Error("Authentication error"));
+	}
+	jwt.verify(token, process.env.JWT_SECRET!, (err: any, decoded: any) => {
+		if (err) {
+			return next(new Error("Authentication error"));
+		}
+		socket.user = decoded;
+		next();
+	});
 };
 
 export const createTopic = async (socket: any, topicName: string, interests: string[], privacy: boolean, createdBy: string) => {
-  if (profanityFilter.isProfane(topicName)) {
-    throw new Error("profanity");
-  }
+	const command = new CreateNewTopicCommand(topicName, privacy, createdBy, interests);
+	const handler = new CreateNewTopicCommandHandler();
 
-  const newTopic = await ChatRepository.createTopic(topicName, interests, privacy, createdBy);
-  const allTopics = await ChatRepository.getAllTopics();
-
-  socket.emit("topicCreated", newTopic);
-  io.emit("topicsUpdated", allTopics);
+	try {
+		const reply = await handler.handle(command);
+		socket.emit("topicCreated", reply.topic);
+		io.emit("topicsUpdated", reply.allTopics);
+	} catch (error) {
+		if (error instanceof Error && error.message === "Profanity is not allowed in topic names") {
+			socket.emit("error", error.message);
+		} else {
+			console.error("Error creating topic:", error);
+			socket.emit("error", "An error occurred while creating the topic");
+		}
+	}
 };
 
 export const joinTopic = async (socket: any, topicId: string) => {
-  socket.join(topicId);
-  // ChatRepository.addParticipant(topicId, )
-  const topic = await ChatRepository.getTopicById(topicId);
-  if (topic) {
-    socket.emit("messages", topic.messages);
-    await ChatRepository.addParticipant(topic.id, socket.user.user.username);
+	if (!topicId) {
+		socket.emit("error", "Invalid topic ID");
+		return;
+	}
 
-    const topicParticipants = await ChatRepository.getParticipants(topicId);
-    socket.nsp.to(topicId).emit("participantsUpdated", topicParticipants);
+	const command = new JoinTopicCommand(topicId, socket.user.user.username);
+	const handler = new JoinTopicCommandHandler();
 
-    const allTopics = await ChatRepository.getAllTopics();
-    io.emit("topicsUpdated", allTopics);
-  }
+	try {
+		const reply = await handler.handle(command);
+
+		socket.join(topicId);
+		socket.emit("messages", reply.topic.messages);
+		io.to(topicId).emit("participantsUpdated", reply.participants);
+		io.emit("topicsUpdated", reply.allTopics);
+	} catch (error) {
+		console.error("Error joining topic:", error);
+		if (error instanceof Error) {
+			socket.emit("error", error.message);
+		} else {
+			socket.emit("error", "An error occurred while joining the topic");
+		}
+	}
 };
 
-// export const editTopicInterests = async (topicId: string, newInterests: string[]) => {
-//   try {
-//     await ChatRepository.editTopicName(topicId, newInterests);
-//     const allTopics = await ChatRepository.getAllTopics();
-//     io.emit("topicsUpdated", allTopics);
-//   } catch (e) {
-//     console.log(e)
-//   }
-// }
-
 export const onLeave = async (socket: any, topicId: string) => {
-  socket.leave(topicId);
+	if (!topicId) {
+		socket.emit("error", "Invalid topic ID");
+		return;
+	}
 
-  await ChatRepository.removeParticipant(topicId, socket.user.user.username);
-  const topicParticipants = await ChatRepository.getParticipants(topicId);
+	const command = new LeaveTopicCommand(topicId, socket.user.user.username);
+	const handler = new LeaveTopicCommandHandler();
 
-  socket.nsp.to(topicId).emit("participantsUpdated", topicParticipants);
+	try {
+		const reply = await handler.handle(command);
 
-  const allTopics = await ChatRepository.getAllTopics();
-  io.emit("topicsUpdated", allTopics);
+		socket.leave(topicId);
+		io.to(topicId).emit("participantsUpdated", reply.participants);
+		io.emit("topicsUpdated", reply.allTopics);
+	} catch (error) {
+		console.error("Error leaving topic:", error);
+		if (error instanceof Error) {
+			socket.emit("error", error.message);
+		} else {
+			socket.emit("error", "An error occurred while leaving the topic");
+		}
+	}
 };
 
 export const onMessage = async (
-  socket: any,
-  { topicId, text }: { topicId: string; text: string }
+	socket: any,
+	{ topicId, text }: { topicId: string; text: string }
 ) => {
-  let userId;
-  if (socket.user.user) {
-    userId = socket.user.user._id;
-  } else {
-    userId = socket.user.id;
-  }
+	let userId = socket.user.user ? socket.user.user._id : socket.user.id;
 
-  let user;
-  try {
-    if (profanityFilter.isProfane(text)) {
-      throw new Error("profanity");
-    }
+	try {
+		if (profanityFilter.isProfane(text)) {
+			throw new Error("Profanity is not allowed in messages");
+		}
 
-    const query = new FetchUserQuery(userId, null);
-    const queryHandler = new FetchUserQueryHandler();
-    const userResult = await queryHandler.handle(query);
+		const userQuery = new FetchUserQuery(userId, null);
+		const userQueryHandler = new FetchUserQueryHandler();
+		const userResult = await userQueryHandler.handle(userQuery);
 
-    user = userResult.user;
-    if (!user) {
-      throw new Error("User not found");
-    }
+		const user = userResult.user;
+		if (!user) {
+			throw new Error("User not found");
+		}
 
-    const message = await ChatRepository.addMessageToTopic(
-      topicId,
-      user!.username,
-      text
-    );
-    if (message) {
-      io.to(topicId).emit("message", message);
-    }
+		const command = new AddMessageCommand(topicId, user.username, text);
+		const handler = new AddMessageCommandHandler();
+		const reply = await handler.handle(command);
 
-    const allTopics = await ChatRepository.getAllTopics();
-    io.emit("topicsUpdated", allTopics);
-  } catch (e: any) {
-    console.log(e.message ? e.message : "Error while fetching user");
-  }
+		if (reply.message) {
+			io.to(topicId).emit("message", reply.message);
+		}
+
+		const allTopics = await ChatRepository.getAllTopics();
+		io.emit("topicsUpdated", allTopics);
+	} catch (error) {
+		console.error("Error sending message:", error);
+		if (error instanceof Error) {
+			socket.emit("error", error.message);
+		} else {
+			socket.emit("error", "An error occurred while sending the message");
+		}
+	}
 };
