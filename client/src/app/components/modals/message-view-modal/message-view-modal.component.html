@@ -38,7 +38,7 @@
       </div>
       <!-- Modal body -->
       <div class="p-4 md:p-5">
-        <p class="text-md">{{ message.text }}</p>
+        <p class="text-md">{{ message.text | truncate:34 }}</p>
         <div class="text-md mt-4 font-semibold">Sent by {{ message.user }}</div>
       </div>
     </div>

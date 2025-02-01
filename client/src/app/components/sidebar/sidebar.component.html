@@ -32,7 +32,7 @@
 
     <!-- Preview tab -->
     @if (activeMenu !== null) {
-        <div class="preview text-white w-[20rem]"
+        <div class="preview text-white w-[20rem] overflow-y-auto"
             [ngClass]="{'closed': !isSidebarExpanded,
                         'border-l-2': isSidebarExpanded,
                         'max-sm:w-[100%]': isSidebarExpanded,

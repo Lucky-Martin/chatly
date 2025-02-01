@@ -1,5 +1,5 @@
 import {
-  AfterViewChecked,
+  AfterViewInit,
   Component,
   DestroyRef,
   ElementRef,
@@ -8,7 +8,6 @@ import {
   ViewChild,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { NgForOf, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SpinnerComponent } from '../../components/spinner/spinner.component';
 import { TruncatePipe } from '../../pipes/truncate.pipe';
@@ -27,6 +26,7 @@ import { EditRoomModalComponent } from "../../components/modals/edit-room-modal/
 import { EditMessageModalComponent } from "../../components/modals/edit-message-modal/edit-message-modal.component";
 import { openDeleteMessageModal, openMessageEditModal } from '../../subjects/subjects';
 import { DeleteMessageModalComponent } from "../../components/modals/delete-message-modal/delete-message-modal.component";
+import { NgClass } from "@angular/common";
 
 export interface IMessageModalData {
   isOpen: boolean;
@@ -45,16 +45,15 @@ export interface IMessageModalData {
     MessageItemComponent,
     EditRoomModalComponent,
     EditMessageModalComponent,
-    DeleteMessageModalComponent
+    DeleteMessageModalComponent,
+    NgClass
   ],
   templateUrl: './conversation.component.html',
   styleUrl: './conversation.component.scss',
 })
-export class ConversationComponent implements OnInit, OnDestroy, AfterViewChecked {
+export class ConversationComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('messageContainer') messageContainer: ElementRef<HTMLDivElement>;
-  private scrollableDiv!: ElementRef<HTMLDivElement>;
-  private profanityFilter: Filter;
-  private messageSubscription: Subscription | undefined;
+
   protected readonly EMessageViewType = EMessageViewType;
   protected readonly window: Window = window;
   protected topic: ITopic | undefined;
@@ -62,12 +61,16 @@ export class ConversationComponent implements OnInit, OnDestroy, AfterViewChecke
   protected isEmojiOpen: boolean = false;
   protected isParticipantVisible: boolean = false;
   protected isEditTopicModalVisible: boolean = false;
+
   protected editMessageModalData: IMessageModalData = {
     isOpen: false
   };
   protected deleteMessageModalData: IMessageModalData = {
     isOpen: false
   };
+
+  private profanityFilter: Filter;
+  private messageSubscription: Subscription | undefined;
 
   constructor(
     private route: ActivatedRoute,
@@ -93,6 +96,8 @@ export class ConversationComponent implements OnInit, OnDestroy, AfterViewChecke
       if (currentTopicIndex > -1) {
         this.topic = topics[currentTopicIndex];
       }
+
+      this.scrollToBottom();
     });
 
     openMessageEditModal.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((message: IMessage) => {
@@ -106,7 +111,7 @@ export class ConversationComponent implements OnInit, OnDestroy, AfterViewChecke
     });
   }
 
-  public ngAfterViewChecked(): void {
+  public ngAfterViewInit(): void {
     this.scrollToBottom();
   }
 
@@ -220,7 +225,11 @@ export class ConversationComponent implements OnInit, OnDestroy, AfterViewChecke
   }
 
   private scrollToBottom(): void {
-    if (!this.scrollableDiv) return;
-    this.scrollableDiv.nativeElement.scrollTop = this.scrollableDiv.nativeElement.scrollHeight;
+    if (!this.messageContainer?.nativeElement) return;
+
+    setTimeout(() => {
+      const container = this.messageContainer.nativeElement;
+      container.scrollTop = container.scrollHeight;
+    }, 1);
   }
 }

@@ -1,7 +1,7 @@
 <button
     (click)="onClick()"
     class="border-[2px] bg-[#EEE] w-full text-black flex p-2 items-center justify-between text-left rounded-lg mt-2 cursor-pointer hover:bg-[#EEE] hover:text-black transition-all">
-    <p class="mr-4">{{ conversation.name | truncate:24 }}</p>
+    <p class="mr-4">{{ conversation.name | truncate:20 }}</p>
     <div>
         <p class="mr-2 inline-block">{{ conversation.participants.length }}</p>
         <i class="fa-solid fa-users inline-block text-black"></i>

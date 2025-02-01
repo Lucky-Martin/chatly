@@ -12,33 +12,44 @@
             class="fa-solid fa-chevron-left cursor-pointer text-black text-2xl mr-4"
             (click)="onLeave()"
           ></i>
-          <h2 class="text-2xl">
-            Chat room - {{ topic.name | truncate : 20 }} - Room code -
-            {{ topic.roomCode }}
-          </h2>
+          @if (window.innerWidth <= 992) {
+            <h2 class="text-2xl">
+              {{ topic.name | truncate : 14 }}
+            </h2>
+          } @else {
+            <h2 class="text-2xl">
+              Chat room - {{ topic.name | truncate : 20 }} - Room code -
+              {{ topic.roomCode }}
+            </h2>
+          }
         </div>
-        <div class="flex">
+        <div class="flex justify-end">
           <i
             class="fa-solid fa-pen-to-square cursor-pointer text-black text-2xl mr-5"
             (click)="onUpdateEditModalState(true)"
           ></i>
           <i
-            class="fa-solid fa-share-from-square text-2xl text-black cursor-pointer mr-4"
+            class="fa-solid fa-share-from-square text-2xl text-black cursor-pointer"
+            [ngClass]="{'mr-5': window.innerWidth > 992}"
             (click)="onShareUrl()"
           ></i>
-          <i
-            class="fa-solid fa-user-group text-black text-2xl cursor-pointer"
-            (click)="isParticipantVisible = !isParticipantVisible"
-          ></i>
+          @if (window.innerWidth > 992) {
+            <i
+              class="fa-solid fa-user-group text-black text-2xl cursor-pointer"
+              (click)="isParticipantVisible = !isParticipantVisible"
+            ></i>
+          }
         </div>
       </div>
 
       <!-- Chat Messages Area -->
       <div
-        class="flex flex-col flex-auto flex-shrink-0 rounded-2xl bg-gray-100 topic-wrap p-2 mb-2"
-      >
+        class="flex flex-col flex-auto flex-shrink-0 rounded-2xl bg-gray-100 topic-wrap p-2 mb-2 max-h-[90vh]">
         <div class="flex flex-col h-full overflow-x-auto mb-4" #messageContainer>
           <div class="flex flex-col h-full">
+            @if (!topic.messages.length) {
+              <p class="no-messages-placeholder text-center mt-2 text-gray-600">No messages yet. Be the first to type something!</p>
+            }
             <div class="space-y-2">
               @for (message of topic.messages; track message) {
                 <div class="msg-wrap">

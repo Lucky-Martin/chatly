@@ -1,10 +1,13 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { IMessage } from '../../../models/IMessage';
+import { TruncatePipe } from "../../../pipes/truncate.pipe";
 
 @Component({
   selector: 'app-message-view-modal',
   standalone: true,
-  imports: [],
+  imports: [
+    TruncatePipe
+  ],
   templateUrl: './message-view-modal.component.html',
   styleUrl: './message-view-modal.component.scss'
 })
