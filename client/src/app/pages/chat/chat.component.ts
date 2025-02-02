@@ -11,6 +11,7 @@ import { filter, Subscription } from 'rxjs';
 import { LogoutModalComponent } from "../../components/modals/logout-modal/logout-modal.component";
 import { IMessage } from '../../models/IMessage';
 import { MessageViewModalComponent } from "../../components/modals/message-view-modal/message-view-modal.component";
+import { NgClass } from "@angular/common";
 
 @Component({
   selector: 'app-chat',
@@ -20,8 +21,9 @@ import { MessageViewModalComponent } from "../../components/modals/message-view-
     SidebarComponent,
     CreateTopicModalComponent,
     LogoutModalComponent,
-    MessageViewModalComponent
-],
+    MessageViewModalComponent,
+    NgClass
+  ],
   templateUrl: './chat.component.html',
   styleUrl: './chat.component.scss'
 })
@@ -80,4 +82,6 @@ export class ChatComponent implements OnInit, OnDestroy {
   public ngOnDestroy(): void {
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
+
+  protected readonly window = window;
 }

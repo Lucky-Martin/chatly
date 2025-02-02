@@ -1,4 +1,4 @@
-<div class="flex h-screen relative">
+<div class="flex conversation-wrapper relative">
   @if (!topic) {
     <div class="flex absolute bottom-0 left-0 right-0 top-0 justify-center items-center full-screen">
       <app-spinner></app-spinner>
@@ -44,7 +44,8 @@
 
       <!-- Chat Messages Area -->
       <div
-        class="flex flex-col flex-auto flex-shrink-0 rounded-2xl bg-gray-100 topic-wrap p-2 mb-2 max-h-[90vh]">
+        [ngClass]="{'h-[100%]': window.innerWidth <= 992, 'max-h-[90vh]': window.innerWidth > 992}"
+        class="flex flex-col flex-auto flex-shrink-0 rounded-2xl bg-gray-100 topic-wrap p-2 mb-2">
         <div class="flex flex-col h-full overflow-x-auto mb-4" #messageContainer>
           <div class="flex flex-col h-full">
             @if (!topic.messages.length) {

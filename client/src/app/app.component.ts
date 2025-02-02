@@ -24,6 +24,20 @@ export class AppComponent implements OnInit {
     this.chatService.disconnect();
   }
 
+  @HostListener('window:focusout', ['$event'])
+  onFocusOut(event: FocusEvent) {
+    const target = event.target as HTMLElement;
+    if (target && target.tagName === 'INPUT') {
+      // Keyboard is likely closed, scroll to top
+      this.scrollToTop();
+    }
+  }
+
+  scrollToTop() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    console.log("scroll")
+  }
+
   async ngOnInit() {
     await this.authService.checkInitialLoginStatus();
   }

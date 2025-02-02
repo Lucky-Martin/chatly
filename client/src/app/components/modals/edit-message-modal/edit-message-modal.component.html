@@ -24,7 +24,7 @@
           <div>
             <label for="message" class="block mb-2 text-sm font-medium text-gray-900">Message</label>
             <textarea id="message" type="text" name="message" placeholder="Enter message" [(ngModel)]="newMessage"
-              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+              class="bg-gray-50 border min-h-[10rem] border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
               required></textarea>
           </div>
           <button (click)="onEditMessage()" type="submit"

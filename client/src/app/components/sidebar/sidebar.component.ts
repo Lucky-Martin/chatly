@@ -83,4 +83,6 @@ export class SidebarComponent implements OnInit {
       return conversation.name.toLowerCase().includes(this.query.toLowerCase());
     });
   }
+
+  protected readonly window = window;
 }

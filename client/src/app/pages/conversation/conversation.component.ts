@@ -27,6 +27,8 @@ import { EditMessageModalComponent } from "../../components/modals/edit-message-
 import { openDeleteMessageModal, openMessageEditModal } from '../../subjects/subjects';
 import { DeleteMessageModalComponent } from "../../components/modals/delete-message-modal/delete-message-modal.component";
 import { NgClass } from "@angular/common";
+import { Share } from "@capacitor/share";
+import { Clipboard } from "@angular/cdk/clipboard";
 
 export interface IMessageModalData {
   isOpen: boolean;
@@ -77,6 +79,7 @@ export class ConversationComponent implements OnInit, OnDestroy, AfterViewInit {
     private router: Router,
     private destroyRef: DestroyRef,
     private toastService: ToastService,
+    private clipboard: Clipboard,
     protected chatService: ChatService,
     protected authService: AuthService
   ) {
@@ -161,14 +164,6 @@ export class ConversationComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  public leaveTopic(topicId: string): void {
-    this.chatService.leaveTopic(topicId);
-    if (this.topic) {
-      this.topic.messages = [];
-    }
-    this.router.navigateByUrl('chat');
-  }
-
   public onSendMessage(): void {
     if (!this.message.trim()) {
       this.toastService.showToast(EToastTypes.warning, 'Enter a valid message!');
@@ -198,8 +193,20 @@ export class ConversationComponent implements OnInit, OnDestroy, AfterViewInit {
     this.router.navigate(['chat']);
   }
 
-  public onShareUrl(): void {
+  public async onShareUrl(): Promise<void> {
     const url = `${window.location.origin}${this.router.url}`;
+    const canShareResult = await Share.canShare();
+
+    if (canShareResult.value) {
+      await Share.share({
+        title: 'Chatly - Share room',
+        text: 'Join this room and chat with your friends!',
+        url,
+        dialogTitle: 'Share with friends!',
+      });
+
+      return;
+    }
 
     if (navigator.share) {
       navigator.share({
@@ -212,11 +219,8 @@ export class ConversationComponent implements OnInit, OnDestroy, AfterViewInit {
         console.error('Error sharing:', error);
       });
     } else {
-      navigator.clipboard.writeText(url).then(() => {
-        alert('URL copied to clipboard!');
-      }).catch((err: Error) => {
-        console.error('Failed to copy: ', err);
-      });
+      this.clipboard.copy(url);
+      alert("Link copied to clipboard!");
     }
   }
 

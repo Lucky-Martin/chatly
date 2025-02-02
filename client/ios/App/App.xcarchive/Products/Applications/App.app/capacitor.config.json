@@ -1,0 +1,6 @@
+{
+	"appId": "com.chatlyapp.nanodigital",
+	"appName": "chatly",
+	"webDir": "dist/browser/",
+	"packageClassList": []
+}

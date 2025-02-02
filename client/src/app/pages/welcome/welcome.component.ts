@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FeaturedRoomCardComponent } from "../../components/featured-room-card/featured-room-card.component";
 import { ChatService } from '../../services/chat.service';
 import { ITopic } from '../../models/ITopic';
-import { NgFor, NgIf } from '@angular/common';
+import { NgClass, NgFor, NgIf } from '@angular/common';
 import { AuthService } from '../../services/auth/auth.service';
 import { TruncatePipe } from "../../pipes/truncate.pipe";
 import { SpinnerComponent } from "../../components/spinner/spinner.component";
@@ -17,7 +17,7 @@ import { IUser } from "../../models/IUser";
 @Component({
   selector: 'app-welcome',
   standalone: true,
-  imports: [FeaturedRoomCardComponent, NgFor, NgIf, FormsModule, TruncatePipe, SpinnerComponent],
+  imports: [FeaturedRoomCardComponent, NgFor, NgIf, FormsModule, TruncatePipe, SpinnerComponent, NgClass],
   templateUrl: './welcome.component.html',
   styleUrl: './welcome.component.scss'
 })

@@ -5,7 +5,7 @@
 @import "@fortawesome/fontawesome-free/css/all.css";
 
 body {
-  background: #ffffff;
+  background-image: linear-gradient(to left bottom, #f4f4f4, #f2f3f2, #f1f1f1, #eff0ef, #eeeeee);
 }
 .error-text {
   color: #ff0033;
@@ -47,4 +47,14 @@ button[disabled].green-btn {
   align-items: center;
   z-index: 999;
   transition: all 1s;
+}
+.safe-area {
+   padding-top: env(safe-area-inset-top);
+   padding-bottom: env(safe-area-inset-bottom);
+}
+.safe-area-top {
+  padding-top: env(safe-area-inset-top);
+}
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
 }

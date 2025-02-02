@@ -27,7 +27,9 @@
         <div class="border-t-2 border-dotted border-white w-full mt-8"></div>
 
         <!-- Logout -->
-        <i class="fa-solid fa-right-from-bracket absolute bottom-8 text-xl cursor-pointer left-0 right-0" (click)="onLogout()"></i>
+        <i class="fa-solid fa-right-from-bracket absolute text-xl cursor-pointer left-0 right-0"
+           [ngClass]="{'bottom-32': window.innerWidth <= 992, 'bottom-8': window.innerWidth < 992}"
+           (click)="onLogout()"></i>
     </div>
 
     <!-- Preview tab -->

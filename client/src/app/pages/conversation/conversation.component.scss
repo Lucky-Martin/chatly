@@ -1,0 +1,9 @@
+.conversation-wrapper {
+  height: 95vh;
+}
+
+@media only screen and (max-width: 992px) {
+  .conversation-wrapper {
+    height: 85vh;
+  }
+}
