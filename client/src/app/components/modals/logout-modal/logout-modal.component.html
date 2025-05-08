@@ -6,7 +6,7 @@
       <!-- Modal header -->
       <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t">
         <h3 class="text-xl font-semibold text-gray-900">
-          Are you sure you want to logout?
+          {{ 'modals.logoutConfirmation' | translate }}
         </h3>
         <button
           (click)="closeModal.emit()"
@@ -17,7 +17,7 @@
             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                   d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
           </svg>
-          <span class="sr-only">Close modal</span>
+          <span class="sr-only">{{ 'modals.closeModal' | translate }}</span>
         </button>
       </div>
       <!-- Modal body -->
@@ -26,7 +26,7 @@
           (click)="logoutUser.emit()"
           type="submit"
           class="w-full text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
-          Logout
+          {{ 'common.logout' | translate }}
         </button>
       </div>
     </div>

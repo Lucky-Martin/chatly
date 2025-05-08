@@ -27,18 +27,15 @@
         <div class="border-t-2 border-dotted border-white w-full mt-8"></div>
 
         <!-- Logout -->
-        <i class="fa-solid fa-right-from-bracket absolute text-xl cursor-pointer left-0 right-0"
-           [ngClass]="{'bottom-32': window.innerWidth <= 992, 'bottom-8': window.innerWidth < 992}"
+        <i class="fa-solid fa-right-from-bracket absolute text-xl cursor-pointer left-0 right-0 mt-8"
+           [ngClass]="{'bottom-32': window.innerWidth > 992, 'bottom-8': window.innerWidth <= 992}"
            (click)="onLogout()"></i>
     </div>
 
     <!-- Preview tab -->
     @if (activeMenu !== null) {
-        <div class="preview text-white w-[20rem] overflow-y-auto"
-            [ngClass]="{'closed': !isSidebarExpanded,
-                        'border-l-2': isSidebarExpanded,
-                        'max-sm:w-[100%]': isSidebarExpanded,
-                        'border-white': isSidebarExpanded}">
+        <div class="preview text-white overflow-y-auto"
+            [ngClass]="{'closed': !isSidebarExpanded}">
             <i class="fa-solid fa-chevron-left cursor-pointer text-white text-2xl" (click)="isSidebarExpanded = false"></i>
 
             <app-sidebar-profile-info *ngIf="activeMenu === ESidebarMenus.ProfileInfo"></app-sidebar-profile-info>

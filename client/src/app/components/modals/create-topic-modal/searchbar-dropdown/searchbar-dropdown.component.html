@@ -1,9 +1,9 @@
 <div class="w-full max-w-xl mx-auto mt-3">
-  <label for="interests" class="block mb-2 text-sm font-medium text-gray-900">Interests</label>
+  <label for="interests" class="block mb-2 text-sm font-medium text-gray-900">{{ 'interests.title' | translate }}</label>
 
   <!-- Selection Counter -->
   <div class="text-sm text-gray-600 mb-2" [ngClass]="{'text-red-600': selectedItems.length < 1, 'text-green-600': selectedItems.length >= 1}">
-    {{ selectedItems.length }}/10 items selected
+    {{ selectedItems.length }}/10 {{ 'interests.itemsSelected' | translate }}
   </div>
 
   <div class="relative">
@@ -13,7 +13,7 @@
         [formControl]="searchControl"
         type="text"
         id="interests"
-        [placeholder]="selectedItems.length >= 10 ? 'Maximum items selected' : 'Search...'"
+        [placeholder]="selectedItems.length >= 10 ? ('interests.maximumSelected' | translate) : ('common.search' | translate)"
         class="w-full px-4 py-2 text-gray-900 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         (focus)="onShowDropdown()"
         (blur)="onBlur()"
@@ -49,7 +49,7 @@
           class="px-4 py-2 hover:bg-gray-100 cursor-pointer text-gray-900"
           [class.hidden]="isItemSelected(item)"
         >
-          {{ item }}
+          {{ getInterestTranslation(item) }}
         </li>
       </ul>
     </div>
@@ -60,7 +60,7 @@
       class="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg"
     >
       <div class="px-4 py-2 text-gray-500">
-        No results found
+        {{ 'interests.noResultsFound' | translate }}
       </div>
     </div>
   </div>
@@ -71,7 +71,7 @@
       *ngFor="let item of selectedItems"
       class="flex items-center gap-2 px-3 py-1 bg-blue-100 rounded-full text-sm"
     >
-      <span class="text-blue-800">{{ item }}</span>
+      <span class="text-blue-800">{{ getInterestTranslation(item) }}</span>
       <button
         (click)="removeItem(item)"
         class="text-blue-600 hover:text-blue-800 focus:outline-none"

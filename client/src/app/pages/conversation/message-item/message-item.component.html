@@ -9,7 +9,7 @@
       </div>
     </div>
   </div>
-  <p class="text-sm text-slate-600 text-left">Sent {{ message.timestamp | timeAgo }}</p>
+  <p class="text-sm text-slate-600 text-left">{{ 'chat.sent' | translate }} {{ message.timestamp | timeAgo }}</p>
 }
 
 @if (messageViewType === EMessageViewType.Sender) {
@@ -31,9 +31,9 @@
   <div class="flex items-center justify-end mt-1">
     @if (isOptionsOpen) {
       <div class="flex justify-between items-center">
-        <p class="text-sm text-slate-600 text-right mr-2">Sent {{ message.timestamp | timeAgo }}</p>
-        <i class="fa-solid fa-trash text-xl text-black cursor-pointer mr-2" (click)="onDeleteMessage()"></i>
-        <i class="fa-solid fa-pen-to-square text-xl text-black cursor-pointer mr-2" (click)="onEditMessage()"></i>
+        <p class="text-sm text-slate-600 text-right mr-2">{{ 'chat.sent' | translate }} {{ message.timestamp | timeAgo }}</p>
+        <i class="fa-solid fa-trash text-xl text-black cursor-pointer mr-2" title="{{ 'chat.deleteMessage' | translate }}" (click)="onDeleteMessage()"></i>
+        <i class="fa-solid fa-pen-to-square text-xl text-black cursor-pointer mr-2" title="{{ 'chat.editMessage' | translate }}" (click)="onEditMessage()"></i>
       </div>
     }
     <i

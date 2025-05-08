@@ -11,7 +11,7 @@
       <div
         class="flex items-center justify-between p-4 md:p-5 border-b rounded-t"
       >
-        <h3 class="text-xl font-semibold text-gray-900">Message preview</h3>
+        <h3 class="text-xl font-semibold text-gray-900">{{ 'chat.messagePreview' | translate }}</h3>
         <button
           (click)="closeModal.emit()"
           type="button"
@@ -33,13 +33,13 @@
               d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
             />
           </svg>
-          <span class="sr-only">Close modal</span>
+          <span class="sr-only">{{ 'modals.closeModal' | translate }}</span>
         </button>
       </div>
       <!-- Modal body -->
       <div class="p-4 md:p-5">
         <p class="text-md">{{ message.text | truncate:34 }}</p>
-        <div class="text-md mt-4 font-semibold">Sent by {{ message.user }}</div>
+        <div class="text-md mt-4 font-semibold">{{ 'chat.sentBy' | translate }} {{ message.user }}</div>
       </div>
     </div>
   </div>

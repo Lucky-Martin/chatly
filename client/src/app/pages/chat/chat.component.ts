@@ -12,6 +12,7 @@ import { LogoutModalComponent } from "../../components/modals/logout-modal/logou
 import { IMessage } from '../../models/IMessage';
 import { MessageViewModalComponent } from "../../components/modals/message-view-modal/message-view-modal.component";
 import { NgClass } from "@angular/common";
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-chat',
@@ -22,7 +23,8 @@ import { NgClass } from "@angular/common";
     CreateTopicModalComponent,
     LogoutModalComponent,
     MessageViewModalComponent,
-    NgClass
+    NgClass,
+    TranslateModule
   ],
   templateUrl: './chat.component.html',
   styleUrl: './chat.component.scss'
@@ -42,7 +44,8 @@ export class ChatComponent implements OnInit, OnDestroy {
   constructor(public authService: AuthService,
               public chatService: ChatService,
               private router: Router,
-              private toastService: ToastService) {
+              private toastService: ToastService,
+              private translateService: TranslateService) {
   }
 
   public ngOnInit(): void {
@@ -70,7 +73,7 @@ export class ChatComponent implements OnInit, OnDestroy {
         this.chatService.getTopicByRoomCode(actionValue.code).then(res => {
           this.chatService.joinTopic(res!.id);
         }).catch(error => {
-          this.toastService.showToast(EToastTypes.warning, "Invalid room code!");
+          this.toastService.showToast(EToastTypes.warning, this.translateService.instant('chat.invalidRoomCode'));
           console.warn(error);
         })
       }

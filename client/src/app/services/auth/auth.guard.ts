@@ -3,6 +3,7 @@ import { inject } from "@angular/core";
 import { IUser } from "../../models/IUser";
 
 export const AuthGuard: CanActivateFn = async () => {
+  console.log('AuthGuard');
   const router = inject(Router);
 
   const token: string | null = localStorage.getItem("auth_token");
@@ -15,6 +16,7 @@ export const AuthGuard: CanActivateFn = async () => {
       return false;
     }
   } else {
+    await router.navigateByUrl('auth/login', {replaceUrl: true});
     return false;
   }
 

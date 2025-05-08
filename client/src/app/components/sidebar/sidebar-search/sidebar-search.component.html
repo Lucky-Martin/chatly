@@ -1,4 +1,4 @@
-<h3 class="text-white mt-4 text-2xl font-bold mb-4">Conversations</h3>
+<h3 class="text-white mt-4 text-2xl font-bold mb-4">{{ 'chat.conversations' | translate }}</h3>
 <!-- Searchbar -->
 <app-searchbar-filter (changeQuery)="onChangeQuery($event)"></app-searchbar-filter>
 <!-- Filtered items -->
@@ -6,4 +6,4 @@
     *ngFor="let conversation of conversations;"
     (clickItem)="onJoinConversation(conversation.id)"
     [conversation]="conversation"></app-searchbar-filter-item>
-<p class="text-white mt-4" *ngIf="!conversations.length">No conversations...</p>
+<p class="text-white mt-4" *ngIf="!conversations.length">{{ 'chat.noConversations' | translate }}</p>

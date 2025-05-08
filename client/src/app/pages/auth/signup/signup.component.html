@@ -7,34 +7,34 @@
     <div class="w-full bg-white rounded-lg shadow border md:mt-0 sm:max-w-md xl:p-0">
       <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
         <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl">
-          Create an account
+          {{ 'auth.createAccount' | translate }}
         </h1>
         <div class="flex items-center justify-center" *ngIf="isLoading">
           <app-spinner></app-spinner>
         </div>
         <form class="space-y-4 md:space-y-6" [formGroup]="loginForm" (ngSubmit)="onSubmit()" *ngIf="!isLoading">
           <div>
-            <label for="username" class="block mb-2 text-sm font-medium text-gray-900">Username</label>
+            <label for="username" class="block mb-2 text-sm font-medium text-gray-900">{{ 'common.username' | translate }}</label>
             <input formControlName="username" type="text" (input)="validateCanSubmit()" name="username" id="username" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" placeholder="@username" required="">
             <p class="error-text mt-2" *ngIf="usernameErrorMessage">{{usernameErrorMessage}}</p>
           </div>
           <div>
-            <label for="email" class="block mb-2 text-sm font-medium text-gray-900">Your email</label>
+            <label for="email" class="block mb-2 text-sm font-medium text-gray-900">{{ 'common.email' | translate }}</label>
             <input formControlName="email" type="email" (input)="validateCanSubmit()" name="email" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" placeholder="name@company.com" required="">
             <p class="error-text mt-2" *ngIf="emailErrorMessage">{{emailErrorMessage}}</p>
           </div>
           <div>
-            <label for="password" class="block mb-2 text-sm font-medium text-gray-900">Password</label>
+            <label for="password" class="block mb-2 text-sm font-medium text-gray-900">{{ 'common.password' | translate }}</label>
             <input formControlName="password" type="password" (input)="validateCanSubmit()" name="password" id="password" placeholder="••••••••" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" required="">
             <p class="error-text mt-2" *ngIf="passwordErrorMessage">{{passwordErrorMessage}}</p>
           </div>
           <div>
-            <label for="confirm-password" class="block mb-2 text-sm font-medium text-gray-900">Confirm password</label>
+            <label for="confirm-password" class="block mb-2 text-sm font-medium text-gray-900">{{ 'auth.confirmPassword' | translate }}</label>
             <input formControlName="confirmPassword" type="password" (input)="validateCanSubmit()" name="confirm-password" id="confirm-password" placeholder="••••••••" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" required="">
           </div>
-          <button [disabled]="!canSubmit" type="submit" class="w-full bg-blue-500 text-white hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center disabled:bg-blue-300">Create an account</button>
+          <button [disabled]="!canSubmit" type="submit" class="w-full bg-blue-500 text-white hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center disabled:bg-blue-300">{{ 'auth.createAccount' | translate }}</button>
           <p class="text-sm font-light text-gray-500">
-            Already have an account? <a href="#" (click)="onNavigateLogin($event)" class="font-medium text-blue-600 hover:underline">Login here</a>
+            {{ 'auth.alreadyHaveAccount' | translate }} <a href="#" (click)="onNavigateLogin($event)" class="font-medium text-blue-600 hover:underline">{{ 'auth.loginHere' | translate }}</a>
           </p>
         </form>
       </div>

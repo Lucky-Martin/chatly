@@ -4,6 +4,7 @@ import { TimeAgoPipe } from "../../../pipes/time-ago.pipe";
 import { TruncatePipe } from "../../../pipes/truncate.pipe";
 import { openDeleteMessageModal, openMessageEditModal, openMessagePreviewModal } from '../../../subjects/subjects';
 import { NgClass } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
 
 export enum EMessageViewType {
   Sender,
@@ -16,7 +17,8 @@ export enum EMessageViewType {
   imports: [
     TimeAgoPipe,
     TruncatePipe,
-    NgClass
+    NgClass,
+    TranslateModule
 ],
   templateUrl: './message-item.component.html',
   styleUrl: './message-item.component.scss'

@@ -13,11 +13,24 @@ import { FormsModule } from '@angular/forms';
 import { openCreateModalSubject } from '../../subjects/subjects';
 import { Subject } from 'rxjs';
 import { IUser } from "../../models/IUser";
+import { CommonModule } from '@angular/common';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { LanguageService } from '../../services/language/language.service';
 
 @Component({
   selector: 'app-welcome',
   standalone: true,
-  imports: [FeaturedRoomCardComponent, NgFor, NgIf, FormsModule, TruncatePipe, SpinnerComponent, NgClass],
+  imports: [
+    CommonModule,
+    FeaturedRoomCardComponent,
+    NgFor,
+    NgIf,
+    FormsModule,
+    TruncatePipe,
+    SpinnerComponent,
+    NgClass,
+    TranslateModule
+  ],
   templateUrl: './welcome.component.html',
   styleUrl: './welcome.component.scss'
 })
@@ -32,7 +45,14 @@ export class WelcomeComponent implements OnInit {
   constructor(private chatService: ChatService,
               private authService: AuthService,
               private toastService: ToastService,
-              private router: Router) { }
+              private router: Router,
+              private translateService: TranslateService,
+              private languageService: LanguageService) {
+    // Ensure language is properly set
+    const currentLang = this.languageService.getCurrentLanguage();
+    console.log('Welcome component: setting language to', currentLang);
+    this.translateService.use(currentLang);
+  }
 
   public ngOnInit(): void {
     const user = localStorage.getItem('user-json');
@@ -62,7 +82,7 @@ export class WelcomeComponent implements OnInit {
     if (!this.promptInput || !this.promptInput.length) return;
 
     if (this.profanityFilter.isProfane(this.promptInput)) {
-      this.toastService.showToast(EToastTypes.warning, "Profanity words are not allowed!");
+      this.toastService.showToast(EToastTypes.warning, this.translateService.instant('errors.profanityNotAllowed'));
       return;
     }
 

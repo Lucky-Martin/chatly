@@ -2,11 +2,15 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { SearchbarDropdownComponent } from '../create-topic-modal/searchbar-dropdown/searchbar-dropdown.component';
 import { ChatService } from '../../../services/chat.service';
 import { EToastTypes, ToastService } from '../../../services/toast.service';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-edit-room-modal',
   standalone: true,
-  imports: [SearchbarDropdownComponent],
+  imports: [
+    SearchbarDropdownComponent,
+    TranslateModule
+  ],
   templateUrl: './edit-room-modal.component.html',
   styleUrl: './edit-room-modal.component.scss',
 })
@@ -16,7 +20,8 @@ export class EditRoomModalComponent {
 
   constructor(
     private chatService: ChatService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private translateService: TranslateService
   ) {}
 
   protected onCloseModal(): void {
@@ -31,7 +36,7 @@ export class EditRoomModalComponent {
     event.preventDefault();
 
     if (!this.interests.length) {
-      this.toastService.showToast(EToastTypes.warning, "Please select at least one interest");
+      this.toastService.showToast(EToastTypes.warning, this.translateService.instant('chat.selectInterestRequired'));
       return;
     }
 
@@ -42,7 +47,7 @@ export class EditRoomModalComponent {
           this.closeModal.emit();
         },
         (err) => {
-          this.toastService.showToast(EToastTypes.warning, "Error while saving interests");
+          this.toastService.showToast(EToastTypes.warning, this.translateService.instant('errors.interestsSaveError'));
           console.warn(err);
         }
       );

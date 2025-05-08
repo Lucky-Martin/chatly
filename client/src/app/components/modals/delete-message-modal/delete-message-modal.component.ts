@@ -1,11 +1,12 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { IMessage } from '../../../models/IMessage';
 import { ChatService } from "../../../services/chat.service";
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-delete-message-modal',
   standalone: true,
-  imports: [],
+  imports: [TranslateModule],
   templateUrl: './delete-message-modal.component.html',
   styleUrl: './delete-message-modal.component.scss'
 })

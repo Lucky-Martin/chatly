@@ -4,11 +4,12 @@ import { ChatService } from '../../../services/chat.service';
 import { IMessage } from '../../../models/IMessage';
 import { Filter } from 'bad-words';
 import { EToastTypes, ToastService } from '../../../services/toast.service';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-edit-message-modal',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, TranslateModule],
   templateUrl: './edit-message-modal.component.html',
   styleUrl: './edit-message-modal.component.scss'
 })
@@ -19,7 +20,8 @@ export class EditMessageModalComponent implements OnInit {
   private profanityFilter: Filter = new Filter();
 
   constructor(private chatService: ChatService,
-              private toastService: ToastService) { }
+              private toastService: ToastService,
+              private translateService: TranslateService) { }
 
   public ngOnInit(): void {
     this.newMessage = `${this.message.text}`;
@@ -27,7 +29,7 @@ export class EditMessageModalComponent implements OnInit {
 
   protected onEditMessage(): void {
     if (this.profanityFilter.isProfane(this.newMessage)) {
-      this.toastService.showToast(EToastTypes.warning, "Profanity words are not allowed!" );
+      this.toastService.showToast(EToastTypes.warning, this.translateService.instant('errors.profanityNotAllowed'));
       return;
     }
 

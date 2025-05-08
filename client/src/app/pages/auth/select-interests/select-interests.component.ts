@@ -4,35 +4,37 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { AuthService } from "../../../services/auth/auth.service";
 import { Router } from "@angular/router";
 import { EToastTypes, ToastService } from "../../../services/toast.service";
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { LanguageService } from '../../../services/language/language.service';
 
 interface Interest {
   id: string;
-  name: string;
+  nameKey: string;
   icon: string;
 }
 
 @Component({
   selector: 'app-select-interests',
   standalone: true,
-  imports: [ReactiveFormsModule, NgFor],
+  imports: [ReactiveFormsModule, NgFor, TranslateModule],
   templateUrl: './select-interests.component.html',
   styleUrl: './select-interests.component.scss'
 })
 export class SelectInterestsComponent implements OnInit {
   public interestForm: FormGroup;
   public interests: Interest[] = [
-    { id: 'technology', name: 'Technology', icon: 'fas fa-laptop-code' },
-    { id: 'sports', name: 'Sports', icon: 'fas fa-football-ball' },
-    { id: 'music', name: 'Music', icon: 'fas fa-music' },
-    { id: 'travel', name: 'Travel', icon: 'fas fa-plane' },
-    { id: 'food', name: 'Food', icon: 'fas fa-utensils' },
-    { id: 'art', name: 'Art', icon: 'fas fa-palette' },
-    { id: 'books', name: 'Books', icon: 'fas fa-book' },
-    { id: 'movies', name: 'Movies', icon: 'fas fa-film' },
-    { id: 'gaming', name: 'Gaming', icon: 'fas fa-gamepad' },
-    { id: 'fashion', name: 'Fashion', icon: 'fas fa-tshirt' },
-    { id: 'photography', name: 'Photography', icon: 'fas fa-camera' },
-    { id: 'science', name: 'Science', icon: 'fas fa-flask' }
+    { id: 'technology', nameKey: 'interests.technology', icon: 'fas fa-laptop-code' },
+    { id: 'sports', nameKey: 'interests.sports', icon: 'fas fa-football-ball' },
+    { id: 'music', nameKey: 'interests.music', icon: 'fas fa-music' },
+    { id: 'travel', nameKey: 'interests.travel', icon: 'fas fa-plane' },
+    { id: 'food', nameKey: 'interests.food', icon: 'fas fa-utensils' },
+    { id: 'art', nameKey: 'interests.art', icon: 'fas fa-palette' },
+    { id: 'books', nameKey: 'interests.books', icon: 'fas fa-book' },
+    { id: 'movies', nameKey: 'interests.movies', icon: 'fas fa-film' },
+    { id: 'gaming', nameKey: 'interests.gaming', icon: 'fas fa-gamepad' },
+    { id: 'fashion', nameKey: 'interests.fashion', icon: 'fas fa-tshirt' },
+    { id: 'photography', nameKey: 'interests.photography', icon: 'fas fa-camera' },
+    { id: 'science', nameKey: 'interests.science', icon: 'fas fa-flask' }
   ];
   private selectedInterests: Set<string> = new Set<string>();
 
@@ -40,8 +42,15 @@ export class SelectInterestsComponent implements OnInit {
     private fb: FormBuilder,
     private router: Router,
     private toastService: ToastService,
-    private authService: AuthService
-  ) { }
+    private authService: AuthService,
+    private translateService: TranslateService,
+    private languageService: LanguageService
+  ) {
+    // Ensure language is properly set
+    const currentLang = this.languageService.getCurrentLanguage();
+    console.log('Interests component: setting language to', currentLang);
+    this.translateService.use(currentLang);
+  }
 
   public ngOnInit(): void {
     this.interestForm = this.fb.group({
@@ -78,7 +87,7 @@ export class SelectInterestsComponent implements OnInit {
         await this.router.navigate(['chat']);
       },
       (err: any) => {
-        this.toastService.showToast(EToastTypes.warning, "Error while saving interests");
+        this.toastService.showToast(EToastTypes.warning, this.translateService.instant('errors.interestsSaveError'));
         console.warn(err);
       }
     );

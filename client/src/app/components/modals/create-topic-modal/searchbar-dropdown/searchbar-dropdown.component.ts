@@ -2,6 +2,8 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { debounceTime, distinctUntilChanged, map } from "rxjs";
 import { FormControl, ReactiveFormsModule } from "@angular/forms";
 import { NgClass, NgForOf, NgIf } from "@angular/common";
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { LanguageService } from '../../../../services/language/language.service';
 
 @Component({
   selector: 'app-searchbar-dropdown',
@@ -10,7 +12,8 @@ import { NgClass, NgForOf, NgIf } from "@angular/common";
     ReactiveFormsModule,
     NgIf,
     NgForOf,
-    NgClass
+    NgClass,
+    TranslateModule
   ],
   templateUrl: './searchbar-dropdown.component.html',
   styleUrl: './searchbar-dropdown.component.scss'
@@ -25,6 +28,16 @@ export class SearchbarDropdownComponent implements OnInit {
   public searchControl = new FormControl('');
   public filteredItems: string[] = [];
   public showDropdown = false;
+
+  constructor(
+    private translateService: TranslateService,
+    private languageService: LanguageService
+  ) {
+    // Ensure language is properly set
+    const currentLang = this.languageService.getCurrentLanguage();
+    console.log('Searchbar dropdown: setting language to', currentLang);
+    this.translateService.use(currentLang);
+  }
 
   ngOnInit(): void {
     this.setupSearch();
@@ -42,8 +55,13 @@ export class SearchbarDropdownComponent implements OnInit {
 
   private filterItems(searchTerm: string): void {
     this.filteredItems = this.predefinedItems.filter(item =>
-      item.toLowerCase().includes(searchTerm)
+      item.toLowerCase().includes(searchTerm) || 
+      this.translateService.instant(`interests.${item}`).toLowerCase().includes(searchTerm)
     );
+  }
+
+  getInterestTranslation(interest: string): string {
+    return this.translateService.instant(`interests.${interest}`);
   }
 
   public selectItem(item: string): void {

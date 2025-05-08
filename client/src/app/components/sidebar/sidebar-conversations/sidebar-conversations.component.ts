@@ -1,14 +1,15 @@
 import { Component, Input } from '@angular/core';
 import { ITopic } from '../../../models/ITopic';
 import { AuthService } from '../../../services/auth/auth.service';
-import { NgFor } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
 import { SearchbarFilterItemComponent } from "../sidebar-search/searchbar-filter/searchbar-filter-item/searchbar-filter-item.component";
 import { ChatService } from '../../../services/chat.service';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-sidebar-conversations',
   standalone: true,
-  imports: [NgFor, SearchbarFilterItemComponent],
+  imports: [NgFor, NgIf, SearchbarFilterItemComponent, TranslateModule],
   templateUrl: './sidebar-conversations.component.html',
   styleUrl: './sidebar-conversations.component.scss'
 })

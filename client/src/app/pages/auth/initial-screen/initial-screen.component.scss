@@ -8,12 +8,62 @@
   margin-top: -20px;
 }
 
+.bg-white {
+  min-height: 100vh;
+  width: 100%;
+}
+
+.mt-10 {
+  margin-top: 20px;
+}
+
+// Header styles
+header {
+  position: relative;
+  width: 100%;
+  
+  nav {
+    // Keep header at reasonable height
+    min-height: 64px;
+    
+    // Ensure proper stacking
+    position: relative;
+    z-index: 10;
+    
+    @media (max-width: 768px) {
+      min-height: 56px;
+      padding: 0.75rem;
+    }
+    
+    // Put navigation links in center with absolute positioning as requested
+    .lg\:justify-center {
+      position: absolute;
+      left: 0;
+      right: 0;
+      z-index: 9999;
+    }
+  }
+}
+
+// Mobile menu overlay
+.fixed.inset-0 {
+  backdrop-filter: blur(2px);
+}
+
+// Ensure mobile menu doesn't go beyond viewport
+.fixed.inset-y-0.right-0 {
+  @media (max-width: 640px) {
+    width: 100%;
+  }
+}
+
 p {
   display: inline-block;
   vertical-align: top;
   margin: 0;
 }
 
+// Animation classes
 .word {
   position: absolute;
   opacity: 0;
@@ -41,6 +91,7 @@ p {
   transition: transform 0.38s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
+// Colors
 .wisteria {
   color: #8e44ad;
 }

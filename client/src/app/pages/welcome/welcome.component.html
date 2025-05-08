@@ -4,14 +4,14 @@
 
     <div class="content-wrapper p-4" *ngIf="isUserLoaded()">
         <h1 class="text-3xl text-black">
-            Hi there,
+            {{ 'common.welcome' | translate }},
             <span class="text-3xl text-black text-transparent bg-gradient-to-r from-pink-500 to-indigo-500 bg-clip-text">
                 {{ getUsername() | truncate:20 }}
             </span>
 
-            <br> What would you like to chat about?
+            <br> {{ 'chat.newMessage' | translate }}?
         </h1>
-        <h4 class="text-sm font-bold mt-2 text-black">Join or create a featured topic about your favourite interests</h4>
+        <h4 class="text-sm font-bold mt-2 text-black">{{ 'chat.joinRoom' | translate }} {{ 'chat.createRoom' | translate }}</h4>
 
         <!-- Loaded -->
         <div class="suggested-rooms-wrapper mt-4 mb-4 grid grid-cols-3 max-lg:grid-cols-1 max-xl:grid-cols-3 gap-2" *ngIf="rooms">
@@ -32,7 +32,7 @@
 
         <!-- Topic prompt -->
         <div class="topic-prompt-wrapper bg-white p-2 border-[1px] border-gray-400 rounded-lg shadow-md flex justify-between items-center">
-            <input [(ngModel)]="promptInput" placeholder="Enter a new topic name..." class="p-2 h-12 w-[90%] mr-2 focus:outline-none focus:ring-0">
+            <input [(ngModel)]="promptInput" placeholder="{{ 'chat.roomName' | translate }}" class="p-2 h-12 w-[90%] mr-2 focus:outline-none focus:ring-0">
             <button (click)="onCreateRoom()" type="button" class="w-[10%] min-w-16 text-white text-xl h-12 rounded-lg bg-indigo-500">
                 <i class="fa-solid fa-plus"></i>
             </button>
@@ -40,8 +40,7 @@
         <div class="flex items-center mt-2 text-right">
             <input id="default-checkbox" type="checkbox" [checked]="isChatroomPublic" (change)="isChatroomPublic = !isChatroomPublic"
               class="w-4 h-4 text-indigo-500 bg-gray-100 border-gray-300 rounded focus:ring-indigo-500 dark:focus:ring-indigo-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-            <label for="default-checkbox" class="ms-2 text-sm font-medium text-gray-900">Public chat
-              room</label>
+            <label for="default-checkbox" class="ms-2 text-sm font-medium text-gray-900">{{ 'chat.createRoom' | translate }}</label>
           </div>
     </div>
 </div>

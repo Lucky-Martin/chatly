@@ -19,10 +19,10 @@
 
     <!-- Placeholder -->
     <div class="placeholder-wrapper text-left" *ngIf="isPlaceholder" (click)="clickCard.emit()">
-        <p class="text-xl font-semibold mb-2">Create a new room</p>
+        <p class="text-xl font-semibold mb-2">{{ 'chat.createNewRoom' | translate }}</p>
         <div class="last-message-wrapper flex items-center">
             <i class="fa-regular fa-comment text-black text-xl mr-2"></i>
-            <p class="text-sm">Click to create a new room!</p>
+            <p class="text-sm">{{ 'chat.clickToCreateRoom' | translate }}</p>
         </div>
     </div>
 </div>

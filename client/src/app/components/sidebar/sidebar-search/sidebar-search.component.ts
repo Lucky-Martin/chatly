@@ -3,11 +3,18 @@ import { SearchbarFilterComponent } from "./searchbar-filter/searchbar-filter.co
 import { NgFor, NgIf } from '@angular/common';
 import { SearchbarFilterItemComponent } from "./searchbar-filter/searchbar-filter-item/searchbar-filter-item.component";
 import { ITopic } from '../../../models/ITopic';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-sidebar-search',
   standalone: true,
-  imports: [SearchbarFilterComponent, NgFor, NgIf, SearchbarFilterItemComponent],
+  imports: [
+    SearchbarFilterComponent, 
+    SearchbarFilterItemComponent, 
+    NgFor, 
+    NgIf,
+    TranslateModule
+  ],
   templateUrl: './sidebar-search.component.html',
   styleUrl: './sidebar-search.component.scss'
 })

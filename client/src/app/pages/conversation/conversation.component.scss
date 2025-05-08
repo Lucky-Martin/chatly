@@ -1,9 +1,23 @@
 .conversation-wrapper {
-  height: 95vh;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.topic-wrap {
+  position: relative;
+  display: flex;
+  flex-direction: column;
 }
 
 @media only screen and (max-width: 992px) {
   .conversation-wrapper {
-    height: 85vh;
+    height: 100vh;
   }
+}
+
+// Make sure scrolling works properly on mobile
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
 }

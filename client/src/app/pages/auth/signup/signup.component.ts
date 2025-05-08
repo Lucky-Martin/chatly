@@ -5,6 +5,8 @@ import {AuthService} from "../../../services/auth/auth.service";
 import {NgIf} from "@angular/common";
 import { EToastTypes, ToastService } from '../../../services/toast.service';
 import { SpinnerComponent } from "../../../components/spinner/spinner.component";
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { LanguageService } from '../../../services/language/language.service';
 
 @Component({
   selector: 'app-signup',
@@ -12,7 +14,8 @@ import { SpinnerComponent } from "../../../components/spinner/spinner.component"
   imports: [
     ReactiveFormsModule,
     NgIf,
-    SpinnerComponent
+    SpinnerComponent,
+    TranslateModule
   ],
   templateUrl: './signup.component.html',
   styleUrl: './signup.component.scss'
@@ -29,7 +32,14 @@ export class SignupComponent implements OnInit {
   constructor(private fb: FormBuilder,
               private router: Router,
               private authService: AuthService,
-              private toastService: ToastService) {}
+              private toastService: ToastService,
+              private translateService: TranslateService,
+              private languageService: LanguageService) {
+    // Ensure language is properly set
+    const currentLang = this.languageService.getCurrentLanguage();
+    console.log('Signup component: setting language to', currentLang);
+    this.translateService.use(currentLang);
+  }
 
   ngOnInit(): void {
     this.loginForm = this.fb.group({
@@ -53,7 +63,7 @@ export class SignupComponent implements OnInit {
       }, err => {
         this.isLoading = false;
         if (err.error.message.includes('unique')) {
-          this.emailErrorMessage = 'Email already in use!';
+          this.emailErrorMessage = this.translateService.instant('errors.emailInUse');
           this.toastService.showToast(EToastTypes.warning, this.emailErrorMessage);
         } else {
           this.credentialsError = true;
@@ -75,7 +85,7 @@ export class SignupComponent implements OnInit {
     const confirmPass = this.loginForm.get('confirmPassword');
 
     if (username && username.length < 4) {
-      this.usernameErrorMessage = "Username must be atleast 4 characters long"
+      this.usernameErrorMessage = this.translateService.instant('errors.usernameLength');
       this.canSubmit = false;
       return;
     } else {
@@ -83,7 +93,7 @@ export class SignupComponent implements OnInit {
     }
 
     if (!this.authService.isValidEmail(email?.value) && email?.value.length) {
-      this.emailErrorMessage = 'Please enter a valid email';
+      this.emailErrorMessage = this.translateService.instant('errors.invalidEmail');
       this.canSubmit = false;
     } else {
       this.emailErrorMessage = '';
@@ -91,10 +101,10 @@ export class SignupComponent implements OnInit {
 
     if (pass?.value.length) {
       if (!pass?.valid && pass?.value.length) {
-        this.passwordErrorMessage = "Password must be atleast 8 characters"
+        this.passwordErrorMessage = this.translateService.instant('errors.passwordLength');
         this.canSubmit = false;
       } else if (pass.value !== confirmPass?.value) {
-        this.passwordErrorMessage = "Passwords don't match"
+        this.passwordErrorMessage = this.translateService.instant('errors.passwordMismatch');
         this.canSubmit = false;
       } else {
         this.passwordErrorMessage = '';

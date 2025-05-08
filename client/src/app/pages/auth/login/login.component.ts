@@ -5,6 +5,8 @@ import {NgIf} from "@angular/common";
 import {AuthService} from "../../../services/auth/auth.service";
 import { EToastTypes, ToastService } from '../../../services/toast.service';
 import { SpinnerComponent } from "../../../components/spinner/spinner.component";
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { LanguageService } from '../../../services/language/language.service';
 
 @Component({
   selector: 'app-login',
@@ -12,7 +14,8 @@ import { SpinnerComponent } from "../../../components/spinner/spinner.component"
   imports: [
     ReactiveFormsModule,
     NgIf,
-    SpinnerComponent
+    SpinnerComponent,
+    TranslateModule
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
@@ -25,7 +28,14 @@ export class LoginComponent implements OnInit {
   constructor(private fb: FormBuilder,
               private authService: AuthService,
               private router: Router,
-              private toastService: ToastService) {}
+              private toastService: ToastService,
+              private translateService: TranslateService,
+              private languageService: LanguageService) {
+    // Ensure language is properly set
+    const currentLang = this.languageService.getCurrentLanguage();
+    console.log('Login component: setting language to', currentLang);
+    this.translateService.use(currentLang);
+  }
 
   ngOnInit(): void {
     this.loginForm = this.fb.group({
@@ -51,7 +61,7 @@ export class LoginComponent implements OnInit {
       }, err => {
         this.credentialsError = true;
         this.isLoading = false;
-        this.toastService.showToast(EToastTypes.warning, "Invalid info. Credentials don't match!");
+        this.toastService.showToast(EToastTypes.warning, this.translateService.instant('errors.loginFailed'));
         console.log(err);
       })
     }

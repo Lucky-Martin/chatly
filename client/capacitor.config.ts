@@ -5,7 +5,7 @@ const config: CapacitorConfig = {
   appName: 'chatly',
   webDir: 'dist/browser/',
   server: {
-    url: 'http://192.168.0.103:4200',
+    url: 'http://172.20.10.11:4200/',
     cleartext: true,
   }
 };

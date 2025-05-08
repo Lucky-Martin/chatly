@@ -3,13 +3,15 @@ import { NgForOf, NgIf } from "@angular/common";
 import { IParticipants } from '../../../models/IParticipants';
 import { ITopic } from '../../../models/ITopic';
 import { ChatService } from '../../../services/chat.service';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-participants-list',
   standalone: true,
     imports: [
         NgForOf,
-        NgIf
+        NgIf,
+        TranslateModule
     ],
   templateUrl: './participants-list.component.html',
   styleUrl: './participants-list.component.scss'

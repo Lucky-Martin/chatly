@@ -2,5 +2,11 @@
 	"appId": "com.chatlyapp.nanodigital",
 	"appName": "chatly",
 	"webDir": "dist/browser/",
-	"packageClassList": []
+	"server": {
+		"url": "http://192.168.0.103:4200",
+		"cleartext": true
+	},
+	"packageClassList": [
+		"SharePlugin"
+	]
 }

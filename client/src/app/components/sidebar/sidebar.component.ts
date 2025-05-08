@@ -8,6 +8,7 @@ import { ChatService } from '../../services/chat.service';
 import { openCreateModalSubject, openLogoutModalSubject } from '../../subjects/subjects';
 import { Subject } from 'rxjs';
 import { Router } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 
 export enum ESidebarMenus {
   ProfileInfo,
@@ -18,7 +19,14 @@ export enum ESidebarMenus {
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [SidebarProfileInfoComponent, NgIf, NgClass, SidebarSearchComponent, SidebarConversationsComponent],
+  imports: [
+    SidebarProfileInfoComponent, 
+    NgIf, 
+    NgClass, 
+    SidebarSearchComponent, 
+    SidebarConversationsComponent,
+    TranslateModule
+  ],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss'
 })

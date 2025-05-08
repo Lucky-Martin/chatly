@@ -29,6 +29,7 @@ import { DeleteMessageModalComponent } from "../../components/modals/delete-mess
 import { NgClass } from "@angular/common";
 import { Share } from "@capacitor/share";
 import { Clipboard } from "@angular/cdk/clipboard";
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 export interface IMessageModalData {
   isOpen: boolean;
@@ -48,7 +49,8 @@ export interface IMessageModalData {
     EditRoomModalComponent,
     EditMessageModalComponent,
     DeleteMessageModalComponent,
-    NgClass
+    NgClass,
+    TranslateModule
   ],
   templateUrl: './conversation.component.html',
   styleUrl: './conversation.component.scss',
@@ -81,7 +83,8 @@ export class ConversationComponent implements OnInit, OnDestroy, AfterViewInit {
     private toastService: ToastService,
     private clipboard: Clipboard,
     protected chatService: ChatService,
-    protected authService: AuthService
+    protected authService: AuthService,
+    private translateService: TranslateService
   ) {
     this.profanityFilter = new Filter();
   }
@@ -166,12 +169,12 @@ export class ConversationComponent implements OnInit, OnDestroy, AfterViewInit {
 
   public onSendMessage(): void {
     if (!this.message.trim()) {
-      this.toastService.showToast(EToastTypes.warning, 'Enter a valid message!');
+      this.toastService.showToast(EToastTypes.warning, this.translateService.instant('errors.required'));
       return;
     }
 
     if (this.profanityFilter.isProfane(this.message)) {
-      this.toastService.showToast(EToastTypes.warning, 'Profanity words are not allowed!');
+      this.toastService.showToast(EToastTypes.warning, this.translateService.instant('errors.profanityNotAllowed'));
       this.message = '';
       return;
     }
@@ -199,10 +202,10 @@ export class ConversationComponent implements OnInit, OnDestroy, AfterViewInit {
 
     if (canShareResult.value) {
       await Share.share({
-        title: 'Chatly - Share room',
-        text: 'Join this room and chat with your friends!',
+        title: this.translateService.instant('chat.shareRoom'),
+        text: this.translateService.instant('chat.joinRoomMessage'),
         url,
-        dialogTitle: 'Share with friends!',
+        dialogTitle: this.translateService.instant('chat.shareWithFriends'),
       });
 
       return;
@@ -210,7 +213,7 @@ export class ConversationComponent implements OnInit, OnDestroy, AfterViewInit {
 
     if (navigator.share) {
       navigator.share({
-        title: 'Share chat room link!',
+        title: this.translateService.instant('chat.shareChatLink'),
         url,
       }).then(() => {
         console.log('Successful share');
@@ -220,7 +223,7 @@ export class ConversationComponent implements OnInit, OnDestroy, AfterViewInit {
       });
     } else {
       this.clipboard.copy(url);
-      alert("Link copied to clipboard!");
+      alert(this.translateService.instant('chat.linkCopied'));
     }
   }
 
