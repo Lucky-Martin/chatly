@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["src/app/components/spinner/spinner.component.scss"],
+  "sourcesContent": ["\n.lds-facebook,\n.lds-facebook div {\n  box-sizing: border-box;\n}\n.lds-facebook {\n  display: inline-block;\n  position: relative;\n  width: 80px;\n  height: 80px;\n}\n.lds-facebook div {\n  display: inline-block;\n  position: absolute;\n  left: 8px;\n  width: 16px;\n  background: #6366F1;\n  animation: lds-facebook 1.2s cubic-bezier(0, 0.5, 0.5, 1) infinite;\n}\n.lds-facebook div:nth-child(1) {\n  left: 8px;\n  animation-delay: -0.24s;\n}\n.lds-facebook div:nth-child(2) {\n  left: 32px;\n  animation-delay: -0.12s;\n}\n.lds-facebook div:nth-child(3) {\n  left: 56px;\n  animation-delay: 0s;\n}\n@keyframes lds-facebook {\n  0% {\n    top: 8px;\n    height: 64px;\n  }\n  50%, 100% {\n    top: 24px;\n    height: 32px;\n  }\n}\n\n"],
+  "mappings": ";AACA,CAAA;AAAA,CAAA,aAAA;AAEE,cAAA;;AAEF,CAJA;AAKE,WAAA;AACA,YAAA;AACA,SAAA;AACA,UAAA;;AAEF,CAVA,aAUA;AACE,WAAA;AACA,YAAA;AACA,QAAA;AACA,SAAA;AACA,cAAA;AACA,aAAA,aAAA,KAAA,aAAA,CAAA,EAAA,GAAA,EAAA,GAAA,EAAA,GAAA;;AAEF,CAlBA,aAkBA,GAAA;AACE,QAAA;AACA,mBAAA;;AAEF,CAtBA,aAsBA,GAAA;AACE,QAAA;AACA,mBAAA;;AAEF,CA1BA,aA0BA,GAAA;AACE,QAAA;AACA,mBAAA;;AAEF,WA9BA;AA+BE;AACE,SAAA;AACA,YAAA;;AAEF;AACE,SAAA;AACA,YAAA;;;",
+  "names": []
+}

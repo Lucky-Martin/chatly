@@ -21,3 +21,28 @@
   flex-direction: column;
   height: 100vh;
 }
+
+.chat-input-bar {
+  position: absolute;
+  bottom: 0.5rem;
+  left: 0.5rem;
+  right: 0.5rem;
+  z-index: 10;
+}
+
+@media only screen and (max-width: 992px) {
+  .chat-input-bar {
+    position: fixed;
+    bottom: 20px;
+    left: 0;
+    right: 0;
+    border-radius: 0;
+    width: 100vw;
+    margin: 0;
+    padding: 0 8px;
+    z-index: 100;
+  }
+  .messages {
+    padding-bottom: 4.5rem; // Adjust if input bar height changes
+  }
+}

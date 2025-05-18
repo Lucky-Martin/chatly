@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["src/app/pages/welcome/welcome.component.scss"],
+  "sourcesContent": [".page-wrapper {\n    background-image: linear-gradient(to left bottom, #f4f4f4, #f2f3f2, #f1f1f1, #eff0ef, #eeeeee);\n}"],
+  "mappings": ";AAAA,CAAA;AACI;IAAA;MAAA,GAAA,KAAA,MAAA;MAAA,OAAA;MAAA,OAAA;MAAA,OAAA;MAAA,OAAA;MAAA;;",
+  "names": []
+}

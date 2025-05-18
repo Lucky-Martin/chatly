@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["src/app/components/toast-templates/toast-templates.component.scss"],
+  "sourcesContent": [".toast-wrapper-hidden {\n    bottom: -100%!important;\n}"],
+  "mappings": ";AAAA,CAAA;AACI,UAAA;;",
+  "names": []
+}

@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["src/app/pages/conversation/conversation.component.scss"],
+  "sourcesContent": [".conversation-wrapper {\n  height: 100vh;\n  overflow: hidden;\n}\n\n.topic-wrap {\n  position: relative;\n  display: flex;\n  flex-direction: column;\n}\n\n@media only screen and (max-width: 992px) {\n  .conversation-wrapper {\n    height: 100vh;\n  }\n}\n\n// Make sure scrolling works properly on mobile\n:host {\n  display: flex;\n  flex-direction: column;\n  height: 100vh;\n}\n"],
+  "mappings": ";AAAA,CAAA;AACE,UAAA;AACA,YAAA;;AAGF,CAAA;AACE,YAAA;AACA,WAAA;AACA,kBAAA;;AAGF,OAAA,KAAA,OAAA,IAAA,CAAA,SAAA,EAAA;AACE,GAZF;AAaI,YAAA;;;AAKJ;AACE,WAAA;AACA,kBAAA;AACA,UAAA;;",
+  "names": []
+}

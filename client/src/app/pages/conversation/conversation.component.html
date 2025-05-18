@@ -45,7 +45,7 @@
       <!-- Chat Messages Area with Fixed Input -->
       <div class="flex flex-col flex-grow rounded-2xl bg-gray-100 topic-wrap p-2 relative h-[calc(100%-4rem)]">
         <!-- Messages Container -->
-        <div class="flex-grow overflow-y-auto mb-16" #messageContainer>
+        <div class="flex-grow overflow-y-auto mb-16 messages" #messageContainer>
           <div class="flex flex-col h-full">
             @if (!topic.messages.length) {
               <p class="no-messages-placeholder text-center mt-2 text-gray-600">{{ 'chat.noMessages' | translate }}</p>
@@ -76,7 +76,7 @@
 
         <!-- Input Area - Fixed to Bottom -->
         <div
-          class="flex items-center h-16 rounded-xl bg-white w-full px-2 shadow-sm shadow-gray-500 absolute bottom-2 left-2 right-2"
+          class="flex items-center h-16 rounded-xl bg-white w-full px-2 shadow-sm shadow-gray-500 absolute bottom-2 left-2 right-2 chat-input-bar"
         >
           <div class="flex-grow">
             <div class="relative w-full">

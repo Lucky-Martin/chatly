@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["src/app/components/sidebar/sidebar.component.scss"],
+  "sourcesContent": [".sidebar-wrapper {\n    -webkit-box-shadow: 5px 0px 5px 0px rgba(0,0,0,0.25);\n    -moz-box-shadow: 5px 0px 5px 0px rgba(0,0,0,0.25);\n    box-shadow: 5px 0px 5px 0px rgba(0,0,0,0.25);\n\n    .text-black {\n        color: #000!important;\n    }\n\n    .preview {\n        max-width: 76%;\n        \n        &.closed {\n            display: none;\n        }\n    }\n}"],
+  "mappings": ";AAAA,CAAA;AACI,sBAAA,IAAA,IAAA,IAAA,IAAA,KAAA,CAAA,EAAA,CAAA,EAAA,CAAA,EAAA;AACA,mBAAA,IAAA,IAAA,IAAA,IAAA,KAAA,CAAA,EAAA,CAAA,EAAA,CAAA,EAAA;AACA,cAAA,IAAA,IAAA,IAAA,IAAA,KAAA,CAAA,EAAA,CAAA,EAAA,CAAA,EAAA;;AAEA,CALJ,gBAKI,CAAA;AACI,SAAA;;AAGJ,CATJ,gBASI,CAAA;AACI,aAAA;;AAEA,CAZR,gBAYQ,CAHJ,OAGI,CAAA;AACI,WAAA;;",
+  "names": []
+}

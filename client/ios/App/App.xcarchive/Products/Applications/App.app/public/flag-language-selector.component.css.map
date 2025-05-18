@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["flag-language-selector.component.ts"],
+  "sourcesContent": ["\n    .flag-language-selector {\n      display: inline-block;\n    }\n    .flag-button {\n      width: 40px;\n      height: 40px;\n      min-width: 40px;\n      min-height: 40px;\n      cursor: pointer !important;\n      transition: transform 0.15s ease-in-out;\n    }\n    .flag-button:hover {\n      transform: scale(1.1);\n    }\n    img {\n      pointer-events: none;\n    }\n  "],
+  "mappings": ";AACI,CAAA;AACE,WAAA;;AAEF,CAAA;AACE,SAAA;AACA,UAAA;AACA,aAAA;AACA,cAAA;AACA,UAAA;AACA,cAAA,UAAA,MAAA;;AAEF,CARA,WAQA;AACE,aAAA,MAAA;;AAEF;AACE,kBAAA;;",
+  "names": []
+}

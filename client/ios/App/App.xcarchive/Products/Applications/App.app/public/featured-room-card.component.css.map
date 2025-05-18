@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["src/app/components/featured-room-card/featured-room-card.component.scss"],
+  "sourcesContent": [".wrapper {\n    animation: 0.4s pop-in forwards;\n}\n\n@keyframes pop-in {\n    from {\n        transform: scale(0);\n    }\n    to {\n        transform: scale(1);\n    }\n}"],
+  "mappings": ";AAAA,CAAA;AACI,aAAA,KAAA,OAAA;;AAGJ,WAHI;AAIA;AACI,eAAA,MAAA;;AAEJ;AACI,eAAA,MAAA;;;",
+  "names": []
+}
