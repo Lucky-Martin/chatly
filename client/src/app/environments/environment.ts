@@ -3,6 +3,6 @@ export interface IEnvironment {
 }
 
 export const environment = {
-  apiUrl: 'https://chatly-hnwf.onrender.com/api'
-  // apiUrl: 'http://localhost:8000/api',
+  // apiUrl: 'https://chatly-hnwf.onrender.com/api'
+  apiUrl: 'http://localhost:8000/api',
 }

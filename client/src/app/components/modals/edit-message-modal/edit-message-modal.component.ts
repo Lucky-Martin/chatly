@@ -16,7 +16,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 export class EditMessageModalComponent implements OnInit {
   @Input() message: IMessage;
   @Output() closeModal: EventEmitter<void> = new EventEmitter<void>();
-  protected newMessage: string;
+  protected newMessage: string = '';
   private profanityFilter: Filter = new Filter();
 
   constructor(private chatService: ChatService,
@@ -27,7 +27,16 @@ export class EditMessageModalComponent implements OnInit {
     this.newMessage = `${this.message.text}`;
   }
 
+  protected isMessageValid(): boolean {
+    return typeof this.newMessage === 'string' && this.newMessage.trim().length > 0;
+  }
+
   protected onEditMessage(): void {
+    if (!this.isMessageValid()) {
+      this.toastService.showToast(EToastTypes.warning, this.translateService.instant('errors.messageCannotBeEmpty'));
+      return;
+    }
+
     if (this.profanityFilter.isProfane(this.newMessage)) {
       this.toastService.showToast(EToastTypes.warning, this.translateService.instant('errors.profanityNotAllowed'));
       return;

@@ -1,7 +1,10 @@
 @if (messageViewType === EMessageViewType.Receiver) {
   <div class="flex justify-start cursor-pointer relative" (click)="onToggleProfilePreview()">
-    <div class="flex items-center justify-center text-white h-10 w-10 rounded-full bg-indigo-500 flex-shrink-0">
-      {{ message.user.charAt(0).toUpperCase() }}
+    <div class="flex flex-col items-center">
+      <div class="flex items-center justify-center text-white h-10 w-10 rounded-full bg-indigo-500 flex-shrink-0">
+        {{ message.user.charAt(0).toUpperCase() }}
+      </div>
+      <span class="text-xs text-slate-600 mt-1">{{ message.user.length > 5 ? (message.user | slice:0:5) + '...' : message.user }}</span>
     </div>
     <div class="ml-3 max-w-[80%]">
       <div class="relative text-sm bg-white py-2 px-4 shadow rounded-xl break-all whitespace-normal">
@@ -21,10 +24,13 @@
         {{ message.text }}
       </div>
     </div>
-    <div
-      (click)="onToggleProfilePreview()"
-      class="flex items-center justify-center h-10 w-10 rounded-full text-white bg-indigo-500 flex-shrink-0">
-      {{ message.user.charAt(0).toUpperCase() }}
+    <div class="flex flex-col items-center">
+      <div
+        (click)="onToggleProfilePreview()"
+        class="flex items-center justify-center h-10 w-10 rounded-full text-white bg-indigo-500 flex-shrink-0">
+        {{ message.user.charAt(0).toUpperCase() }}
+      </div>
+      <span class="text-xs text-slate-600 mt-1">{{ message.user.length > 5 ? (message.user | slice:0:5) + '...' : message.user }}</span>
     </div>
   </div>
 
